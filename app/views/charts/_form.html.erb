@@ -1,4 +1,4 @@
-<%= form_with(model: [@chart.regi, @chart]) do |f| %>
+<%= form_with(model: [@regi, @chart]) do |f| %>
   <% if @chart.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@chart.errors.count, "error") %> prohibited this chart from being saved:</h2>
@@ -11,27 +11,38 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= f.label :t_date %><br />
-    <%= f.text_field :t_date %>
+  <%= f.text_field :name, value: (@regi.last_name + ", " + @regi.first_name + " " + (@regi.init? ? (@regi.init + ".") : '' )), hidden: true %>
+
+  <div class="row">
+    <div class="col col-md-3 fs-6">
+      <b>Updated on</b>
+      <%= f.date_field :t_date, placeholder: "MM/DD/YYYY", class:"form-control form-control-sm border-primary fs-4" %>
+    </div>
   </div>
-  <div class="field">
-    <%= f.label :subj %><br />
-    <%= f.textarea :subj %>
+  <br>
+  <div class="col row fs-6">
+    <b>Subjective</b>
+    <%= f.text_area :subj, class:"form-control form-control-sm border-primary fs-4", style:"height: 150px" %>
   </div>
-  <div class="field">
-    <%= f.label :obj %><br />
-    <%= f.textarea :obj %>
+  <br>
+  <div class="col fs-6">
+    <b>Objective</b>
+    <%= f.text_area :obj, class:"form-control form-control-sm border-primary fs-4", style:"height: 150px" %>
   </div>
-  <div class="field">
-    <%= f.label :assess %><br />
-    <%= f.textarea :assess %>
+  <br>
+  <div class="col fs-6">
+    <b>Assessment</b>
+    <%= f.text_area :assess, class:"form-control form-control-sm border-primary fs-4", style:"height: 150px" %>
   </div>
-  <div class="field">
-    <%= f.label :plan %><br />
-    <%= f.textarea :plan %>
+  <br>
+  <div class="col fs-6">
+    <b>Plan</b>
+    <%= f.text_area :plan, class:"form-control form-control-sm border-primary fs-4", style:"height: 150px" %>
   </div>
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+  <br>
+  <div class="btn-group" role="group">
+    <%= f.submit "Submit", class: "btn btn-sm btn-primary rounded-pill px-3 m-2 fw-bold" %>
 <% end %>
+  <%= button_to "Delete", [@regi,@chart], method: :delete, class:"btn btn-sm btn-danger rounded-pill px-3 m-2 fw-bold", form: { data: { turbo_confirm: "Are you sure?" } } %>
+  <%= link_to 'Retun', :back, class:"btn btn-sm btn-success rounded-pill px-3 m-2 fw-bold" %>
+  </div>

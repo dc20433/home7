@@ -1,5 +1,4 @@
 class ChartsController < ApplicationController
-  #before_action :authenticate_user!
   before_action :set_regi
   before_action :set_chart, only: [:show, :edit, :update, :destroy]
 
@@ -14,11 +13,7 @@ class ChartsController < ApplicationController
 
   # GET regis/1/charts/new
   def new
-    if defined?(Chart.where(regi_id: params[:regi_id]).last.id)
-      @chart = @regi.charts.order('t_date ASC').last.dup
-    else 
-      @chart = @regi.charts.build
-    end
+    @chart = @regi.charts.build
   end
 
   # GET regis/1/charts/1/edit
@@ -30,7 +25,7 @@ class ChartsController < ApplicationController
     @chart = @regi.charts.build(chart_params)
 
     if @chart.save
-      redirect_to regi_charts_path(@regi,@chart), notice: 'Patient Chart created...'
+      redirect_to([@chart.regi, @chart], notice: 'Chart was successfully created.')
     else
       render action: 'new'
     end
@@ -39,7 +34,7 @@ class ChartsController < ApplicationController
   # PUT regis/1/charts/1
   def update
     if @chart.update(chart_params)
-      redirect_to regi_charts_path(@regi,@chart), notice: 'Patient Chart updated...'
+      redirect_to([@chart.regi, @chart], notice: 'Chart was successfully updated.')
     else
       render action: 'edit'
     end
@@ -48,7 +43,8 @@ class ChartsController < ApplicationController
   # DELETE regis/1/charts/1
   def destroy
     @chart.destroy
-    redirect_to regi_charts_path(@regi), notice: "Chart deleted..."
+
+    redirect_to regi_charts_url(@regi)
   end
 
   private
@@ -63,6 +59,6 @@ class ChartsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def chart_params
-      params.require(:chart).permit(:t_date, :subj, :obj, :assess, :plan, :regi_id)
+      params.require(:chart).permit(:t_date, :subj, :obj, :assess, :plan)
     end
 end
