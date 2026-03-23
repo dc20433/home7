@@ -1,0 +1,31 @@
+<%= link_to "Search Patient", "#offcanvasExample", data: { bs_toggle: "offcanvas" }, area: { controls: "offcanvasExample" }, role: "button", class: "btn btn-sm btn-outline-primary outline-double rounded-pill px-3 py-0 ms-1 fw-bold" %>
+  <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="offcanvasExampleLabel">Search Patients Here</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <%= search_form_for @q do |f| %>
+        <div class="form-group">
+          <b><%= f.label :by_last_name_start, "By first letters of the Last Name", class: "form-label fs-6" %></b>
+          <%= f.search_field :last_name_start, class:"form-control form-control-sm border-primary fs-4 mb-3" %>
+        </div>
+        <div class="form-group">
+          <b><%= f.label :by_last_name_or_first_name_cont, "By letters in the Last Name or First Name", class: "form-label fs-6" %></b>
+          <%= f.search_field :last_name_or_first_name_cont, class:"form-control form-control-sm border-primary fs-4 mb-3" %>
+        </div>
+        <div class="form-group">
+          <b><%= f.label :by_first_name_cont, "By First Name", class: "form-label fs-6" %></b>
+          <%= f.search_field :first_name_cont, class:"form-control form-control-sm border-primary fs-4 mb-3" %>
+        </div>
+        <div class="form-group">
+          <b><%= f.label :by_gender_start, "By Gender (Male/Female/Other)", class: "form-label fs-6" %></b>
+          <%= f.search_field :gender_start, class:"form-control form-control-sm border-primary fs-4 mb-3" %>
+        </div>
+        <div class="form-group">
+          <%= f.submit "Submit", class: "btn btn-outline-dark btn-sm outline-double rounded-pill px-3 py-0 fw-bold" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<%= link_to "Reset", regis_path, class: "btn btn-sm btn-outline-info outline-double rounded-pill px-3 py-0 m-1 fw-bold" %>

@@ -1,0 +1,37 @@
+<%= form_with(model: [@chart.regi, @chart]) do |f| %>
+  <% if @chart.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@chart.errors.count, "error") %> prohibited this chart from being saved:</h2>
+
+      <ul>
+      <% @chart.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :t_date %><br />
+    <%= f.text_field :t_date %>
+  </div>
+  <div class="field">
+    <%= f.label :subj %><br />
+    <%= f.textarea :subj %>
+  </div>
+  <div class="field">
+    <%= f.label :obj %><br />
+    <%= f.textarea :obj %>
+  </div>
+  <div class="field">
+    <%= f.label :assess %><br />
+    <%= f.textarea :assess %>
+  </div>
+  <div class="field">
+    <%= f.label :plan %><br />
+    <%= f.textarea :plan %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

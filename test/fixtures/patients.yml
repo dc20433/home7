@@ -1,0 +1,63 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  regi: one
+  v_date: 2026-03-22
+  name: MyString
+  street: MyString
+  city: MyString
+  state: MyString
+  zip: MyString
+  cell: MyString
+  home: MyString
+  work: MyString
+  email: MyString
+  height: MyString
+  weight: MyString
+  m_stat: MyString
+  occup: MyString
+  company: MyString
+  referred: MyString
+  comp1: MyString
+  comp2: MyString
+  comp3: MyString
+  d_onset: MyString
+  pain_scale: MyString
+  diag_given: MyString
+  aq_b4: MyString
+  di_list: MyString
+  o_dis: MyString
+  last_prd: MyString
+  preg: MyString
+  preg_wks: MyString
+
+two:
+  regi: two
+  v_date: 2026-03-22
+  name: MyString
+  street: MyString
+  city: MyString
+  state: MyString
+  zip: MyString
+  cell: MyString
+  home: MyString
+  work: MyString
+  email: MyString
+  height: MyString
+  weight: MyString
+  m_stat: MyString
+  occup: MyString
+  company: MyString
+  referred: MyString
+  comp1: MyString
+  comp2: MyString
+  comp3: MyString
+  d_onset: MyString
+  pain_scale: MyString
+  diag_given: MyString
+  aq_b4: MyString
+  di_list: MyString
+  o_dis: MyString
+  last_prd: MyString
+  preg: MyString
+  preg_wks: MyString

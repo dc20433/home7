@@ -1,0 +1,129 @@
+<%= form_with(model: [@patient.regi, @patient]) do |f| %>
+  <% if @patient.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@patient.errors.count, "error") %> prohibited this patient from being saved:</h2>
+
+      <ul>
+      <% @patient.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :v_date %><br />
+    <%= f.date_field :v_date %>
+  </div>
+  <div class="field">
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :street %><br />
+    <%= f.text_field :street %>
+  </div>
+  <div class="field">
+    <%= f.label :city %><br />
+    <%= f.text_field :city %>
+  </div>
+  <div class="field">
+    <%= f.label :state %><br />
+    <%= f.text_field :state %>
+  </div>
+  <div class="field">
+    <%= f.label :zip %><br />
+    <%= f.text_field :zip %>
+  </div>
+  <div class="field">
+    <%= f.label :cell %><br />
+    <%= f.text_field :cell %>
+  </div>
+  <div class="field">
+    <%= f.label :home %><br />
+    <%= f.text_field :home %>
+  </div>
+  <div class="field">
+    <%= f.label :work %><br />
+    <%= f.text_field :work %>
+  </div>
+  <div class="field">
+    <%= f.label :email %><br />
+    <%= f.text_field :email %>
+  </div>
+  <div class="field">
+    <%= f.label :height %><br />
+    <%= f.text_field :height %>
+  </div>
+  <div class="field">
+    <%= f.label :weight %><br />
+    <%= f.text_field :weight %>
+  </div>
+  <div class="field">
+    <%= f.label :m_stat %><br />
+    <%= f.text_field :m_stat %>
+  </div>
+  <div class="field">
+    <%= f.label :occup %><br />
+    <%= f.text_field :occup %>
+  </div>
+  <div class="field">
+    <%= f.label :company %><br />
+    <%= f.text_field :company %>
+  </div>
+  <div class="field">
+    <%= f.label :referred %><br />
+    <%= f.text_field :referred %>
+  </div>
+  <div class="field">
+    <%= f.label :comp1 %><br />
+    <%= f.text_field :comp1 %>
+  </div>
+  <div class="field">
+    <%= f.label :comp2 %><br />
+    <%= f.text_field :comp2 %>
+  </div>
+  <div class="field">
+    <%= f.label :comp3 %><br />
+    <%= f.text_field :comp3 %>
+  </div>
+  <div class="field">
+    <%= f.label :d_onset %><br />
+    <%= f.text_field :d_onset %>
+  </div>
+  <div class="field">
+    <%= f.label :pain_scale %><br />
+    <%= f.text_field :pain_scale %>
+  </div>
+  <div class="field">
+    <%= f.label :diag_given %><br />
+    <%= f.text_field :diag_given %>
+  </div>
+  <div class="field">
+    <%= f.label :aq_b4 %><br />
+    <%= f.text_field :aq_b4 %>
+  </div>
+  <div class="field">
+    <%= f.label :di_list %><br />
+    <%= f.text_field :di_list %>
+  </div>
+  <div class="field">
+    <%= f.label :o_dis %><br />
+    <%= f.text_field :o_dis %>
+  </div>
+  <div class="field">
+    <%= f.label :last_prd %><br />
+    <%= f.text_field :last_prd %>
+  </div>
+  <div class="field">
+    <%= f.label :preg %><br />
+    <%= f.text_field :preg %>
+  </div>
+  <div class="field">
+    <%= f.label :preg_wks %><br />
+    <%= f.text_field :preg_wks %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

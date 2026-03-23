@@ -1,0 +1,66 @@
+<%= form_with(model: regi) do |form| %>
+  <% if regi.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(regi.errors.count, "error") %> prohibited this regi from being saved:</h2>
+
+      <ul>
+        <% regi.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="row mb-1">
+    <div class="col col-md-3 pt-1 mt-1">
+      <b><%= form.label :last_name, "Last Name" %></b>
+    </div>
+    <div class="col col-md-9">
+      <%= form.text_field :last_name, autofocus: true, class:"form-control form-control-sm border-primary fs-4" %>
+    </div>
+  </div>
+
+  <div class="row mb-1">
+    <div class="col col-md-3 pt-1 mt-1">
+      <b><%= form.label :first_name, "First Name" %></b>
+    </div>
+    <div class="col col-md-9">
+      <%= form.text_field :first_name, class:"form-control form-control-sm border-primary fs-4" %>
+    </div>
+  </div>
+
+  <div class="row mb-1">
+    <div class="col col-md-3 pt-1 mt-1">
+      <b><%= form.label :init, "Middle Inital" %></b>
+    </div>
+    <div class="col col-md-9">
+      <%= form.text_field :init, class:"form-control form-control-sm border-primary fs-4" %>
+    </div>
+  </div>
+
+  <div class="row input-group mb-1">
+    <div class="col col-md-3 pt-1 mt-1">
+      <b><%= form.label :gender, "Gender" %></b>
+    </div>
+    <div class="col col-md-9">
+      <%= form.select :gender, Regi::GENDER_OPTIONS, class:"form-control form-control-sm border-primary fs-4" %>
+    </div>
+  </div>
+ 
+ <div class="row mb-1">
+    <div class="col col-md-3 pt-1 mt-1">
+     <b><%= form.label :dob, "Date of Birth" %></b>
+    </div>
+    <div class="col col-md-9">
+      <%= form.date_field :dob, placeholder: "MM/DD/YYYY", class:"form-control form-control-sm border-primary fs-4" %>
+    </div>
+  </div>
+  <div>
+    <div class="btn-group" role="group"> 
+      <%= form.submit "Submit", class: "btn btn-sm btn-primary rounded-pill px-3 m-2 fw-bold" %>
+<% end %>      
+      <%= button_to "Delete", @regi, method: :delete, class:"btn btn-sm btn-danger rounded-pill px-3 m-2 fw-bold" %>
+      <%= link_to "Return", :back, class:"btn btn-sm btn-success rounded-pill px-3 m-2 fw-bold" %>
+    </div>
+  </div>
+

@@ -1,0 +1,63 @@
+<nav class="navbar navbar-expand navbar-dark fixed-top bg-primary pt-1 pb-1 fs-6" id="mainNav">
+  <div class="container-fluid">
+    <%= link_to "Home", root_path, class:"navbar-brand fw-bold" %>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <% if current_user %>
+          <li class="nav-item">
+            <%= button_to("Log out", destroy_user_session_path, class:"nav-link text-dark ms-1 mt-1 pt-1 pb-1 fw-bold bg-info rounded-pill border border-dark border-2", method: :delete, data: { turbo_method: :delete }) %>
+          </li>
+        <% else %>
+          <li class="nav-item">
+            <%= link_to "Log in", new_user_session_path, class:"nav-link text-dark ms-1 mt-1 pt-1 pb-1 ps-3 pe-3 fw-bold bg-info rounded-pill border border-dark border-2" %>
+          </li>
+          <li class="nav-item">
+            <%# link_to "Sign up", new_user_registration_path, class:"nav-link text-dark fw-bold bg-info rounded-pill border border-dark border-2" %>
+          </li>
+        <% end %>  
+
+        <% if (current_user && current_user.Admin?) || (current_user && current_user.Manager?) %>
+        
+          <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle dropdown-toggle-split nav-link text-dark ms-1 mt-1 pt-1 pb-1 fw-bold bg-info rounded-pill border border-dark border-2" id="navbarDropdownMenuLink" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Overview
+            </button>
+            <ul class="dropdown-menu dropdown-menu-dark" id="navbarDropdownMenuLink">
+              <li><%= link_to "Patient Info", overviews_patient_info_path, class: "dropdown-item fw-bold" %></li>
+              <li><%= link_to "Charts by Name", overviews_chart_name_path, class: "dropdown-item fw-bold" %></li>
+              <li><%= link_to "Charts by Date", overviews_chart_date_path, class: "dropdown-item fw-bold" %></li>
+            </ul>
+          </div>
+
+          <li class="nav-item">
+            <%= link_to "Patient List", regis_path, class:"nav-link text-dark ms-1 mt-1 pt-1 pb-1 fw-bold bg-info rounded-pill border border-dark border-2" %>
+          </li>
+          <li class="nav-item">
+            <%= link_to "Scheduler", "https://calendar.google.com/calendar", class:"nav-link text-dark ms-1 mt-1 pt-1 pb-1 fw-bold bg-info rounded-pill border border-dark border-2" %>
+          </li>
+        <% end %>
+
+        <% if current_user && current_user.Admin? %>
+          <li class="nav-item">
+            <%= link_to "Usage", users_path, class:"nav-link text-dark ms-1 mt-1 pt-1 pb-1 ps-3 pe-3 fw-bold bg-info rounded-pill border border-dark border-2" %>
+          </li>
+          <li class="nav-item">
+            <%# link_to "Sign up", new_user_registration_path, class:"nav-link text-dark fw-bold bg-info rounded-pill" %>
+          </li>
+        <% end %>
+      </ul>
+
+
+      
+      <li class="d-flex">
+        <% if current_user && current_user.Admin? %>
+          <p class="text-dark fw-bold bg-info mt-1 mb-1 p-3 pt-1 pb-1 rounded-pill border border-dark border-2"><%= current_user.email %> : <%= current_user.role %></p>
+        <% end %>
+      </li>
+    </div>
+  </div>
+
+</nav>

@@ -1,0 +1,27 @@
+<h1>Listing filings</h1>
+
+<table>
+  <tr>
+    <th>F date</th>
+    <th>Image</th>
+    <th>Describe</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @filings.each do |filing| %>
+  <tr>
+    <td><%= filing.f_date %></td>
+    <td><%= filing.image %></td>
+    <td><%= filing.describe %></td>
+    <td><%= link_to 'Show', [filing.regi, filing] %></td>
+    <td><%= link_to 'Edit', edit_regi_filing_path(filing.regi, filing) %></td>
+    <td><%= link_to 'Destroy', [filing.regi, filing], method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Filing', new_regi_filing_path(params[:regi_id]) %>

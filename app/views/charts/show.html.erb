@@ -1,0 +1,30 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>T date:</b>
+  <%= @chart.t_date %>
+</p>
+
+<p>
+  <b>Subj:</b>
+  <%= @chart.subj %>
+</p>
+
+<p>
+  <b>Obj:</b>
+  <%= @chart.obj %>
+</p>
+
+<p>
+  <b>Assess:</b>
+  <%= @chart.assess %>
+</p>
+
+<p>
+  <b>Plan:</b>
+  <%= @chart.plan %>
+</p>
+
+
+<%= link_to 'Edit', edit_regi_chart_path(@chart.regi, @chart) %> |
+<%= link_to 'Back', regi_charts_path(@chart.regi) %>

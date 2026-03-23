@@ -1,0 +1,31 @@
+<h1>Listing charts</h1>
+
+<table>
+  <tr>
+    <th>T date</th>
+    <th>Subj</th>
+    <th>Obj</th>
+    <th>Assess</th>
+    <th>Plan</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @charts.each do |chart| %>
+  <tr>
+    <td><%= chart.t_date %></td>
+    <td><%= chart.subj %></td>
+    <td><%= chart.obj %></td>
+    <td><%= chart.assess %></td>
+    <td><%= chart.plan %></td>
+    <td><%= link_to 'Show', [chart.regi, chart] %></td>
+    <td><%= link_to 'Edit', edit_regi_chart_path(chart.regi, chart) %></td>
+    <td><%= link_to 'Destroy', [chart.regi, chart], method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Chart', new_regi_chart_path(params[:regi_id]) %>

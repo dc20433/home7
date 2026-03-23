@@ -1,0 +1,77 @@
+<h1>Listing patients</h1>
+
+<table>
+  <tr>
+    <th>V date</th>
+    <th>Name</th>
+    <th>Street</th>
+    <th>City</th>
+    <th>State</th>
+    <th>Zip</th>
+    <th>Cell</th>
+    <th>Home</th>
+    <th>Work</th>
+    <th>Email</th>
+    <th>Height</th>
+    <th>Weight</th>
+    <th>M stat</th>
+    <th>Occup</th>
+    <th>Company</th>
+    <th>Referred</th>
+    <th>Comp1</th>
+    <th>Comp2</th>
+    <th>Comp3</th>
+    <th>D onset</th>
+    <th>Pain scale</th>
+    <th>Diag given</th>
+    <th>Aq b4</th>
+    <th>Di list</th>
+    <th>O dis</th>
+    <th>Last prd</th>
+    <th>Preg</th>
+    <th>Preg wks</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @patients.each do |patient| %>
+  <tr>
+    <td><%= patient.v_date %></td>
+    <td><%= patient.name %></td>
+    <td><%= patient.street %></td>
+    <td><%= patient.city %></td>
+    <td><%= patient.state %></td>
+    <td><%= patient.zip %></td>
+    <td><%= patient.cell %></td>
+    <td><%= patient.home %></td>
+    <td><%= patient.work %></td>
+    <td><%= patient.email %></td>
+    <td><%= patient.height %></td>
+    <td><%= patient.weight %></td>
+    <td><%= patient.m_stat %></td>
+    <td><%= patient.occup %></td>
+    <td><%= patient.company %></td>
+    <td><%= patient.referred %></td>
+    <td><%= patient.comp1 %></td>
+    <td><%= patient.comp2 %></td>
+    <td><%= patient.comp3 %></td>
+    <td><%= patient.d_onset %></td>
+    <td><%= patient.pain_scale %></td>
+    <td><%= patient.diag_given %></td>
+    <td><%= patient.aq_b4 %></td>
+    <td><%= patient.di_list %></td>
+    <td><%= patient.o_dis %></td>
+    <td><%= patient.last_prd %></td>
+    <td><%= patient.preg %></td>
+    <td><%= patient.preg_wks %></td>
+    <td><%= link_to 'Show', [patient.regi, patient] %></td>
+    <td><%= link_to 'Edit', edit_regi_patient_path(patient.regi, patient) %></td>
+    <td><%= link_to 'Destroy', [patient.regi, patient], method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Patient', new_regi_patient_path(params[:regi_id]) %>

@@ -1,0 +1,20 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>F date:</b>
+  <%= @filing.f_date %>
+</p>
+
+<p>
+  <b>Image:</b>
+  <%= @filing.image %>
+</p>
+
+<p>
+  <b>Describe:</b>
+  <%= @filing.describe %>
+</p>
+
+
+<%= link_to 'Edit', edit_regi_filing_path(@filing.regi, @filing) %> |
+<%= link_to 'Back', regi_filings_path(@filing.regi) %>

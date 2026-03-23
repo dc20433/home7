@@ -1,0 +1,29 @@
+<%= form_with(model: [@filing.regi, @filing]) do |f| %>
+  <% if @filing.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@filing.errors.count, "error") %> prohibited this filing from being saved:</h2>
+
+      <ul>
+      <% @filing.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :f_date %><br />
+    <%= f.date_field :f_date %>
+  </div>
+  <div class="field">
+    <%= f.label :image %><br />
+    <%= f.text_field :image %>
+  </div>
+  <div class="field">
+    <%= f.label :describe %><br />
+    <%= f.textarea :describe %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
