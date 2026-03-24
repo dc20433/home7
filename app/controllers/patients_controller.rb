@@ -1,4 +1,5 @@
 class PatientsController < ApplicationController
+  #before_action :authenticate_user!
   before_action :set_regi
   before_action :set_patient, only: [:show, :edit, :update, :destroy]
 
@@ -13,7 +14,11 @@ class PatientsController < ApplicationController
 
   # GET regis/1/patients/new
   def new
-    @patient = @regi.patients.build
+    if defined?(Patient.where(regi_id: params[:regi_id]).last.id)
+      @patient = @regi.patients.order('v_date ASC').last.dup
+    else
+      @patient = @regi.patients.build
+    end
   end
 
   # GET regis/1/patients/1/edit
@@ -25,7 +30,8 @@ class PatientsController < ApplicationController
     @patient = @regi.patients.build(patient_params)
 
     if @patient.save
-      redirect_to([@patient.regi, @patient], notice: 'Patient was successfully created.')
+      redirect_to regi_patients_path(@regi), notice:'Patient Record Created...'
+      #redirect_to consent_path, notice: "Patient Record Created..."
     else
       render action: 'new'
     end
@@ -34,7 +40,7 @@ class PatientsController < ApplicationController
   # PUT regis/1/patients/1
   def update
     if @patient.update(patient_params)
-      redirect_to([@patient.regi, @patient], notice: 'Patient was successfully updated.')
+      redirect_to regi_patients_path(@regi), notice:'Patient Record Updated...'
     else
       render action: 'edit'
     end
@@ -43,8 +49,7 @@ class PatientsController < ApplicationController
   # DELETE regis/1/patients/1
   def destroy
     @patient.destroy
-
-    redirect_to regi_patients_url(@regi)
+    redirect_to regi_patients_path(@regi), notice: "Patient Record Deleted..."
   end
 
   private
@@ -59,6 +64,6 @@ class PatientsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def patient_params
-      params.require(:patient).permit(:v_date, :name, :street, :city, :state, :zip, :cell, :home, :work, :email, :height, :weight, :m_stat, :occup, :company, :referred, :comp1, :comp2, :comp3, :d_onset, :pain_scale, :diag_given, :aq_b4, :di_list, :o_dis, :last_prd, :preg, :preg_wks)
+      params.require(:patient).permit(:v_date, :m_stat, :weight, :height, :street, :city, :state, :zip, :cell, :home, :work, :email, :referred, :comp1, :comp2, :comp3, :d_onset, :pain_scale, :diag_given, :aq_b4, :o_dis, :last_prd, :preg, :preg_wks, :regi_id, di_list:[])
     end
 end

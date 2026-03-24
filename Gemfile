@@ -70,3 +70,4 @@ gem "nested_scaffold"
 gem 'ransack'
 gem "bootstrap", "~> 5.3.3"
 gem "dartsass-rails"
+

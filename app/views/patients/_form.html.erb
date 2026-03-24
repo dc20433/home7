@@ -1,129 +1,170 @@
-<%= form_with(model: [@patient.regi, @patient]) do |f| %>
-  <% if @patient.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@patient.errors.count, "error") %> prohibited this patient from being saved:</h2>
+<%# render "layouts/navbar" %>
 
-      <ul>
-      <% @patient.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
+  <%= form_with(model: [@regi, @patient]) do |f| %>
+    <% if @patient.errors.any? %>
+      <div id="error_explanation">
+        <h2><%= pluralize(@patient.errors.count, "error") %> prohibited this patient from being saved:</h2>
+
+        <ul>
+        <% @patient.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <%# f.text_field :name, value: (@regi.last_name + ", " + @regi.first_name + " " + (@regi.init? ? (@regi.init + ".") : '' )), hidden: true %>
+  
+    <div class="row fs-6">
+      <div class="col-md-2">
+        <b><%= f.label :v_date, "Updated on", class:"form-label mt-1 mb-0" %></b>
+        <%= f.date_field :v_date, placeholder: "MM/DD/YYYY", class: "form-control form-control-sm form-control-sm border-primary fs-4" %>
+      </div>
+      <div class="col-md-4">
+        <b><%= f.label :street, "Street", class:"form-label mt-1 mb-0" %></b>
+        <%= f.text_field :street, class: "form-control form-control-sm border-primary fs-4" %>
+      </div>
+      <div class="col-md-3">
+        <b><%= f.label :city, "City", class:"form-label mt-1 mb-0" %></b>
+        <%= f.text_field :city, class: "form-control form-control-sm border-primary fs-4" %>
+      </div>
+      <div class="col-md-1">
+        <b><%= f.label :state, "State", class:"form-label mt-1 mb-0" %></b>
+        <%= f.text_field :state, class: "form-control form-control-sm border-primary fs-4" %>
+      </div>
+      <div class="col-md-2">
+        <b><%= f.label :zip, "Zip Code", class:"form-label mt-1 mb-0" %></b>
+        <%= f.text_field :zip, class: "form-control form-control-sm border-primary fs-4" %>
+      </div>
+      
     </div>
-  <% end %>
 
-  <div class="field">
-    <%= f.label :v_date %><br />
-    <%= f.date_field :v_date %>
+    <div class="row fs-6">
+      <div class="col-md-3">
+        <b><%= f.label :cell, "Cell Phone", class:"form-label mt-1 mb-0" %></b>
+        <%= f.text_field :cell, class: "form-control form-control-sm border-primary fs-4" %>
+      </div>
+      <div class="col-md-3">
+        <b><%= f.label :home, "Home Phone", class:"form-label mt-1 mb-0" %></b>
+        <%= f.text_field :home, class: "form-control form-control-sm border-primary fs-4" %>
+      </div>
+      <div class="col-md-3">
+        <b><%= f.label :work, "Work Phone", class:"form-label mt-1 mb-0" %></b>
+        <%= f.text_field :work, class: "form-control form-control-sm border-primary fs-4" %>
+      </div>
+      <div class="col-md-3">
+        <b><%= f.label :email, "Email", class:"form-label mt-1 mb-0" %></b>
+        <%= f.email_field :email, class: "form-control form-control-sm border-primary fs-4" %>
+      </div>
+      
+    </div>
+
+    <div class="row fs-6">
+    <div class="col-md-2">
+      <b><%= f.label :height, "Height", class:"form-label mt-1 mb-0" %></b>
+      <%= f.number_field :height, step: 0.1, class: "form-control form-control-sm border-primary fs-4" %>
+    </div>
+    <div class="col-md-2">
+      <b><%= f.label :weight, "Weight", class:"form-label mt-1 mb-0" %></b>
+      <%= f.number_field :weight, step: 0.1, class: "form-control form-control-sm border-primary fs-4" %>
+    </div>
+    <div class="col-md-2">
+      <b><%= f.label :m_stat, "Marital Status", class:"form-label mt-1 mb-0" %></b><br>
+      <%= f.select :m_stat, Patient::MARITAL_STATUS, class: "form-select" %>
+    </div>
+
+    <div class="col-md-2">
+    <b><%= f.label :occup, "Occupation", class:"form-label mt-1 mb-0" %></b>
+    <%= f.text_field :occup, class: "form-control form-control-sm border-primary fs-4" %>
+  </div> 
+  <div class="col-md-2">
+    <b><%= f.label :company, "Company", class:"form-label mt-1 mb-0" %></b>
+    <%= f.text_field :company, class: "form-control form-control-sm border-primary fs-4" %>
+  </div> 
+  <div class="col-md-2">
+    <b><%= f.label :referred, "Referred by", class:"form-label mt-1 mb-0" %></b>
+    <%= f.text_field :referred, class: "form-control form-control-sm border-primary fs-4" %>
+  </div> 
+
   </div>
-  <div class="field">
-    <%= f.label :name %><br />
-    <%= f.text_field :name %>
-  </div>
-  <div class="field">
-    <%= f.label :street %><br />
-    <%= f.text_field :street %>
-  </div>
-  <div class="field">
-    <%= f.label :city %><br />
-    <%= f.text_field :city %>
-  </div>
-  <div class="field">
-    <%= f.label :state %><br />
-    <%= f.text_field :state %>
-  </div>
-  <div class="field">
-    <%= f.label :zip %><br />
-    <%= f.text_field :zip %>
-  </div>
-  <div class="field">
-    <%= f.label :cell %><br />
-    <%= f.text_field :cell %>
-  </div>
-  <div class="field">
-    <%= f.label :home %><br />
-    <%= f.text_field :home %>
-  </div>
-  <div class="field">
-    <%= f.label :work %><br />
-    <%= f.text_field :work %>
-  </div>
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.text_field :email %>
-  </div>
-  <div class="field">
-    <%= f.label :height %><br />
-    <%= f.text_field :height %>
-  </div>
-  <div class="field">
-    <%= f.label :weight %><br />
-    <%= f.text_field :weight %>
-  </div>
-  <div class="field">
-    <%= f.label :m_stat %><br />
-    <%= f.text_field :m_stat %>
-  </div>
-  <div class="field">
-    <%= f.label :occup %><br />
-    <%= f.text_field :occup %>
-  </div>
-  <div class="field">
-    <%= f.label :company %><br />
-    <%= f.text_field :company %>
-  </div>
-  <div class="field">
-    <%= f.label :referred %><br />
-    <%= f.text_field :referred %>
-  </div>
-  <div class="field">
-    <%= f.label :comp1 %><br />
-    <%= f.text_field :comp1 %>
-  </div>
-  <div class="field">
-    <%= f.label :comp2 %><br />
-    <%= f.text_field :comp2 %>
-  </div>
-  <div class="field">
-    <%= f.label :comp3 %><br />
-    <%= f.text_field :comp3 %>
-  </div>
-  <div class="field">
-    <%= f.label :d_onset %><br />
-    <%= f.text_field :d_onset %>
-  </div>
-  <div class="field">
-    <%= f.label :pain_scale %><br />
-    <%= f.text_field :pain_scale %>
-  </div>
-  <div class="field">
-    <%= f.label :diag_given %><br />
-    <%= f.text_field :diag_given %>
-  </div>
-  <div class="field">
-    <%= f.label :aq_b4 %><br />
-    <%= f.text_field :aq_b4 %>
-  </div>
-  <div class="field">
-    <%= f.label :di_list %><br />
-    <%= f.text_field :di_list %>
-  </div>
-  <div class="field">
-    <%= f.label :o_dis %><br />
-    <%= f.text_field :o_dis %>
-  </div>
-  <div class="field">
-    <%= f.label :last_prd %><br />
-    <%= f.text_field :last_prd %>
-  </div>
-  <div class="field">
-    <%= f.label :preg %><br />
-    <%= f.text_field :preg %>
-  </div>
-  <div class="field">
-    <%= f.label :preg_wks %><br />
-    <%= f.text_field :preg_wks %>
-  </div>
-  <div class="actions">
-    <%= f.submit %>
-  </div>
-<% end %>
+
+    <div class="row fs-6">
+      <div class="col-md-4">
+        <b><%= f.label :comp1, "Complaint 1", class:"form-label mt-1 mb-0" %></b>
+        <%= f.text_field :comp1, class: "form-control form-control-sm border-primary fs-4" %>
+      </div>
+      <div class="col-md-4">
+        <b><%= f.label :comp2, "Complaint 2", class:"form-label mt-1 mb-0" %></b>
+        <%= f.text_field :comp2, class: "form-control form-control-sm border-primary fs-4" %>
+      </div>
+      <div class="col-md-4">
+        <b><%= f.label :comp3, "Complaint 3", class:"form-label mt-1 mb-0" %></b>
+        <%= f.text_field :comp3, class: "form-control form-control-sm border-primary fs-4" %>
+      </div>
+    </div>
+
+    <div class="row fs-6">
+      <div class="col-md-2">
+        <b><%= f.label :d_onset, "Date Onset", class:"form-label mt-1 mb-0" %></b>
+        <%= f.date_field :d_onset, class: "form-control form-control-sm border-primary fs-4" %>
+      </div>
+      <div class="col-md-2">
+        <b><%= f.label :pain_scale, "Pain Scale 1-10", class:"form-label mt-1 mb-0" %></b>
+        <%= f.number_field :pain_scale, in: 0..10, class: "form-control form-control-sm border-primary fs-4" %>
+      </div>
+      <div class="col-md-5">
+        <b><%= f.label :diag_given, "Any diagnoses given?", class:"form-label mt-1 mb-0" %></b>
+        <%= f.text_field :diag_given, class: "form-control form-control-sm border-primary fs-4" %>
+      </div>
+      <div class="col-md-3">
+        <b><%= f.label :aq_b4, "Had acupunture?", class:"form-label mt-1 mb-0" %></b><br>
+        <%= f.select :aq_b4, Patient::ACU_BEFORE, class: "form-control form-control-sm border-primary fs-4" %>
+      </div>
+    </div>
+
+    <div class="row fs-6">
+      <div class="col-md-12 fs-4">
+        <b><%= f.label :di_list, "Major Health Issues:", class:"form-label mt-2 mb-0 fs-6" %></b><br>
+        
+        <% Patient::HEALTH.each do |h| %>
+          <%= f.check_box :di_list, { multiple: true, checked: f.object.di_list&.include?(h.to_s)}, h, nil %>
+          <%= f.label h %>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="row fs-6">
+      <div class="col-md-12">
+        <b><%= f.label :o_dis, "Other Issues", class:"form-label mt-1 mb-0" %></b>
+        <%= f.text_field :o_dis, class: "form-control form-control-sm border-primary fs-4" %>
+      </div>
+    </div>
+
+    <div class="row mt-2 pb-0 fs-6">
+      <i>Female patient only:</i>
+      <div class="col-md-3">
+        <b><%= f.label :last_prd, "Date last period", class:"form-label mt-1 mb-0" %></b>
+        <%= f.date_field :last_prd, class: "form-control form-control-sm border-primary fs-4" %>
+      </div>
+      <div class="col-md-3">
+        <b><%= f.label :preg, "Are you pregnant?", class:"form-label mt-1 mb-0 select-label" %></b><br>
+        <%= f.select :preg, Patient::PREG, class: "pt-3 form-select form-select-lg border-primary fs-4" %>
+      
+        </div>
+      <div class="col-md-2">
+        <b><%= f.label :preg_wks, "In weeks?", class:"form-label mt-1 mb-0" %></b>
+        <%= f.number_field :preg_wks, class: "form-control form-control-sm border-primary fs-4" %>
+      </div>
+    </div>
+    <br>
+
+    
+
+    <div class="btn-group" role="group">
+      
+        <%= f.submit "Submit", data: { burbo: false}, class:'btn btn-success btn-sm m-2 ps-4 pe-4 rounded-pill' %>
+  <% end %>
+      
+        <%= button_to 'Delete', [@regi,@patient], method: :delete, class:"btn btn-danger btn-sm rounded-pill px-3 m-2 fw-bold", form: { data: { turbo_confirm: 'Are you sure?' }  } %>
+        <%= link_to "Previous Page", :back, class:'btn btn-success btn-sm rounded-pill px-3 m-2 fw-bold' %>
+    </div>
