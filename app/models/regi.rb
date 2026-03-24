@@ -1,4 +1,5 @@
 class Regi < ApplicationRecord
+  has_many :filings
   has_many :filings, dependent: :destroy
   has_many :patients, dependent: :destroy
   has_many :charts, dependent: :destroy

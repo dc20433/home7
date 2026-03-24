@@ -1,4 +1,5 @@
 class FilingsController < ApplicationController
+  #before_action :authenticate_user!
   before_action :set_regi
   before_action :set_filing, only: [:show, :edit, :update, :destroy]
 
@@ -25,16 +26,16 @@ class FilingsController < ApplicationController
     @filing = @regi.filings.build(filing_params)
 
     if @filing.save
-      redirect_to([@filing.regi, @filing], notice: 'Filing was successfully created.')
+      redirect_to regi_filings_path(@regi,@filing), notice: 'Patient File created...'
     else
       render action: 'new'
     end
   end
-
+  
   # PUT regis/1/filings/1
   def update
     if @filing.update(filing_params)
-      redirect_to([@filing.regi, @filing], notice: 'Filing was successfully updated.')
+      redirect_to regi_filings_path(@regi,@filing), notice: 'Patient File changed...'
     else
       render action: 'edit'
     end
@@ -59,6 +60,6 @@ class FilingsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def filing_params
-      params.require(:filing).permit(:f_date, :image, :describe)
+      params.require(:filing).permit(:u_date, :f_date, :title, :describe, :regi_id, :image)
     end
 end

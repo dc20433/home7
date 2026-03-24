@@ -1,20 +1,28 @@
-<p id="notice"><%= notice %></p>
 
-<p>
-  <b>F date:</b>
-  <%= @filing.f_date %>
-</p>
+  <%= render 'layouts/identifier' %>
 
-<p>
-  <b>Image:</b>
-  <%= @filing.image %>
-</p>
+  <table class="table table-sm table-striped table-hover mt-1">
+    <thead class="table-info">
+      <tr>
+        <th>Uploaded on</th>
+        <th>File Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="height:15px">
+        <td><%= @filing.u_date %></td>
+        <td><%= @filing.title %></td>
+        <td><%= @filing.describe %></td>
+      </tr>
+    </tbody>
+  </table>
 
-<p>
-  <b>Describe:</b>
-  <%= @filing.describe %>
-</p>
-
-
-<%= link_to 'Edit', edit_regi_filing_path(@filing.regi, @filing) %> |
-<%= link_to 'Back', regi_filings_path(@filing.regi) %>
+  <div class="btn-group" role="group">
+    <% if @filing.image.attached? %>
+      <%= link_to 'View File', @filing.image, class: "btn btn-sm btn-success m-2 rounded-pill" %>
+    <% end %>
+    <%= link_to 'Change', edit_regi_filing_path(@filing.regi, @filing), class: "btn btn-sm btn-warning m-2 rounded-pill" %>
+    <%= button_to "Delete", [@regi,@filing], method: :delete, class:"btn btn-sm btn-danger m-2 rounded-pill", form: { data: { turbo_confirm: "Are you sure?" } } %>
+    <%= link_to 'Return', regi_filings_path(@filing.regi), class: "btn btn-sm btn-primary m-2 rounded-pill" %>
+  </div>

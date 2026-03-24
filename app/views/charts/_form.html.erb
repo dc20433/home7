@@ -41,8 +41,8 @@
   </div>
   <br>
   <div class="btn-group" role="group">
-    <%= f.submit "Submit", class: "btn btn-sm btn-primary rounded-pill px-3 m-2 fw-bold" %>
+    <%= f.submit "Submit", class: "btn btn-sm btn-success border border-dark rounded-pill px-3 m-2 fw-bold" %>
 <% end %>
-  <%= button_to "Delete", [@regi,@chart], method: :delete, class:"btn btn-sm btn-danger rounded-pill px-3 m-2 fw-bold", form: { data: { turbo_confirm: "Are you sure?" } } %>
-  <%= link_to 'Retun', :back, class:"btn btn-sm btn-success rounded-pill px-3 m-2 fw-bold" %>
+  <%= button_to "Delete", [@regi,@chart], method: :delete, class:"btn btn-sm btn-danger border border-dark rounded-pill px-3 m-2 fw-bold", form: { data: { turbo_confirm: "Are you sure?" } } %>
+  <%= link_to 'Return', :back, class:"btn btn-sm btn-info border border-dark rounded-pill px-3 m-2 fw-bold" %>
   </div>
