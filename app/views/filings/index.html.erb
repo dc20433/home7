@@ -1,27 +1,56 @@
-<h1>Listing filings</h1>
+<%# render "layouts/navbar" %>
 
-<table>
-  <tr>
-    <th>F date</th>
-    <th>Image</th>
-    <th>Describe</th>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
+<div 
+  class="screen"
+  style="background-image: url(<%= asset_path 'pine_trees.jpg' %> );">
+  <div class="color-overlay d-flex justify-content-center">    
+    <div class="card mt-3 mx-auto border-primary" style="width: 48rem;">
+        <div class="card shadow border-dark">
+          <div class="card-header">
+            <h1 class="text-center">Patient Files</h1>
+            <%= render 'layouts/identifier' %>
+          </div>
+          <div class="card-body">
+            <%= link_to 'New Filing', new_regi_filing_path(params[:regi_id]), class: "btn btn-sm btn-outline-dark outline-double rounded-pill px-2 py-0 m-1 fw-bold" %>
+            <%= link_to 'Patient Info', regi_patients_path, class:"btn btn-sm btn-outline-info outline-double rounded-pill px-2 py-0 m-1 fw-bold" %>
+            <%= link_to 'Patient Charts', regi_charts_path, class:"btn btn-sm btn-outline-primary outline-double rounded-pill px-2 py-0 m-1 fw-bold" %>
+            <%= link_to 'All Patients', regis_path, class:"btn btn-sm btn-outline-secondary outline-double rounded-pill px-2 py-0 m-1 fw-bold" %>
+            <%= link_to 'Previous Page', :back, class:"btn btn-sm btn-outline-success outline-double rounded-pill px-2 py-0 m-1 fw-bold" %>
 
-<% @filings.each do |filing| %>
-  <tr>
-    <td><%= filing.f_date %></td>
-    <td><%= filing.image %></td>
-    <td><%= filing.describe %></td>
-    <td><%= link_to 'Show', [filing.regi, filing] %></td>
-    <td><%= link_to 'Edit', edit_regi_filing_path(filing.regi, filing) %></td>
-    <td><%= link_to 'Destroy', [filing.regi, filing], method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
-
-<br />
-
-<%= link_to 'New Filing', new_regi_filing_path(params[:regi_id]) %>
+            <table class="table table-sm table-striped table-hover mt-1">
+              <thead class="table-info fs-6">
+                <tr>
+                  <th>File</th>
+                  <th>Description</th>
+                  <th>Uploaded at</th>
+                  <th style="width:220px"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @regi.filings.order("created_at DESC").each do |filing| %>
+                  <tr>
+                    <td>
+                      <% if filing.image.attached? && filing.image.image? %>
+                        <%= image_tag filing.image, height: "25px" %>
+                      <% else %>
+                        <%= 'PDF' %>
+                      <% end %>
+                    </td>
+                    <td><%= filing.describe %></td>
+                    <td><%= (filing.created_at - 5*3600).strftime("%Y-%m-%d, %H:%M") %></td>
+                    <td>
+                      <div class="btn-group" role="group">
+                      <%= link_to 'View', filing.image, class: "btn btn-sm btn-primary shadow border border-dark rounded-pill px-3 m-2 fw-bold" %>
+                      <%= link_to 'Change', edit_regi_filing_path(@regi,filing), class: "btn btn-sm btn-info shadow border border-dark rounded-pill px-3 m-2 fw-bold" %>
+                      <%= button_to "Delete", [@regi,filing], method: :delete, class:"btn btn-sm btn-danger shadow border border-dark rounded-pill px-3 m-2 fw-bold", form: { data: { turbo_confirm: "Are you sure?" } } %>
+                      </div>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+  </div>
+</div>

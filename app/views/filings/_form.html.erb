@@ -1,29 +1,44 @@
-<%= form_with(model: [@filing.regi, @filing]) do |f| %>
-  <% if @filing.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@filing.errors.count, "error") %> prohibited this filing from being saved:</h2>
+<div 
+  class="screen"
+  style="background-image: url(<%= asset_path 'pine_trees.jpg' %> );">
+  <div class="color-overlay d-flex justify-content-center mt-5 pt-5">
+    
+    <div class="card mt-3 mx-auto border-primary" style="width: 33rem;">
+        <div class="card shadow border-dark">
+          <div class="card-header">
+            <h2 class="card-title text-center">Filing</h2>
+            <h3><%= render 'layouts/identifier' %></h3>
+          </div>
+          <div class="card-body">
+            <%= form_for([@filing.regi, @filing]) do |f| %>
+              <% if @filing.errors.any? %>
+                <div id="error_explanation">
+                  <h2><%= pluralize(@filing.errors.count, "error") %> prohibited this filing from being saved:</h2>
 
-      <ul>
-      <% @filing.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
+                  <ul>
+                  <% @filing.errors.full_messages.each do |msg| %>
+                    <li><%= msg %></li>
+                  <% end %>
+                  </ul>
+                </div>
+              <% end %>
 
-  <div class="field">
-    <%= f.label :f_date %><br />
-    <%= f.date_field :f_date %>
+              <div class="field"><br>
+                <%= f.file_field :image,  class:'form-control border-primary' %>
+              </div><br>
+              
+              <div class="field fs-6">
+                <b><%= f.label :describe, "File Description" %></b><br>
+                <%= f.text_area :describe,  class:'form-control border-primary fs-4' %>
+              </div>
+
+              <div class="actions">
+                <%= f.submit "Submit", class: "btn btn-sm btn-success shadow border border-dark rounded-pill px-3 m-2 fw-bold" %>
+                <%= link_to 'Return', regi_filings_path(@filing.regi), class: "btn btn-sm btn-info shadow border border-dark rounded-pill px-3 m-2 fw-bold" %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
   </div>
-  <div class="field">
-    <%= f.label :image %><br />
-    <%= f.text_field :image %>
-  </div>
-  <div class="field">
-    <%= f.label :describe %><br />
-    <%= f.textarea :describe %>
-  </div>
-  <div class="actions">
-    <%= f.submit %>
-  </div>
-<% end %>
+</div>

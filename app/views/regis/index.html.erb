@@ -12,7 +12,7 @@
           </div>
           <div class="card-body">
 
-            <%= link_to "New Patient", new_regi_path, class: "btn btn-sm btn-outline-dark outline-double rounded-pill px-3 py-0 fw-bold"  %>
+            <%= link_to "New Patient", new_regi_path, class: "btn btn-sm btn-outline-dark outline-double rounded-pill px-2 py-0 fw-bold"  %>
             <%= render 'search' %>
             <table class="table table-sm table-striped table-hover mx-auto mt-1">
               <thead class="table-primary fs-6 pt">
@@ -38,9 +38,9 @@
                 <td><%= regi.dob? ? ((Time.now.in_time_zone("America/New_York") - regi.dob.to_time) / 1.year.seconds).floor : " " %></td>
                 <td><%= regi.dob %></td>                
                 <td>                
-                  <%= link_to 'Info', regi_patients_path(regi.id), class: "btn btn-outline-primary btn-sm outline-double rounded-pill px-2 py-0 fw-bold" %>
-                  <%= link_to 'Charts', regi_charts_path(regi.id), class: "btn btn-outline-info btn-sm outline-double rounded-pill px-1 py-0 fw-bold" %>
-                  <%= link_to 'Files', regi_filings_path(regi.id), class: "btn btn-outline-success btn-sm outline-double rounded-pill px-2 py-0 fw-bold" %>
+                  <%= link_to 'Info', regi_patients_path(regi.id), class: "btn btn-sm btn-info border border-dark  rounded-pill px-2 py-0 fw-bold" %>
+                  <%= link_to 'Charts', regi_charts_path(regi.id), class: "btn btn-sm btn-primary border border-dark rounded-pill px-1 py-0 fw-bold" %>
+                  <%= link_to 'Files', regi_filings_path(regi.id), class: "btn btn-sm btn-success border border-dark rounded-pill px-2 py-0 fw-bold" %>
                 </td>
               </tr>
               <% end %>

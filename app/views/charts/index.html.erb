@@ -4,9 +4,10 @@
   <%= render 'layouts/identifier' %>
 
   <%= link_to 'New Chart', new_regi_chart_path, class: "btn btn-sm btn-outline-dark outline-double rounded-pill px-2 py-0 m-1 fw-bold" %>
-  <%= link_to 'Patient Info', regi_patients_path, class:"btn btn-sm btn-outline-primary outline-double rounded-pill px-2 py-0 m-1 fw-bold" %>
-  <%= link_to 'Patient Files', regi_filings_path, class:"btn btn-sm btn-outline-info outline-double rounded-pill px-2 py-0 m-1 fw-bold" %>
-  <%= link_to 'Previous Page', :back, class:"btn btn-sm btn-outline-secondary outline-double rounded-pill px-2 py-0 m-1 fw-bold" %>
+  <%= link_to 'Patient Info', regi_patients_path, class:"btn btn-sm btn-outline-info outline-double rounded-pill px-2 py-0 m-1 fw-bold" %>
+  <%= link_to 'Patient Files', regi_filings_path, class:"btn btn-sm btn-outline-primary outline-double rounded-pill px-2 py-0 m-1 fw-bold" %>
+  <%= link_to 'All Patients', regis_path, class:"btn btn-sm btn-outline-secondary outline-double rounded-pill px-2 py-0 m-1 fw-bold" %>
+  <%= link_to 'Previous Page', :back, class:"btn btn-sm btn-outline-dark outline-double rounded-pill px-2 py-0 m-1 fw-bold" %>
   <button onclick="window.print()", class="btn btn-sm btn-outline-success outline-double rounded-pill px-2 py-0 m-1 fw-bold" >Print This Page</button>
 
   <table class="table table-sm table-striped table-hover mt-1">
