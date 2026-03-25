@@ -13,7 +13,8 @@
   <table class="table table-sm table-striped table-hover mt-1">
     <thead class="table-info fs-6">
       <tr>
-        <th style="width:145px">Dated on</th>
+        <th style="width:145px">Created on</th>
+        <th style="width:145px">Updated on</th>
         <th style="width:20vw">Subjective</th>
         <th style="width:10vw">Objective</th>
         <th style="width:10vw">Assessment</th>
@@ -23,6 +24,7 @@
     </tbody>
       <% @regi.charts.order("t_date DESC").each do |chart| %>
         <tr style="height:15px">
+          <td><%= (chart.created_at - 5*3600).strftime("%Y-%m-%d, %H:%M") %></td>
           <td><%= link_to chart.t_date, regi_chart_path(@regi,chart) %></td>
           <td><%= chart.subj %></td>
           <td><%= chart.obj %></td>

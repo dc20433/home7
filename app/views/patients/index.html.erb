@@ -14,7 +14,8 @@
     <table class="table table-sm table-striped table-hover mt-1">
     <thead class="table-success fs-6">
     <tr>
-        <th style="width:105px">Dated on</th>
+        <th style="width:105px">Created on</th>
+        <th style="width:105px">Updated on</th>
         <th>Contact Info</th>
         <th>Weight</th>
         <th>Complaints</th>
@@ -29,9 +30,10 @@
       <% @regi.patients.order("v_date DESC").each do |patient| %>
         <tr>
           <td>
-            
+            <%= (patient.created_at - 5*3600).strftime("%Y-%m-%d, %H:%M") %>
+          </td>
+          <td>
               <%= link_to patient.v_date, regi_patient_path(@regi,patient) %>
-
           </td>  
           <td>
             <%= patient.street %><%= ', ' if patient.street? %>

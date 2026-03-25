@@ -20,15 +20,18 @@
             <table class="table table-sm table-striped table-hover mt-1">
               <thead class="table-info fs-6">
                 <tr>
+                  <th>Created on</th>
+                  <th>Updated on</th>
                   <th>File</th>
                   <th>Description</th>
-                  <th>Uploaded at</th>
                   <th style="width:220px"></th>
                 </tr>
               </thead>
               <tbody>
                 <% @regi.filings.order("created_at DESC").each do |filing| %>
                   <tr>
+                  <td><%= (filing.created_at - 5*3600).strftime("%Y-%m-%d, %H:%M") %></td>
+                  <td><%= filing.f_date %></td>
                     <td>
                       <% if filing.image.attached? && filing.image.image? %>
                         <%= image_tag filing.image, height: "25px" %>
@@ -37,7 +40,6 @@
                       <% end %>
                     </td>
                     <td><%= filing.describe %></td>
-                    <td><%= (filing.created_at - 5*3600).strftime("%Y-%m-%d, %H:%M") %></td>
                     <td>
                       <div class="btn-group" role="group">
                       <%= link_to 'View', filing.image, class: "btn btn-sm btn-primary shadow border border-dark rounded-pill px-3 m-2 fw-bold" %>

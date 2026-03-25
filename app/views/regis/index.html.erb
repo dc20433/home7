@@ -17,26 +17,25 @@
             <table class="table table-sm table-striped table-hover mx-auto mt-1">
               <thead class="table-primary fs-6 pt">
                 <tr>
-                
                   <th>Last Name</th>
                   <th>First Name</th>
                   <th>M.I.</th>
                   <th>Gender</th>
                   <th>Age</th>
-                  <th style="width:160px">Date of Birth</th>
-                  <th  style="width:190px"></th>
+                  <th>Date of Birth</th>
+                  <th style="width:160px">Created on</th>
+                  <th style="width:185px"></th>
                 </tr>
               </thead>
             <% @regis.each do |regi| %>
-
               <tr>
-              
                 <td><%= link_to regi.last_name, regi_path(regi.id) %></td>
                 <td><%= regi.first_name %></td>
                 <td><%= regi.init? ? regi.init + "." : "" %></td>
                 <td><%= regi.gender %></td>
                 <td><%= regi.dob? ? ((Time.now.in_time_zone("America/New_York") - regi.dob.to_time) / 1.year.seconds).floor : " " %></td>
-                <td><%= regi.dob %></td>                
+                <td><%= regi.dob %></td>
+                <td><%= (regi.created_at - 5*3600).strftime("%Y-%m-%d, %H:%M") %></td>              
                 <td>                
                   <%= link_to 'Info', regi_patients_path(regi.id), class: "btn btn-sm btn-info border border-dark  rounded-pill px-2 py-0 fw-bold" %>
                   <%= link_to 'Charts', regi_charts_path(regi.id), class: "btn btn-sm btn-primary border border-dark rounded-pill px-1 py-0 fw-bold" %>
