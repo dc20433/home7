@@ -1,0 +1,37 @@
+
+#<%# render "layouts/navbar" %>
+
+  <h2 class="text-center">Patient Charts by Date as of <%= Time.now.in_time_zone("America/New_York").strftime("%Y-%m-%d %H:%M") %></h2>
+  
+  <button onclick="window.print()", class="btn btn-sm btn-outline-success outline-double rounded-pill px-3 py-0 fw-bold">Print This Page</button>
+
+  <table class="table table-sm table-striped table-hover mt-2">
+    <thead class="table-info fs-6">
+      <tr>
+        <th style="width:150px">Date</th>
+        <th style="width:12vw">Name</th>
+        <th style="width:18vw">Subjective</th>
+        <th style="width:12vw">Objective</th>
+        <th style="width:10vw">Assessment</th>
+        <th style="width:36vw">Plan</th>
+      </tr>
+    </thead>
+    </tbody>
+        <% @date = 0 %>
+        <% @chart_date.each do |chart| %>
+        <% @name = '' %>
+        <% @name = Regi.find(id=chart.regi_id).last_name + ", " + Regi.find(id=chart.regi_id).first_name + " " + Regi.find(id=chart.regi_id).init %>
+          <tr style="height:15px" class="fs-4">
+            <% @date != chart.t_date ? show_date = chart.t_date : show_date = " " %>
+            <td><%= show_date %></td> 
+            <% @date = chart.t_date %>
+            <td><%= link_to chart.name, regi_charts_path(chart.regi_id) %></td>
+            <td><%= chart.subj %></td>
+            <td><%= chart.obj %></td>
+            <td><%= chart.assess %></td>
+            <td><%= chart.plan %></td>
+          </tr>
+        <% end %>
+    </tbody>
+  </table>
+

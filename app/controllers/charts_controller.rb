@@ -63,6 +63,6 @@ class ChartsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def chart_params
-      params.require(:chart).permit(:t_date, :subj, :obj, :assess, :plan, :regi_id)
+      params.require(:chart).permit(:name, :t_date, :subj, :obj, :assess, :plan, :regi_id)
     end
 end
