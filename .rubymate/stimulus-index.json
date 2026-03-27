@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "indexedAt": 1774451132379,
+  "controllers": {
+    "hello": {
+      "filePath": "/home/jz/rails/home7/app/javascript/controllers/hello_controller.js",
+      "targets": [],
+      "values": [],
+      "outlets": [],
+      "actions": [],
+      "classes": [],
+      "mtime": 1774446342180.1377
+    }
+  }
+}

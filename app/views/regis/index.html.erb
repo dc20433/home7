@@ -14,6 +14,10 @@
 
             <%= link_to "New Patient", new_regi_path, class: "btn btn-sm btn-outline-dark outline-double rounded-pill px-2 py-0 fw-bold"  %>
             <%= render 'search' %>
+            <%= link_to 'All Charts by Date', overviews_chart_date_path, class:"btn btn-sm btn-outline-danger outline-double rounded-pill px-2 py-0 m-1 fw-bold" %>
+            <%= link_to 'All Charts by Name', overviews_chart_name_path, class:"btn btn-sm btn-outline-secondary outline-double rounded-pill px-2 py-0 m-1 fw-bold" %>
+            <%= link_to 'All Patient Info', overviews_patient_info_path, class:"btn btn-sm btn-outline-success outline-double rounded-pill px-2 py-0 m-1 fw-bold" %>
+
             <table class="table table-sm table-striped table-hover mx-auto mt-1">
               <thead class="table-primary fs-6 pt">
                 <tr>
@@ -37,7 +41,7 @@
                 <td><%= regi.dob %></td>
                 <td><%= (regi.created_at - 5*3600).strftime("%Y-%m-%d, %H:%M") %></td>              
                 <td>                
-                  <%= link_to 'Info', regi_patients_path(regi.id), class: "btn btn-sm btn-info border border-dark  rounded-pill px-2 py-0 fw-bold" %>
+                  <%= link_to 'Info', regi_patients_path(regi.id), class: "btn btn-sm btn-warning border border-lg border-dark  rounded-pill px-2 py-0 fw-bold" %>
                   <%= link_to 'Charts', regi_charts_path(regi.id), class: "btn btn-sm btn-primary border border-dark rounded-pill px-1 py-0 fw-bold" %>
                   <%= link_to 'Files', regi_filings_path(regi.id), class: "btn btn-sm btn-success border border-dark rounded-pill px-2 py-0 fw-bold" %>
                 </td>

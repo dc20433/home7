@@ -1,11 +1,15 @@
 
-#<%# render "layouts/navbar" %>
+<%# render "layouts/navbar" %>
 
   <h2 class="text-center">Patient Charts by Date as of <%= Time.now.in_time_zone("America/New_York").strftime("%Y-%m-%d %H:%M") %></h2>
   
   <button onclick="window.print()", class="btn btn-sm btn-outline-success outline-double rounded-pill px-3 py-0 fw-bold">Print This Page</button>
+  <%= link_to 'All Patients', regis_path, class:"btn btn-sm btn-outline-danger outline-double rounded-pill px-2 py-0 m-1 fw-bold" %>
 
   <table class="table table-sm table-striped table-hover mt-2">
+
+    <%# @regi = Regi.all(regi_params) %>
+
     <thead class="table-info fs-6">
       <tr>
         <th style="width:150px">Date</th>
@@ -20,12 +24,15 @@
         <% @date = 0 %>
         <% @chart_date.each do |chart| %>
         <% @name = '' %>
+        <% age = '' %>
+        <% @age = Regi.find(id=chart.regi_id).dob? ? ((Time.zone.now - Regi.find(id=chart.regi_id).dob.to_time) / 1.year.seconds).floor : "<No data>" %>
         <% @name = Regi.find(id=chart.regi_id).last_name + ", " + Regi.find(id=chart.regi_id).first_name + " " + Regi.find(id=chart.regi_id).init %>
+        
           <tr style="height:15px" class="fs-4">
             <% @date != chart.t_date ? show_date = chart.t_date : show_date = " " %>
             <td><%= show_date %></td> 
             <% @date = chart.t_date %>
-            <td><%= link_to chart.name, regi_charts_path(chart.regi_id) %></td>
+            <td><%= link_to chart.name, regi_charts_path(chart.regi_id) %> (<%= @age %>)</td>
             <td><%= chart.subj %></td>
             <td><%= chart.obj %></td>
             <td><%= chart.assess %></td>

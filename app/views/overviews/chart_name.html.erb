@@ -3,6 +3,7 @@
   <h2 class="text-center">Patient Charts by Name as of <%= Time.now.in_time_zone("America/New_York").strftime("%Y-%m-%d %H:%M") %></h2>
   
   <button onclick="window.print()", class="btn btn-sm btn-outline-success outline-double rounded-pill px-3 py-0 fw-bold" >Print This Page</button>
+  <%= link_to 'All Patients', regis_path, class:"btn btn-sm btn-outline-danger outline-double rounded-pill px-2 py-0 m-1 fw-bold" %>
 
   <table class="table table-sm table-striped table-hover mt-2">
     <thead class="table-info fs-6">
@@ -20,7 +21,10 @@
       <% @chart_name.each do |chart| %>
         <tr style="height:15px">
         <% @name != chart.name ? show_name = chart.name : show_name = " " %>
-        <td><%= link_to show_name, regi_charts_path(chart.regi_id) %></td>
+        <% @age = Regi.find(id=chart.regi_id).dob? ? ((Time.zone.now - Regi.find(id=chart.regi_id).dob.to_time) / 1.year.seconds).floor : "<No data>" %>
+        <% @name != chart.name ? show_age = @age : show_age = " " %>
+
+        <td><%= link_to show_name, regi_charts_path(chart.regi_id) %> <%= show_age %></td>
         <% @name = chart.name %>
         <td><%= chart.t_date %></td>
         <td><%= chart.subj %></td>

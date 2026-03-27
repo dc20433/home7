@@ -3,6 +3,7 @@
   <h2 class="text-center">Patient Information as of <%= Time.now.in_time_zone("America/New_York").strftime("%Y-%m-%d %H:%M") %></h2>
 
   <button onclick="window.print()", class="btn btn-sm btn-outline-success outline-double rounded-pill px-3 py-0 fw-bold">Print This Page</button>
+  <%= link_to 'All Patients', regis_path, class:"btn btn-sm btn-outline-danger outline-double rounded-pill px-2 py-0 m-1 fw-bold" %>
 
   <table class="table table-sm table-striped table-hover mt-2">
     <thead class="table-success fs-6">
