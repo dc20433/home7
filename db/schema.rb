@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_25_032831) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_27_020522) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -43,6 +43,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_25_032831) do
   end
 
   create_table "charts", force: :cascade do |t|
+    t.string "age"
     t.text "assess"
     t.datetime "created_at", null: false
     t.string "name"
@@ -66,9 +67,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_25_032831) do
   end
 
   create_table "patients", force: :cascade do |t|
+    t.string "age"
     t.string "aq_b4"
     t.string "cell"
     t.string "city"
+    t.string "com1"
+    t.string "com2"
+    t.string "com3"
     t.string "comp1"
     t.string "comp2"
     t.string "comp3"
@@ -108,6 +113,24 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_25_032831) do
     t.string "init"
     t.string "last_name"
     t.datetime "updated_at", null: false
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.datetime "created_at", precision: 0, null: false
+    t.datetime "current_sign_in_at", precision: 0
+    t.string "current_sign_in_ip"
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.datetime "last_sign_in_at", precision: 0
+    t.string "last_sign_in_ip"
+    t.datetime "remember_created_at", precision: 0
+    t.datetime "reset_password_sent_at", precision: 0
+    t.string "reset_password_token"
+    t.integer "role", default: 0
+    t.integer "sign_in_count", default: 0, null: false
+    t.datetime "updated_at", precision: 0, null: false
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"

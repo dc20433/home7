@@ -23,10 +23,8 @@
     </tbody>
         <% @date = 0 %>
         <% @chart_date.each do |chart| %>
-        <% @name = '' %>
         <% age = '' %>
         <% @age = Regi.find(id=chart.regi_id).dob? ? ((Time.zone.now - Regi.find(id=chart.regi_id).dob.to_time) / 1.year.seconds).floor : "<No data>" %>
-        <% @name = Regi.find(id=chart.regi_id).last_name + ", " + Regi.find(id=chart.regi_id).first_name + " " + Regi.find(id=chart.regi_id).init %>
         
           <tr style="height:15px" class="fs-4">
             <% @date != chart.t_date ? show_date = chart.t_date : show_date = " " %>

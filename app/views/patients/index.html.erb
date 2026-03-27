@@ -49,9 +49,9 @@
             <%= patient.weight %>
           </td>
           <td>
-            <%= patient.comp1.strip if patient.comp1? %>
-            <%= ' / ' + patient.comp2.strip if patient.comp2? %>
-            <%= ' / ' + patient.comp3.strip if patient.comp3? %>
+            <%= patient.com1.strip if patient.com1? %>
+            <%= ' / ' + patient.com2.strip if patient.com2? %>
+            <%= ' / ' + patient.com3.strip if patient.com3? %>
           </td>
           <td>
             <%= patient.d_onset %><%= '/Pain: ' if patient.pain_scale? %>
@@ -59,7 +59,8 @@
           </td>
           <td><%= patient.referred %></td>
           <td>
-            <%= patient.di_list.gsub(/_/, ' ').gsub(/;/, '').gsub(/"/, '').gsub(/\]/, '').gsub(/\[/, '') if patient.di_list? %>
+            <%= patient.di_list.to_sentence(words_connector: '/', last_word_connector: '/').gsub(/_/, ' ').gsub(/;/, '') if patient.di_list != "" %>  
+            <%# patient.di_list.gsub(/_/, ' ').gsub(/;/, '').gsub(/"/, '').gsub(/\]/, '').gsub(/\[/, '') if patient.di_list? %>
             <%= ' and ' + patient.o_dis if patient.o_dis? %>
             <%= 'and Pregnant' if patient.preg == 'Yes' %>
           </td>
