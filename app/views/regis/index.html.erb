@@ -8,15 +8,15 @@
     <div class="card mt-3 mx-auto border-primary" style="width: 70rem;">
         <div class="card shadow border-dark">
           <div class="card-header">
-            <h2 class="card-title text-center">List of Patients</h2>
+            <h2 class="card-title text-center">Patient List</h2>
           </div>
           <div class="card-body">
 
             <%= link_to "New Patient", new_regi_path, class: "btn btn-sm btn-outline-dark outline-double rounded-pill px-2 py-0 fw-bold"  %>
+            <%= link_to 'All Charts by Date', overviews_chart_date_path, class:"btn btn-sm btn-outline-info outline-double rounded-pill px-2 py-0 m-1 fw-bold" %>
+            <%= link_to 'All Charts by Name', overviews_chart_name_path, class:"btn btn-sm btn-outline-primary outline-double rounded-pill px-2 py-0 m-1 fw-bold" %>
+            <%= link_to 'All Patient Info', overviews_patient_info_path, class:"btn btn-sm btn-outline-secondary outline-double rounded-pill px-2 py-0 m-1 fw-bold" %>
             <%= render 'search' %>
-            <%= link_to 'All Charts by Date', overviews_chart_date_path, class:"btn btn-sm btn-outline-danger outline-double rounded-pill px-2 py-0 m-1 fw-bold" %>
-            <%= link_to 'All Charts by Name', overviews_chart_name_path, class:"btn btn-sm btn-outline-secondary outline-double rounded-pill px-2 py-0 m-1 fw-bold" %>
-            <%= link_to 'All Patient Info', overviews_patient_info_path, class:"btn btn-sm btn-outline-success outline-double rounded-pill px-2 py-0 m-1 fw-bold" %>
 
             <table class="table table-sm table-striped table-hover mx-auto mt-1">
               <thead class="table-primary fs-6 pt">

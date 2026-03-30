@@ -1,42 +1,44 @@
 
 <%# render "layouts/navbar" %>
 
-  <h2 class="text-center">Patient Charts by Date as of <%= Time.now.in_time_zone("America/New_York").strftime("%Y-%m-%d %H:%M") %></h2>
-  
-  <button onclick="window.print()", class="btn btn-sm btn-outline-success outline-double rounded-pill px-3 py-0 fw-bold">Print This Page</button>
-  <%= link_to 'All Patients', regis_path, class:"btn btn-sm btn-outline-danger outline-double rounded-pill px-2 py-0 m-1 fw-bold" %>
+<h2 class="text-center">All Patient Charts by Date as of <%= Time.now.in_time_zone("America/New_York").strftime("%Y-%m-%d %H:%M") %></h2>
 
-  <table class="table table-sm table-striped table-hover mt-2">
 
-    <%# @regi = Regi.all(regi_params) %>
+<%= link_to 'All Charts by Name', overviews_chart_name_path, class:"btn btn-sm btn-outline-dark outline-double rounded-pill px-2 py-0 m-1 fw-bold" %>
+<%= link_to 'All Patient Info', overviews_patient_info_path, class:"btn btn-sm btn-outline-info outline-double rounded-pill px-2 py-0 m-1 fw-bold" %>
+<%= link_to 'Patient List', regis_path, class:"btn btn-sm btn-outline-primary outline-double rounded-pill px-2 py-0 m-1 fw-bold" %>
+<button onclick="window.print()", class="btn btn-sm btn-outline-success outline-double rounded-pill px-3 py-0 fw-bold">Print This Page</button>
 
-    <thead class="table-info fs-6">
-      <tr>
-        <th style="width:150px">Date</th>
-        <th style="width:12vw">Name</th>
-        <th style="width:18vw">Subjective</th>
-        <th style="width:12vw">Objective</th>
-        <th style="width:10vw">Assessment</th>
-        <th style="width:36vw">Plan</th>
-      </tr>
-    </thead>
-    </tbody>
-        <% @date = 0 %>
-        <% @chart_date.each do |chart| %>
-        <% age = '' %>
-        <% @age = Regi.find(id=chart.regi_id).dob? ? ((Time.zone.now - Regi.find(id=chart.regi_id).dob.to_time) / 1.year.seconds).floor : "<No data>" %>
-        
-          <tr style="height:15px" class="fs-4">
-            <% @date != chart.t_date ? show_date = chart.t_date : show_date = " " %>
-            <td><%= show_date %></td> 
-            <% @date = chart.t_date %>
-            <td><%= link_to chart.name, regi_charts_path(chart.regi_id) %> (<%= @age %>)</td>
-            <td><%= chart.subj %></td>
-            <td><%= chart.obj %></td>
-            <td><%= chart.assess %></td>
-            <td><%= chart.plan %></td>
-          </tr>
-        <% end %>
-    </tbody>
-  </table>
+<table class="table table-sm table-striped table-hover mt-2">
+
+  <thead class="table-info fs-6">
+    <tr>
+      <th style="width:150px">Date</th>
+      <th style="width:12vw">Name</th>
+      <th style="width:18vw">Subjective</th>
+      <th style="width:12vw">Objective</th>
+      <th style="width:10vw">Assessment</th>
+      <th style="width:36vw">Plan</th>
+    </tr>
+  </thead>
+
+  </tbody>
+    <% @chart_date.joins(:regi).order("t_date").each do |chart| %>
+    
+      <% @prefix = Regi.find(id=chart.regi_id) %>
+      <% @name != @prefix ? show_name = @prefix.p_name : show_name = " " %>
+
+    <tr style="height:15px" class="fs-4">
+        <% @date != chart.t_date ? show_date = chart.t_date : show_date = " " %>
+      <td><%= show_date %></td> 
+        <% @date = chart.t_date %>
+      <td><%= link_to chart.name, regi_charts_path(chart.regi_id) %>(<%= @prefix.p_age %>)</td>
+      <td><%= chart.subj %></td>
+      <td><%= chart.obj %></td>
+      <td><%= chart.assess %></td>
+      <td><%= chart.plan %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
 

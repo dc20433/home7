@@ -18,4 +18,15 @@ class Regi < ApplicationRecord
   def self.ransackable_attributes(auth_object = nil)
     %w[first_name gender init last_name dob]
   end
+
+  def p_age
+    return unless dob.present?
+    now = Time.now.utc.to_date
+    now.year - dob.year - ((now.month > dob.month || (now.month == dob.month && now.day >= dob.day)) ? 0 : 1)
+  end
+
+  def p_name
+    "#{last_name}, #{first_name} #{init}"
+  end
+
 end
