@@ -1,9 +1,11 @@
 <%# render "layouts/navbar" %>
   
-  <h2 class="text-center">Patient Information as of <%= Time.now.in_time_zone("America/New_York").strftime("%Y-%m-%d %H:%M") %></h2>
+  <h2 class="text-center">All Patient Information as of <%= Time.now.in_time_zone("America/New_York").strftime("%Y-%m-%d %H:%M") %></h2>
 
+  <%= link_to 'All Charts by Date', overviews_chart_date_path, class:"btn btn-sm btn-outline-dark outline-double rounded-pill px-2 py-0 m-1 fw-bold" %>
+  <%= link_to 'All Charts by Name', overviews_chart_name_path, class:"btn btn-sm btn-outline-info outline-double rounded-pill px-2 py-0 m-1 fw-bold" %>
+  <%= link_to 'Patient List', regis_path, class:"btn btn-sm btn-outline-primary outline-double rounded-pill px-2 py-0 m-1 fw-bold" %>
   <button onclick="window.print()", class="btn btn-sm btn-outline-success outline-double rounded-pill px-3 py-0 fw-bold">Print This Page</button>
-  <%= link_to 'All Patients', regis_path, class:"btn btn-sm btn-outline-danger outline-double rounded-pill px-2 py-0 m-1 fw-bold" %>
 
   <table class="table table-sm table-striped table-hover mt-2">
     <thead class="table-success fs-6">
@@ -24,10 +26,9 @@
         <tr style="height:15px">
           <td>
             <% @prefix = Regi.find(id=patient.regi_id) %>
-            <% @name != @prefix ? show_name = @prefix.last_name + ", " + @prefix.first_name + " " + @prefix.init : show_name = " " %>
-            <%= link_to show_name, regi_patient_path(patient.regi_id, patient) %>
-          </td>
-        <% @name = @prefix %>
+            <%# @name != @prefix ? show_name = @prefix.last_name + ", " + @prefix.first_name + " " + @prefix.init : show_name = " " %>
+            <% @name != @prefix ? show_name = @prefix.p_name : show_name = " " %>
+            <%= link_to show_name, regi_patient_path(patient.regi_id, patient) %> (<%= @prefix.p_age %>)
           <td>
           <%= patient.v_date %>
           </td>

@@ -34,6 +34,7 @@ class RegisController < ApplicationController
   # PATCH/PUT /regis/1 or /regis/1.json
   def update
     if @regi.update regi_params
+      @regi.update(p_name: "#{@regi.last_name}, #{@regi.first_name} #{@regi.init}")
       redirect_to regis_path, notice: "Patient Registration updated..."
     else
       render :edit, status: :unprocessable_entity
@@ -54,6 +55,6 @@ class RegisController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def regi_params
-      params.require(:regi).permit(:last_name, :first_name, :init, :gender, :dob)
+      params.require(:regi).permit(:last_name, :first_name, :init, :gender, :dob, :p_name, :age)
     end
 end

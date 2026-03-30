@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_27_020522) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_29_025822) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -43,76 +43,86 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_27_020522) do
   end
 
   create_table "charts", force: :cascade do |t|
-    t.string "age"
     t.text "assess"
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: 0, null: false
     t.string "name"
     t.text "obj"
     t.text "plan"
     t.bigint "regi_id", null: false
     t.text "subj"
-    t.string "t_date"
-    t.datetime "updated_at", null: false
+    t.date "t_date"
+    t.datetime "updated_at", precision: 0, null: false
     t.index ["regi_id"], name: "index_charts_on_regi_id"
   end
 
   create_table "filings", force: :cascade do |t|
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: 0, null: false
     t.text "describe"
     t.date "f_date"
-    t.string "image"
     t.bigint "regi_id", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "updated_at", precision: 0, null: false
     t.index ["regi_id"], name: "index_filings_on_regi_id"
   end
 
   create_table "patients", force: :cascade do |t|
-    t.string "age"
+    t.string "alcohol"
     t.string "aq_b4"
+    t.string "aq_where"
+    t.string "aqrist"
+    t.string "better"
+    t.string "c_onset"
     t.string "cell"
     t.string "city"
     t.string "com1"
     t.string "com2"
     t.string "com3"
-    t.string "comp1"
-    t.string "comp2"
-    t.string "comp3"
-    t.string "company"
-    t.datetime "created_at", null: false
-    t.string "d_onset"
-    t.string "di_list"
+    t.datetime "created_at", precision: 0, null: false
+    t.decimal "d_lost", precision: 4, scale: 1
+    t.date "d_onset"
+    t.decimal "d_restd", precision: 4, scale: 1
+    t.string "di_list", default: [], array: true
     t.string "diag_given"
+    t.string "diag_where"
     t.string "email"
-    t.string "height"
+    t.date "h_when"
+    t.decimal "height", precision: 2, scale: 1
     t.string "home"
-    t.string "last_prd"
+    t.string "hosp"
+    t.string "inj_surg"
+    t.date "last_prd"
     t.string "m_stat"
+    t.string "med_taken"
     t.string "name"
     t.string "o_dis"
-    t.string "occup"
+    t.string "o_drs"
+    t.date "o_drs_when"
     t.string "pain_scale"
+    t.string "pcp_name"
     t.string "preg"
-    t.string "preg_wks"
+    t.integer "preg_wks"
     t.string "referred"
     t.bigint "regi_id", null: false
     t.string "state"
     t.string "street"
-    t.datetime "updated_at", null: false
+    t.string "tobacco"
+    t.datetime "updated_at", precision: 0, null: false
     t.date "v_date"
-    t.string "weight"
+    t.decimal "weight", precision: 4, scale: 1
     t.string "work"
+    t.string "worse"
     t.string "zip"
     t.index ["regi_id"], name: "index_patients_on_regi_id"
   end
 
   create_table "regis", force: :cascade do |t|
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: 0, null: false
     t.date "dob"
     t.string "first_name"
     t.string "gender"
     t.string "init"
     t.string "last_name"
-    t.datetime "updated_at", null: false
+    t.string "p_name"
+    t.datetime "updated_at", precision: 0, null: false
   end
 
   create_table "users", force: :cascade do |t|
