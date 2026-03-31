@@ -19,22 +19,19 @@
       </tr>
     </thead>
     </tbody>
-      <% @name = 0 %>
-      <% @chart_name.joins(:regi).each do |chart| %>
-
-        <% @prefix = Regi.find(id=chart.regi_id) %>
+      <% show_name = "" %>
+        <% Chart.joins(:regi).order("regi.p_name").each do |chart| %>
 
         <tr style="height:15px">
-        <% @name != chart.name ? show_name = chart.name : show_name = " " %>
-        <% @name != chart.name ? show_age = "(#{@prefix.p_age})" : show_age = " " %>
+        <% show_name == chart.regi.p_name ? show_name = "" : show_name = "#{chart.regi.p_name} (#{chart.regi.p_age})" %>
 
-        <td><%= link_to show_name, regi_charts_path(chart.regi_id) %><%= show_age %></td>
-        <% @name = chart.name %>
+        <td><%= link_to show_name, regi_charts_path(chart.regi_id) %></td>
         <td><%= chart.t_date %></td>
         <td><%= chart.subj %></td>
         <td><%= chart.obj %></td>
         <td><%= chart.assess %></td>
         <td><%= chart.plan %></td>
+        <% show_name = chart.regi.p_name %>
         </tr>
       <% end %>
     </tbody>

@@ -21,14 +21,12 @@
       </tr>
     </thead>
     </tbody>
-      <% @name = 0 %>
-      <% Patient.joins(:regi).order("last_name, first_name, init, dob, v_date DESC").each do |patient| %>
+      <% show_name = "" %>
+      <% Patient.joins(:regi).order("regi.p_name").each do |patient| %>
         <tr style="height:15px">
           <td>
-            <% @prefix = Regi.find(id=patient.regi_id) %>
-            <%# @name != @prefix ? show_name = @prefix.last_name + ", " + @prefix.first_name + " " + @prefix.init : show_name = " " %>
-            <% @name != @prefix ? show_name = @prefix.p_name : show_name = " " %>
-            <%= link_to show_name, regi_patient_path(patient.regi_id, patient) %> (<%= @prefix.p_age %>)
+            <% show_name == patient.regi.p_name ? show_name = "" : show_name = "#{patient.regi.p_name} (#{patient.regi.p_age})" %>
+             <%= link_to show_name, regi_patient_path(patient.regi_id, patient) %>
           <td>
           <%= patient.v_date %>
           </td>
@@ -59,6 +57,7 @@
             <%= ' and ' + patient.o_dis if patient.o_dis? %>
             <%= 'and Pregnant' if patient.preg == 'Yes' %>
           </td>
+          <% show_name = patient.regi.p_name %>
         </tr>
       <% end %>
     </tbody>
