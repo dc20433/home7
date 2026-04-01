@@ -6,6 +6,7 @@ class CreateRegis < ActiveRecord::Migration[8.1]
       t.string :init
       t.string :gender
       t.date :dob
+      t.string :p_name
 
       t.timestamps
     end

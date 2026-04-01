@@ -20,7 +20,7 @@
     </thead>
     </tbody>
       <% show_name = "" %>
-        <% Chart.joins(:regi).order("regi.p_name").each do |chart| %>
+        <% Chart.joins(:regi).order("regis.p_name").each do |chart| %>
 
         <tr style="height:15px">
         <% show_name == chart.regi.p_name ? show_name = "" : show_name = "#{chart.regi.p_name} (#{chart.regi.p_age})" %>

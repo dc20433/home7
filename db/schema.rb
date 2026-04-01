@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_29_025822) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_01_035345) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -46,6 +46,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_29_025822) do
     t.text "assess"
     t.datetime "created_at", precision: 0, null: false
     t.string "name"
+    t.string "o_treats"
     t.text "obj"
     t.text "plan"
     t.bigint "regi_id", null: false
@@ -58,7 +59,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_29_025822) do
   create_table "filings", force: :cascade do |t|
     t.datetime "created_at", precision: 0, null: false
     t.text "describe"
-    t.date "f_date"
     t.bigint "regi_id", null: false
     t.datetime "updated_at", precision: 0, null: false
     t.index ["regi_id"], name: "index_filings_on_regi_id"
@@ -104,6 +104,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_29_025822) do
     t.bigint "regi_id", null: false
     t.string "state"
     t.string "street"
+    t.string "string", default: [], array: true
     t.string "tobacco"
     t.datetime "updated_at", precision: 0, null: false
     t.date "v_date"

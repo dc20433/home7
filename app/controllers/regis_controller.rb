@@ -34,7 +34,7 @@ class RegisController < ApplicationController
   # PATCH/PUT /regis/1 or /regis/1.json
   def update
     if @regi.update regi_params
-      @regi.update(p_name: "#{@regi.last_name}, #{@regi.first_name} #{@regi.init}")
+      #@regi.update(p_name: "#{@regi.last_name}, #{@regi.first_name} #{@regi.init}")
       redirect_to regis_path, notice: "Patient Registration updated..."
     else
       render :edit, status: :unprocessable_entity

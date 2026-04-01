@@ -1,7 +1,6 @@
 class CreatePatients < ActiveRecord::Migration[8.1]
   def change
     create_table :patients do |t|
-      t.references :regi, null: false, foreign_key: true
       t.date :v_date
       t.string :name
       t.string :street
@@ -18,9 +17,9 @@ class CreatePatients < ActiveRecord::Migration[8.1]
       t.string :occup
       t.string :company
       t.string :referred
-      t.string :comp1
-      t.string :comp2
-      t.string :comp3
+      t.string :com1
+      t.string :com2
+      t.string :com3
       t.string :d_onset
       t.string :pain_scale
       t.string :diag_given
@@ -30,6 +29,7 @@ class CreatePatients < ActiveRecord::Migration[8.1]
       t.string :last_prd
       t.string :preg
       t.string :preg_wks
+      t.references :regi, null: false, foreign_key: true
 
       t.timestamps
     end

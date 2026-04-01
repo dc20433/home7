@@ -4,6 +4,7 @@ class Regi < ApplicationRecord
   has_many :patients, dependent: :destroy
   has_many :charts, dependent: :destroy
   validates :last_name, :first_name, :gender, presence: true
+  before_save :set_p_name
 
   GENDER_OPTIONS = [
     ['Select', ''],
@@ -25,8 +26,8 @@ class Regi < ApplicationRecord
     now.year - dob.year - ((now.month > dob.month || (now.month == dob.month && now.day >= dob.day)) ? 0 : 1)
   end
 
-  def p_name
-    "#{last_name}, #{first_name} #{init}"
+  def set_p_name
+    self.p_name = "#{last_name}, #{first_name} #{init}"
   end
 
 end
