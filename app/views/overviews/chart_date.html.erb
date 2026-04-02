@@ -23,14 +23,17 @@
   </thead>
 
   </tbody>
-    <% show_date = "" %>
-    <% Chart.joins(:regi).order(t_date: :desc).each do |chart| %>
+    <% last_date = nil %>
+    <% @charts.each do |chart| %>
     
     <tr style="height:15px" class="fs-4">
-        <% show_date != chart.t_date ? show_date = chart.t_date : show_date = "" %>
-      <td><%= show_date %></td> 
-        <% show_date = chart.t_date %>
-      <td><%= link_to chart.regi.p_name, regi_charts_path(chart.regi_id) %>(<%= chart.regi.p_age %>)</td>
+        <%# Only show the date if it's different from the previous row %>
+      <td><%= chart.t_date != last_date ? chart.t_date : "" %></td>
+        <% last_date = chart.t_date %>
+      <td> 
+        <%= link_to chart.regi.p_name, regi_charts_path(chart.regi_id) %>
+        (<%= chart.regi.p_age %>)
+      </td>
       <td><%= chart.subj %></td>
       <td><%= chart.obj %></td>
       <td><%= chart.assess %></td>

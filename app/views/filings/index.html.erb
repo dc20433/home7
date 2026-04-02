@@ -30,7 +30,7 @@
               <tbody>
                 <% @regi.filings.order("created_at DESC").each do |filing| %>
                   <tr>
-                  <td><%= (filing.created_at - 5*3600).strftime("%Y-%m-%d, %H:%M") %></td>
+                  <td><%= (filing.created_at.strftime("%Y-%m-%d, %H:%M")) %></td>
                   <td><%= filing.f_date %></td>
                     <td>
                       <% if filing.image.attached? && filing.image.image? %>

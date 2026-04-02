@@ -13,9 +13,11 @@ class FilingsController < ApplicationController
   end
 
   # GET regis/1/filings/new
-  def new
-    @filing = @regi.filings.build
-  end
+  # app/controllers/filings_controller.rb
+def new
+  @regi = Regi.find(params[:regi_id])
+  @filing = @regi.filings.build # This ensures @filing.regi is NOT nil
+end
 
   # GET regis/1/filings/1/edit
   def edit

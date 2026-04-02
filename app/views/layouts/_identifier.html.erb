@@ -1,5 +1,1 @@
-<% @age = @regi.dob? ? ((Time.zone.now - @regi.dob.to_time) / 1.year.seconds).floor : "<No data>" %>
-
-<% @gender = @regi.gender? ? @regi.gender : "<No gender data>" %>
-
-<h4 class="text-center"><%= @regi.last_name %>, <%= @regi.first_name %> <%= @regi.init %><%= '.' if @regi.init? %> | Age: <%= @age %> | <%= @gender %> </h4>
+<h4 class="text-center"><%= @regi.p_name %> | Age: <%= @regi.p_age %> | <%= @regi.p_gender %> </h4>

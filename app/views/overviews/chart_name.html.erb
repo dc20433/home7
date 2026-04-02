@@ -18,21 +18,25 @@
         <th style="width:36vw">Plan</th>
       </tr>
     </thead>
-    </tbody>
-      <% show_name = "" %>
-        <% Chart.joins(:regi).order("regis.p_name").each do |chart| %>
-
+    <tbody>
+      <% last_patient_id = nil %>
+      
+      <% @charts.each do |chart| %>
         <tr style="height:15px">
-        <% show_name == chart.regi.p_name ? show_name = "" : show_name = "#{chart.regi.p_name} (#{chart.regi.p_age})" %>
-
-        <td><%= link_to show_name, regi_charts_path(chart.regi_id) %></td>
-        <td><%= chart.t_date %></td>
-        <td><%= chart.subj %></td>
-        <td><%= chart.obj %></td>
-        <td><%= chart.assess %></td>
-        <td><%= chart.plan %></td>
-        <% show_name = chart.regi.p_name %>
+          <td>
+            <% if chart.regi_id != last_patient_id %>
+              <%= link_to "#{chart.regi.p_name} (#{chart.regi.p_age})", regi_charts_path(chart.regi_id) %>
+            <% end %>
+          </td>
+          
+          <td><%= chart.t_date %></td>
+          <td><%= chart.subj %></td>
+          <td><%= chart.obj %></td>
+          <td><%= chart.assess %></td>
+          <td><%= chart.plan %></td>
         </tr>
+        
+        <% last_patient_id = chart.regi_id %>
       <% end %>
     </tbody>
   </table>

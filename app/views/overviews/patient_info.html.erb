@@ -20,45 +20,52 @@
         <th>Health History</th>
       </tr>
     </thead>
-    </tbody>
-      <% show_name = "" %>
-      <% Patient.joins(:regi).order("regi.p_name").each do |patient| %>
-        <tr style="height:15px">
-          <td>
-            <% show_name == patient.regi.p_name ? show_name = "" : show_name = "#{patient.regi.p_name} (#{patient.regi.p_age})" %>
-             <%= link_to show_name, regi_patient_path(patient.regi_id, patient) %>
-          <td>
-          <%= patient.v_date %>
-          </td>
-          <td>
-            <%= patient.street %><%= ', ' if patient.street? %>
-            <%= patient.city %>
-            <%= patient.state %>
-            <%= patient.zip %>
-            <%= 'C: ' if patient.cell? %><%= patient.cell %>
-            <%= 'H: ' if patient.home? %><%= patient.home %>
-            <%= 'W: ' if patient.work? %><%= patient.work %>
-            <%= 'E: ' if patient.email? %><%= patient.email %>
-          </td>
-          <td><%= patient.weight %></td>
-          <td>
-            <%= patient.com1.strip if patient.com1? %>
-            <%= ' / ' + patient.com2.strip if patient.com2? %>
-            <%= ' / ' + patient.com3.strip if patient.com3? %>
-          </td>
-          <td>
-            <%= patient.d_onset %><%= '/Pain: ' if patient.pain_scale? %>
-            <%= patient.pain_scale %>
-          </td>
-          <td><%= patient.referred %></td>
-          <td>
-            <%= patient.di_list.to_sentence(words_connector: '/', last_word_connector: '/').gsub(/_/, ' ').gsub(/;/, '') if patient.di_list != "" %>
-            <%# patient.di_list.gsub(/_/, ' ').gsub(/;/, '').gsub(/"/, '').gsub(/\]/, '').gsub(/\[/, '') if patient.di_list != "" %>
-            <%= ' and ' + patient.o_dis if patient.o_dis? %>
-            <%= 'and Pregnant' if patient.preg == 'Yes' %>
-          </td>
-          <% show_name = patient.regi.p_name %>
-        </tr>
-      <% end %>
-    </tbody>
+    <tbody>
+  <% last_patient_id = nil %>
+  <% @patients.each do |patient| %>
+    <tr style="height:15px">
+      <td>
+        <%# Only show name if it's a new patient group %>
+        <% if patient.regi_id != last_patient_id %>
+          <%= link_to "#{patient.regi.p_name} (#{patient.regi.p_age})", regi_patient_path(patient.regi_id, patient) %>
+        <% end %>
+      </td>
+
+      <td><%= patient.v_date %></td>
+
+      <td>
+        <%= patient.street %><%= ', ' if patient.street.present? %>
+        <%= patient.city %> <%= patient.state %> <%= patient.zip %>
+        <br>
+        <%= "C: #{patient.cell} " if patient.cell.present? %>
+        <%= "H: #{patient.home} " if patient.home.present? %>
+        <%= "W: #{patient.work} " if patient.work.present? %>
+        <%= "E: #{patient.email}" if patient.email.present? %>
+      </td>
+
+      <td><%= patient.weight %></td>
+
+      <td>
+        <%= [patient.com1, patient.com2, patient.com3].select(&:present?).map(&:strip).join(' / ') %>
+      </td>
+
+      <td>
+        <%= patient.d_onset %>
+        <%= ' / Pain: ' + patient.pain_scale.to_s if patient.pain_scale.present? %>
+      </td>
+
+      <td><%= patient.referred %></td>
+
+      <td>
+        <% if patient.di_list.present? %>
+          <%= patient.di_list.to_sentence(words_connector: '/', last_word_connector: '/').gsub(/_/, ' ').gsub(/;/, '') %>
+        <% end %>
+        <%= ' and ' + patient.o_dis if patient.o_dis.present? %>
+        <%= ' and Pregnant' if patient.preg == 'Yes' %>
+      </td>
+    </tr>
+    <%# Update the tracker at the end of the loop %>
+    <% last_patient_id = patient.regi_id %>
+  <% end %>
+</tbody>
   </table>

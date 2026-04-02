@@ -1,2 +1,12 @@
 // Sassy
 @import "bootstrap"
+/*
+  * Custom styles for the application.
+  * You can add your own styles here or create separate SCSS files and import them.
+  * For example, you could create a _custom.scss file and import it here:
+  * @import "custom";
+  
+  .table-responsive {
+   max-height: 80vh;
+   overflow-y: auto;
+ }

@@ -37,9 +37,9 @@
                 <td><%= regi.first_name %></td>
                 <td><%= regi.init? ? regi.init + "." : "" %></td>
                 <td><%= regi.gender %></td>
-                <td><%= regi.dob? ? ((Time.now.in_time_zone("America/New_York") - regi.dob.to_time) / 1.year.seconds).floor : " " %></td>
+                <td><%= regi.p_age %></td>
                 <td><%= regi.dob %></td>
-                <td><%= (regi.created_at - 5*3600).strftime("%Y-%m-%d, %H:%M") %></td>              
+                <td><%= regi.created_at.strftime("%Y-%m-%d, %H:%M") %></td>             
                 <td>                
                   <%= link_to 'Info', regi_patients_path(regi.id), class: "btn btn-sm btn-warning border border-lg border-dark  rounded-pill px-2 py-0 fw-bold" %>
                   <%= link_to 'Charts', regi_charts_path(regi.id), class: "btn btn-sm btn-primary border border-dark rounded-pill px-1 py-0 fw-bold" %>
