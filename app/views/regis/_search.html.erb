@@ -5,7 +5,7 @@
       <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
-      <%= search_form_for @q do |f| %>
+      <%= search_form_with @q do |f| %>
         <div class="form-group">
           <b><%= f.label :by_last_name_start, "By first letters of the Last Name", class: "form-label fs-6" %></b>
           <%= f.search_field :last_name_start, class:"form-control form-control-sm border-primary fs-4 mb-3" %>

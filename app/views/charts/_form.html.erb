@@ -16,7 +16,7 @@
   <div class="row">
     <div class="col col-md-3 fs-6">
       <b>Updated on</b>
-      <%= f.date_field :t_date, placeholder: "MM/DD/YYYY", class:"form-control form-control-sm border-primary fs-4" %>
+      <%= f.date_field :t_date, class:"form-control form-control-sm border-primary fs-4" %>
     </div>
   </div>
   <br>
@@ -41,8 +41,8 @@
   </div>
   <br>
   <div class="btn-group" role="group">
-    <%= f.submit "Submit", class: "btn btn-sm btn-primary rounded-pill px-3 m-2 fw-bold" %>
+    <%= f.submit "Submit", class: "btn btn-sm btn-primary outline-double rounded-pill px-3 m-2 fw-bold" %>
 <% end %>
-  <%= button_to "Delete", [@regi,@chart], method: :delete, class:"btn btn-sm btn-danger rounded-pill px-3 m-2 fw-bold", form: { data: { turbo_confirm: "Are you sure?" } } %>
-  <%= link_to 'Retun', :back, class:"btn btn-sm btn-success rounded-pill px-3 m-2 fw-bold" %>
+  <%= button_to "Delete", [@regi,@chart], method: :delete, class:"btn btn-sm btn-danger outline-double rounded-pill px-3 m-2 fw-bold", form: { data: { turbo_confirm: "Are you sure?" } } %>
+  <%= link_to 'Return', :back, class:"btn btn-sm btn-success outline-double rounded-pill px-3 m-2 fw-bold" %>
   </div>
