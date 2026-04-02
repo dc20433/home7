@@ -11,8 +11,6 @@
     </div>
   <% end %>
 
-  <%= f.text_field :name, value: (@regi.last_name + ", " + @regi.first_name + " " + (@regi.init? ? (@regi.init + ".") : '' )), hidden: true %>
-
   <div class="row">
     <div class="col col-md-3 fs-6">
       <b>Updated on</b>

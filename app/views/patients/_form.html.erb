@@ -13,8 +13,6 @@
       </div>
     <% end %>
 
-    
-
     <%= f.text_field :name, value: (@regi.last_name + ", " + @regi.first_name + " " + (@regi.init? ? (@regi.init + ".") : '' )), hidden: true %>
   
     <div class="row fs-6">
@@ -89,7 +87,6 @@
   </div> 
 
   </div>
-
     <div class="row fs-6">
       <div class="col-md-4">
         <b><%= f.label :com1, "Complaint 1", class:"form-label mt-1 mb-0" %></b>
@@ -160,7 +157,6 @@
     <div class="btn-group" role="group">
         <%= f.submit "Submit", data: { burbo: false}, class:'btn btn-success btn-sm border border-dark m-2 ps-4 pe-4 rounded-pill' %>
   <% end %>
-      
         <%= button_to 'Delete', [@regi,@patient], method: :delete, class:"btn btn-danger btn-sm border border-dark rounded-pill px-3 m-2 fw-bold", form: { data: { turbo_confirm: 'Are you sure?' }  } %>
         <%= link_to "Return", :back, class:'btn btn-info btn-sm border border-dark rounded-pill px-3 m-2 fw-bold' %>
     </div>
