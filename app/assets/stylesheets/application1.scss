@@ -1,0 +1,50 @@
+@import "bootstrap";
+
+// 1. Force the Body to be transparent so it doesn't "paint" over your div
+body {
+  background-color: transparent !important;
+  background: none !important;
+}
+
+// 2. Ensure the HTML element (the very base layer) is also clear
+html {
+  background-color: #2d3436; // A dark base color looks better while loading than white/grey
+}
+
+// 3. Fix the Screen Class
+.screen {
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-attachment: fixed !important;
+  min-height: 100vh !important;
+  width: 100% !important;
+  margin: 0 !important;
+  position: relative;
+  z-index: 1;
+}
+
+// 4. The Tint (Adjust the 0.4 to make it lighter or darker)
+.color-overlay {
+  background-color: rgba(0, 0, 0, 0.4) !important;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.table-responsive {
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.outline-double {
+  outline-style: double;
+  outline-width: 3px;
+}
+
+.nav-link:hover {
+  outline-width: 5px;
+  outline-style: double;
+  color: white;
+}

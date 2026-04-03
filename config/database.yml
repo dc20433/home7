@@ -4,8 +4,8 @@ default: &default
   encoding: unicode
   max_connections: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   host: localhost
-  username: <%= ENV["PG_UN"] %>
-  password: <%= ENV["PG_PW"] %>
+  username: postgres
+  password: <%= Rails.application.credentials.dig(:database, :password) %>
 
 development:
   <<: *default
@@ -71,6 +71,7 @@ test:
 # Read https://guides.rubyonrails.org/configuring.html#configuring-a-database
 # for a full overview on how database connection configuration can be specified.
 #
+
 production:
   primary: &primary_production
     <<: *default

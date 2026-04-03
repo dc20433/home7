@@ -68,7 +68,6 @@ group :test do
   gem "selenium-webdriver"
 end
 
-gem 'dotenv-rails'
 gem "nested_scaffold"
 gem 'ransack'
 gem "bootstrap", "~> 5.3.3"

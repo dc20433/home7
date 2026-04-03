@@ -1,11 +1,10 @@
 <%# render "layouts/navbar" %>
-
   
 <div 
   class="screen"
-  style="background-image: url(<%= asset_path 'pine_trees.jpg' %> ) ;">
+  style="background-image: url('<%= asset_path "pine_trees.jpg" %>');">
   <div class="color-overlay d-flex justify-content-center align-items-center">    
-    <div class="card mt-3 mx-auto border-primary" style="width: 70rem;">
+    <div class="card mt-0 mx-auto border-primary" style="width: 70rem;">
         <div class="card shadow border-dark">
           <div class="card-header">
             <h2 class="card-title text-center">Patient List</h2>
@@ -41,8 +40,8 @@
                 <td><%= regi.dob %></td>
                 <td><%= regi.created_at.strftime("%Y-%m-%d, %H:%M") %></td>             
                 <td>                
-                  <%= link_to 'Info', regi_patients_path(regi.id), class: "btn btn-sm btn-warning border border-lg border-dark  rounded-pill px-2 py-0 fw-bold" %>
-                  <%= link_to 'Charts', regi_charts_path(regi.id), class: "btn btn-sm btn-primary border border-dark rounded-pill px-1 py-0 fw-bold" %>
+                  <%= link_to 'Info', regi_patients_path(regi.id), class: "btn btn-sm btn-warning border border-lg border-dark rounded-pill px-2 py-0 fw-bold" %>
+                  <%= link_to 'Charts', regi_charts_path(regi.id), class: "btn btn-sm btn-primary border border-lg border-dark rounded-pill px-1 py-0 fw-bold" %>
                   <%= link_to 'Files', regi_filings_path(regi.id), class: "btn btn-sm btn-success border border-dark rounded-pill px-2 py-0 fw-bold" %>
                 </td>
               </tr>

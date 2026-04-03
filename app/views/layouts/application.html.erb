@@ -1,15 +1,16 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <title>Home 7</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-    <%= stylesheet_link_tag "application", "data-turbo-track": "reload"%>
-    <%# javascript_importmap_tags %>
-    <style>
+    <%# These two lines load your local CSS and JS %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+<%#    <style>
       .outline-double {
         outline-style: double; outline-width: 3px;
       }
@@ -19,26 +20,18 @@
         color: white;
       }
     </style>
-
-    <title>Home 7</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-
+%>
   </head>
   <body>
     <%# render "layouts/navbar" %>
-    <div class="container-fluid mt-5 fs-4"><br>
+    <div class="container-fluid mt-0 fs-4"><br>
       <div class="text-end">
         <%= image_tag "title_1.png" %><br>
       </div>
-    <%= render "layouts/alert" %>
+      <%= render "layouts/alert" %>
       <div class="float-center">
       <%= yield %>
       </div>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js" integrity="sha384-G/EV+4j2dNv+tEPo3++6LCgdCROaejBqfUeNjuKAiuXbjrxilcCdDz6ZAVfHWe1Y" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
-
   </body>
 </html>

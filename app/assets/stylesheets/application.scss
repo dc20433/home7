@@ -1,12 +1,54 @@
-// Sassy
-@import "bootstrap"
-/*
-  * Custom styles for the application.
-  * You can add your own styles here or create separate SCSS files and import them.
-  * For example, you could create a _custom.scss file and import it here:
-  * @import "custom";
-  
-  .table-responsive {
-   max-height: 80vh;
-   overflow-y: auto;
- }
+@import "bootstrap";
+
+// 1. Reset the body so it doesn't interfere
+body,
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background-color: transparent !important; // Prevent the "Grey Paint"
+}
+
+// 2. The Screen Container
+.screen {
+  display: block !important;
+  width: 100% !important;
+  min-height: 100vh !important; // Force it to fill the browser height
+  margin: 0 !important;
+  padding: 0 !important;
+
+  // Background logic
+  background-size: cover !important;
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
+  background-attachment: fixed !important;
+
+  // Ensure it sits behind the card content
+  position: relative;
+  z-index: 1;
+}
+
+// 3. The Color Overlay (The "Tint")
+.color-overlay {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(0, 0, 0, 0.4) !important; // Darken the trees for readability
+}
+
+.table-responsive {
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.outline-double {
+  outline-style: double;
+  outline-width: 3px;
+}
+
+.nav-link:hover {
+  outline-width: 5px;
+  outline-style: double;
+  color: white;
+}
