@@ -17,7 +17,7 @@ class Regi < ApplicationRecord
   end
 
   def self.ransackable_attributes(auth_object = nil)
-    %w[first_name gender init last_name dob]
+    ["last_name", "first_name", "dob", "gender", "created_at"]
   end
 
   def p_age

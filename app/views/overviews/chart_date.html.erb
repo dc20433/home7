@@ -1,13 +1,12 @@
 
 <%# render "layouts/navbar" %>
 
-<h2 class="text-center">All Patient Charts by Date as of <%= Time.now.in_time_zone("America/New_York").strftime("%Y-%m-%d %H:%M") %></h2>
+<h2 class="text-center">All Patient Charts by Date as of <%= Time.now.strftime("%Y-%m-%d %H:%M") %></h2>
 
-
-<%= link_to 'All Charts by Name', overviews_chart_name_path, class:"btn btn-sm btn-outline-dark outline-double rounded-pill px-2 py-0 m-1 fw-bold" %>
-<%= link_to 'All Patient Info', overviews_patient_info_path, class:"btn btn-sm btn-outline-info outline-double rounded-pill px-2 py-0 m-1 fw-bold" %>
-<%= link_to 'Patient List', regis_path, class:"btn btn-sm btn-warning outline-double rounded-pill px-2 py-0 m-1 fw-bold" %>
-<button onclick="window.print()", class="btn btn-sm btn-outline-success outline-double rounded-pill px-3 py-0 fw-bold">Print This Page</button>
+<%= link_to 'All Charts by Name', overviews_chart_name_path, class:"btn btn-sm btn-outline-dark border border-lg border-dark rounded-pill px-2 py-0 m-1 fw-bold" %>
+<%= link_to 'All Patient Info', overviews_patient_info_path, class:"btn btn-sm btn-outline-info border border-lg border-dark rounded-pill px-2 py-0 m-1 fw-bold" %>
+<%= link_to 'Patient List', regis_path, class:"btn btn-sm btn-warning border border-lg border-dark rounded-pill px-2 py-0 m-1 fw-bold" %>
+<button onclick="window.print()", class="btn btn-sm btn-outline-success border border-lg border-dark rounded-pill px-3 py-0 fw-bold">Print This Page</button>
 
 <table class="table table-sm table-striped table-hover mt-2">
 

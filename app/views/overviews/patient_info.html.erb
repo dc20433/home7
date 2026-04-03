@@ -1,11 +1,11 @@
 <%# render "layouts/navbar" %>
   
-  <h2 class="text-center">All Patient Information as of <%= Time.now.in_time_zone("America/New_York").strftime("%Y-%m-%d %H:%M") %></h2>
+  <h2 class="text-center">All Patient Information as of <%= Time.now.strftime("%Y-%m-%d %H:%M") %></h2>
 
-  <%= link_to 'All Charts by Date', overviews_chart_date_path, class:"btn btn-sm btn-outline-dark outline-double rounded-pill px-2 py-0 m-1 fw-bold" %>
-  <%= link_to 'All Charts by Name', overviews_chart_name_path, class:"btn btn-sm btn-outline-info outline-double rounded-pill px-2 py-0 m-1 fw-bold" %>
-  <%= link_to 'Patient List', regis_path, class:"btn btn-sm btn-warning outline-double rounded-pill px-2 py-0 m-1 fw-bold" %>
-  <button onclick="window.print()", class="btn btn-sm btn-outline-success outline-double rounded-pill px-3 py-0 fw-bold">Print This Page</button>
+  <%= link_to 'All Charts by Date', overviews_chart_date_path, class:"btn btn-sm btn-outline-dark border border-lg border-dark rounded-pill px-2 py-0 m-1 fw-bold" %>
+  <%= link_to 'All Charts by Name', overviews_chart_name_path, class:"btn btn-sm btn-outline-info border border-lg border-dark rounded-pill px-2 py-0 m-1 fw-bold" %>
+  <%= link_to 'Patient List', regis_path, class:"btn btn-sm btn-warning border border-lg border-dark rounded-pill px-2 py-0 m-1 fw-bold" %>
+  <button onclick="window.print()", class="btn btn-sm btn-outline-success border border-lg border-dark rounded-pill px-3 py-0 fw-bold">Print This Page</button>
 
   <table class="table table-sm table-striped table-hover mt-2">
     <thead class="table-success fs-6">
@@ -37,10 +37,10 @@
         <%= patient.street %><%= ', ' if patient.street.present? %>
         <%= patient.city %> <%= patient.state %> <%= patient.zip %>
         <br>
-        <%= "C: #{patient.cell} " if patient.cell.present? %>
-        <%= "H: #{patient.home} " if patient.home.present? %>
-        <%= "W: #{patient.work} " if patient.work.present? %>
-        <%= "E: #{patient.email}" if patient.email.present? %>
+        <%= "(C)#{patient.cell} " if patient.cell.present? %>
+        <%= "(H)#{patient.home} " if patient.home.present? %>
+        <%= "(W)#{patient.work} " if patient.work.present? %>
+        <%= " #{patient.email}" if patient.email.present? %>
       </td>
 
       <td><%= patient.weight %></td>

@@ -35,18 +35,18 @@
             <%= patient.city %>
             <%= patient.state %>
             <%= patient.zip %>
-            <%= 'C: ' if patient.cell? %><%= patient.cell %>
-            <%= 'H: ' if patient.home? %><%= patient.home %>
-            <%= 'W: ' if patient.work? %><%= patient.work %>
-            <%= 'E: ' if patient.email? %><%= patient.email %>
+            <%= "(C)#{patient.cell} " if patient.cell.present? %>
+            <%= "(H)#{patient.home} " if patient.home.present? %>
+            <%= "(W)#{patient.work} " if patient.work.present? %>
+            <%= " #{patient.email}" if patient.email.present? %>
           </td>
           <td>
             <%= patient.weight %>
           </td>
           <td>
-            <%= patient.com1.strip if patient.com1? %>
-            <%= ' / ' + patient.com2.strip if patient.com2? %>
-            <%= ' / ' + patient.com3.strip if patient.com3? %>
+            <%= "#{patient.com1.strip}" if patient.com1? %>
+            <%= " / #{patient.com2.strip}" if patient.com2? %>
+            <%= " / #{patient.com3.strip}" if patient.com3? %>
           </td>
           <td>
             <%= patient.d_onset %><%= '/Pain: ' if patient.pain_scale? %>

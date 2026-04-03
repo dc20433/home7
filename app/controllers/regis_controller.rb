@@ -4,8 +4,11 @@ class RegisController < ApplicationController
 
   # GET /regis or /regis.json
   def index
-    @q = Regi.order("last_name, first_name, init, dob").ransack(params[:q])
-    @regis = @q.result(distinct: true)
+    # Search first, then apply the result to @regis
+    @q = Regi.ransack(params[:q])
+    
+    # Apply result and THEN add your specific ordering
+    @regis = @q.result(distinct: true).order("last_name, first_name, init, dob")
   end
 
   # GET /regis/1 or /regis/1.json
