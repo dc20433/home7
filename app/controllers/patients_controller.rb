@@ -64,6 +64,14 @@ class PatientsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def patient_params
-      params.require(:patient).permit(:name, :v_date, :m_stat, :weight, :height, :street, :city, :state, :zip, :cell, :home, :work, :email, :referred, :com1, :com2, :com3, :d_onset, :pain_scale, :diag_given, :aq_b4, :o_dis, :last_prd, :preg, :preg_wks, :regi_id, di_list:[])
+      params.require(:patient).permit(
+        :name, :v_date, :m_stat, :weight, :height, :street, :city, :state, :zip, 
+        :cell, :home, :work, :email, :referred, :com1, :com2, :com3, 
+        :d_onset, :pain_scale, :diag_given, :aq_b4, :o_dis, :last_prd, 
+        :preg, :preg_wks, :regi_id,
+        # This line replaces 'di_list:[]' and automatically permits 
+        # every key you defined in your Patient model's HEALTH_ISSUES hash
+        *Patient::HEALTH_ISSUES.keys
+      )
     end
 end

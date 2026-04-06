@@ -62,6 +62,12 @@ end
 
     # Only allow a trusted parameter "white list" through.
     def filing_params
-      params.require(:filing).permit(:u_date, :f_date, :title, :describe, :regi_id, :image)
+      # We list all possible params
+      list = [:title, :describe, :regi_id, :image]
+      
+      # Only add :f_date to the permit list if the column actually exists
+      list << :f_date if Filing.column_names.include?('f_date')
+      
+      params.require(:filing).permit(list)
     end
 end

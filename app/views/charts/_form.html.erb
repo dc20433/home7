@@ -1,3 +1,9 @@
+<div class="card mt-0 mx-auto p-4 border-primary" style="width: 70rem;">
+  <div class="card-header">
+    <h2 class="card-title text-center">Patient Chart</h2>
+    <%= render 'layouts/identifier' %>
+  </div> 
+
 <%= form_with(model: [@regi, @chart]) do |f| %>
   <% if @chart.errors.any? %>
     <div id="error_explanation">
@@ -39,8 +45,10 @@
   </div>
   <br>
   <div class="btn-group" role="group">
-    <%= f.submit "Submit", class: "btn btn-sm btn-primary outline-double rounded-pill px-3 m-2 fw-bold" %>
+    <%= f.submit "Save", class: "btn btn-sm btn-outline-primary outline-double rounded-pill px-3 m-2 fw-bold" %>
 <% end %>
-  <%= button_to "Delete", [@regi,@chart], method: :delete, class:"btn btn-sm btn-danger outline-double rounded-pill px-3 m-2 fw-bold", form: { data: { turbo_confirm: "Are you sure?" } } %>
-  <%= link_to 'Return', :back, class:"btn btn-sm btn-success outline-double rounded-pill px-3 m-2 fw-bold" %>
+  <%= button_to "Delete", [@regi,@chart], method: :delete, class:"btn btn-sm btn-outline-danger outline-double rounded-pill px-3 m-2 fw-bold", form: { data: { turbo_confirm: "Are you sure?" } } %>
+  <%= link_to 'Patient Chart', regi_charts_path, class:"btn btn-sm btn-outline-info outline-double rounded-pill px-1 m-2 fw-bold" %>
+  <%= link_to 'Last Page', :back, class:"btn btn-sm btn-outline-success outline-double rounded-pill px-3 m-2 fw-bold" %>
   </div>
+</div>

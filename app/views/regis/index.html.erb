@@ -1,55 +1,50 @@
-<%# render "layouts/navbar" %>
-  
-<div 
-  class="screen"
-  style="background-image: url('<%= asset_path "pine_trees.jpg" %>');">
-  <div class="color-overlay d-flex justify-content-center align-items-center">    
-    <div class="card mt-0 mx-auto border-primary" style="width: 70rem;">
-        <div class="card shadow border-dark">
-          <div class="card-header">
-            <h2 class="card-title text-center">Patient List</h2>
-          </div>
-          <div class="card-body">
+<div class="card mt-0 mx-auto border-primary" style="width: 70rem;">
+  <div class="card shadow border-dark">
+    <div class="card-header">
+      <h2 class="card-title text-center p-4">Patient List as of <%= Time.now.strftime("%Y-%m-%d %H:%M") %></h2>
+    </div>
+    <div class="card-body">
 
-            <%= link_to "New Patient", new_regi_path, class: "btn btn-sm btn-outline-dark outline-double rounded-pill px-2 py-0 fw-bold"  %>
-            <%= link_to 'All Charts by Date', overviews_chart_date_path, class:"btn btn-sm btn-outline-info outline-double rounded-pill px-2 py-0 m-1 fw-bold" %>
-            <%= link_to 'All Charts by Name', overviews_chart_name_path, class:"btn btn-sm btn-outline-primary outline-double rounded-pill px-2 py-0 m-1 fw-bold" %>
-            <%= link_to 'All Patient Info', overviews_patient_info_path, class:"btn btn-sm btn-outline-secondary outline-double rounded-pill px-2 py-0 m-1 fw-bold" %>
-            <%= render 'search' %>
+      <%= link_to "New Patient", new_regi_path, class: "btn btn-sm btn-dark outline outline-double border border-lg border-dark rounded-pill px-2 py-0 fw-bold" %>
+      <%= link_to 'All Charts by Date', overviews_chart_date_path, class:"btn btn-sm btn-primary outline-double border border-lg border-primary rounded-pill px-2 py-0 m-1 fw-bold" %>
+      <%= link_to 'All Charts by Name', overviews_chart_name_path, class:"btn btn-sm btn-secondary outline-double border border-lg border-secondary rounded-pill px-2 py-0 m-1 fw-bold" %>
+      <%= link_to 'All Patient Info', overviews_patient_info_path, class:"btn btn-sm btn-info border border-lg border-info rounded-pill px-2 py-0 m-1 fw-bold" %>
+      <%= link_to 'Patient Statistics', overviews_statistics_path, class:"btn btn-sm btn-warning border border-lg border-dark rounded-pill px-2 py-0 m-1 fw-bold" %>
+      <%= render 'search' %>
 
-            <table class="table table-sm table-striped table-hover mx-auto mt-1">
-              <thead class="table-primary fs-6 pt">
-                <tr>
-                  <th>Last Name</th>
-                  <th>First Name</th>
-                  <th>M.I.</th>
-                  <th>Gender</th>
-                  <th>Age</th>
-                  <th style="width:155px">Date of Birth</th>
-                  <th style="width:155px">Created on</th>
-                  <th style="width:185px"></th>
-                </tr>
-              </thead>
-            <% @regis.each do |regi| %>
-              <tr>
-                <td><%= link_to regi.last_name, regi_path(regi.id) %></td>
-                <td><%= regi.first_name %></td>
-                <td><%= regi.init? ? regi.init + "." : "" %></td>
-                <td><%= regi.gender %></td>
-                <td><%= regi.p_age %></td>
-                <td><%= regi.dob %></td>
-                <td><%= regi.created_at.strftime("%Y-%m-%d, %H:%M") %></td>             
-                <td>                
-                  <%= link_to 'Info', regi_patients_path(regi.id), class: "btn btn-sm btn-warning border border-lg border-dark rounded-pill px-2 py-0 fw-bold" %>
-                  <%= link_to 'Charts', regi_charts_path(regi.id), class: "btn btn-sm btn-primary border border-lg border-dark rounded-pill px-1 py-0 fw-bold" %>
-                  <%= link_to 'Files', regi_filings_path(regi.id), class: "btn btn-sm btn-success border border-dark rounded-pill px-2 py-0 fw-bold" %>
-                </td>
-              </tr>
-              <% end %>
-            </table>
-          </div>
-        </div>
-      </div>
+      <table class="table table-sm table-striped table-hover mx-auto mt-1">
+        <thead class="table-primary">
+      
+        <tr>
+            <th>Last Name</th>
+            <th>First Name</th>
+            <th>M.I.</th>
+            <th>Gender</th>
+            <th>Age</th>
+            <th class="text-nowrap">Date of Birth</th>
+            <th class="text-nowrap">Created on</th>
+            <th class="text-nowrap"></th>
+          </tr>
+
+        </thead>
+      <% @regis.each do |regi| %>
+        <tr>
+          <td><%= link_to regi.last_name, regi_path(regi.id) %></td>
+          <td><%= regi.first_name %></td>
+          <td><%= regi.init? ? regi.init + "." : "" %></td>
+          <td><%= regi.gender %></td>
+          <td><%= regi.p_age %></td>
+          <td><%= regi.dob %></td>
+          <td><%= regi.created_at.strftime("%Y-%m-%d") %></td>             
+          <td>                
+            <%= link_to 'Info', regi_patients_path(regi.id), class: "btn btn-sm btn-outline-info outline-double border border-lg border-info rounded-pill px-2 py-0 fw-bold" %>
+            <%= link_to 'Charts', regi_charts_path(regi.id), class: "btn btn-sm btn-outline-primary outline-double border border-lg border-primary rounded-pill px-1 py-0 fw-bold" %>
+            <%= link_to 'Files', regi_filings_path(regi.id), class: "btn btn-sm btn-outline-success outline-double border border-lg border-success rounded-pill px-2 py-0 fw-bold" %>
+          </td>
+        </tr>
+        <% end %>
+      </table>
+    </div>
   </div>
 </div>
 

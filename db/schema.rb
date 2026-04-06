@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_02_190750) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_06_165413) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -54,13 +54,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_02_190750) do
     t.date "t_date"
     t.datetime "updated_at", precision: 0, null: false
     t.index ["regi_id"], name: "index_charts_on_regi_id"
-    t.index ["t_date"], name: "index_charts_on_t_date"
   end
 
   create_table "filings", force: :cascade do |t|
     t.datetime "created_at", precision: 0, null: false
     t.text "describe"
-    t.date "f_date"
     t.bigint "regi_id", null: false
     t.datetime "updated_at", precision: 0, null: false
     t.index ["regi_id"], name: "index_filings_on_regi_id"
@@ -68,42 +66,64 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_02_190750) do
 
   create_table "patients", force: :cascade do |t|
     t.string "alcohol"
+    t.boolean "anxiety"
     t.string "aq_b4"
     t.string "aq_where"
     t.string "aqrist"
+    t.boolean "back_pain"
     t.string "better"
+    t.boolean "borderline"
+    t.boolean "bypolar"
     t.string "c_onset"
+    t.boolean "cancer"
     t.string "cell"
+    t.boolean "chest_pain"
     t.string "city"
     t.string "com1"
     t.string "com2"
     t.string "com3"
+    t.boolean "constipation"
+    t.boolean "crack_cocaine"
     t.datetime "created_at", precision: 0, null: false
     t.decimal "d_lost", precision: 4, scale: 1
     t.date "d_onset"
     t.decimal "d_restd", precision: 4, scale: 1
+    t.boolean "depression"
     t.string "di_list", default: [], array: true
+    t.boolean "diabetes"
     t.string "diag_given"
     t.string "diag_where"
     t.string "email"
+    t.boolean "excess_sweating"
+    t.boolean "frequent_colds"
     t.date "h_when"
+    t.boolean "heart_disease"
     t.decimal "height", precision: 2, scale: 1
+    t.boolean "hepatitis"
+    t.boolean "hiv_aids"
     t.string "home"
     t.string "hosp"
+    t.boolean "hypertension"
     t.string "inj_surg"
     t.date "last_prd"
+    t.boolean "lymph"
     t.string "m_stat"
     t.string "med_taken"
     t.string "name"
+    t.boolean "neck_stiffness"
+    t.boolean "night_sweating"
     t.string "o_dis"
     t.string "o_drs"
     t.date "o_drs_when"
     t.string "pain_scale"
+    t.boolean "palpitation"
     t.string "pcp_name"
     t.string "preg"
     t.integer "preg_wks"
+    t.boolean "ptsd"
     t.string "referred"
     t.bigint "regi_id", null: false
+    t.boolean "seizure"
     t.string "state"
     t.string "street"
     t.string "string", default: [], array: true
@@ -126,8 +146,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_02_190750) do
     t.string "last_name"
     t.string "p_name"
     t.datetime "updated_at", precision: 0, null: false
-    t.index ["last_name"], name: "index_regis_on_last_name"
-    t.index ["p_name"], name: "index_regis_on_p_name"
   end
 
   create_table "users", force: :cascade do |t|

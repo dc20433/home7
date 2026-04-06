@@ -1,56 +1,52 @@
 <%# render "layouts/navbar" %>
 
-<div 
-  class="screen"
-  style="background-image: url(<%= asset_path 'pine_trees.jpg' %> );">
-  <div class="color-overlay d-flex justify-content-center">    
-    <div class="card mt-3 mx-auto border-primary" style="width: 48rem;">
-        <div class="card shadow border-dark">
-          <div class="card-header">
-            <h1 class="text-center">Patient Files</h1>
-            <%= render 'layouts/identifier' %>
-          </div>
-          <div class="card-body">
-            <%= link_to 'New Filing', new_regi_filing_path(params[:regi_id]), class: "btn btn-sm btn-outline-dark outline-double rounded-pill px-2 py-0 m-1 fw-bold" %>
-            <%= link_to 'Patient Info', regi_patients_path, class:"btn btn-sm btn-outline-info border border-lg border-dark rounded-pill px-2 py-0 m-1 fw-bold" %>
-            <%= link_to 'Patient Charts', regi_charts_path, class:"btn btn-sm btn-outline-primary border border-lg border-dark rounded-pill px-2 py-0 m-1 fw-bold" %>
-            <%= link_to 'Patient List', regis_path, class:"btn btn-sm btn-warning border border-lg border-dark rounded-pill px-2 py-0 m-1 fw-bold" %>
-            <%= link_to 'Previous Page', :back, class:"btn btn-sm btn-outline-success border border-lg border-dark rounded-pill px-2 py-0 m-1 fw-bold" %>
+   
+<div class="card mt-3 mx-auto border-primary" style="width: 48rem;">
+  <div class="card shadow border-dark">
+    <div class="card-header">
+      <h1 class="text-center">Patient Files</h1>
+      <%= render 'layouts/identifier' %>
+    </div>
 
-            <table class="table table-sm table-striped table-hover mt-1">
-              <thead class="table-info fs-6">
-                <tr>
-                  <th>Updated on</th>
-                  <th>File</th>
-                  <th>Description</th>
-                  <th style="width:220px"></th>
-                </tr>
-              </thead>
-              <tbody>
-                <% @regi.filings.order("created_at DESC").each do |filing| %>
-                  <tr>
-                  <td><%= filing.f_date %></td>
-                    <td>
-                      <% if filing.image.attached? && filing.image.image? %>
-                        <%= image_tag filing.image, height: "25px" %>
-                      <% else %>
-                        <%= 'PDF' %>
-                      <% end %>
-                    </td>
-                    <td><%= filing.describe %></td>
-                    <td>
-                      <div class="btn-group" role="group">
-                      <%= link_to 'View', filing.image, class: "btn btn-sm btn-primary shadow border border-dark rounded-pill px-3 m-2 fw-bold" %>
-                      <%= link_to 'Change', edit_regi_filing_path(@regi,filing), class: "btn btn-sm btn-info shadow border border-dark rounded-pill px-3 m-2 fw-bold" %>
-                      <%= button_to "Delete", [@regi,filing], method: :delete, class:"btn btn-sm btn-danger shadow border border-dark rounded-pill px-3 m-2 fw-bold", form: { data: { turbo_confirm: "Are you sure?" } } %>
-                      </div>
-                    </td>
-                  </tr>
+    <div class="card-body">
+      <%= link_to 'New Filing', new_regi_filing_path(params[:regi_id]), class: "btn btn-sm btn-dark outline-double rounded-pill px-2 py-0 m-1 fw-bold" %>
+      <%= link_to 'Patient Info', regi_patients_path, class:"btn btn-sm btn-info border border-lg border-dark rounded-pill px-2 py-0 m-1 fw-bold" %>
+      <%= link_to 'Patient Charts', regi_charts_path, class:"btn btn-sm btn-primary border border-lg border-dark rounded-pill px-2 py-0 m-1 fw-bold" %>
+      <%= link_to 'Patient List', regis_path, class:"btn btn-sm btn-warning border border-lg border-dark rounded-pill px-2 py-0 m-1 fw-bold" %>
+      <%= link_to 'Previous Page', :back, class:"btn btn-sm btn-success border border-lg border-dark rounded-pill px-2 py-0 m-1 fw-bold" %>
+
+      <table class="table table-sm table-striped table-hover mt-1">
+        <thead class="table-info fs-6">
+          <tr>
+            <th>Filed on</th>
+            <th>File</th>
+            <th>Description</th>
+            <th style="width:220px"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @regi.filings.order("created_at DESC").each do |filing| %>
+            <tr>
+            <td><%= filing.f_date %></td>
+              <td>
+                <% if filing.image.attached? && filing.image.image? %>
+                  <%= image_tag filing.image, height: "25px" %>
+                <% else %>
+                  <%= 'PDF' %>
                 <% end %>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
+              </td>
+              <td><%= filing.describe %></td>
+              <td>
+                <div class="btn-group" role="group">
+                <%= link_to 'View', filing.image, class: "btn btn-sm btn-ooutline-primary shadow border border-dark rounded-pill px-3 m-2 fw-bold" %>
+                <%= link_to 'Change', edit_regi_filing_path(@regi,filing), class: "btn btn-sm btn-ooutline-info shadow border border-dark rounded-pill px-3 m-2 fw-bold" %>
+                <%= button_to "Delete", [@regi,filing], method: :delete, class:"btn btn-sm btn-ooutline-danger shadow border border-dark rounded-pill px-3 m-2 fw-bold", form: { data: { turbo_confirm: "Are you sure?" } } %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>

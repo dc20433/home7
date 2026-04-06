@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   get 'overviews/patient_info'
   get 'overviews/chart_name'
   get 'overviews/chart_date'
+  get 'overviews/statistics'
 
   get 'filings/image/:id', to: 'filings#image', as: 'image_regi_filing'
 

@@ -1,0 +1,43 @@
+<div class="card mt-0 mx-auto border-primary" style="width: 70rem;">
+  <div class="card shadow border-dark">
+    <div class="card-header">
+      <h2 class="text-center m-4">Patient Statistics as of <%= Time.now.strftime("%Y-%m-%d %H:%M") %></h2>
+
+      <%= link_to 'All Charts by Date', overviews_chart_date_path, class:"btn btn-sm btn-dark border-lg border-dark rounded-pill px-2 py-0 m-1 fw-bold" %>
+      <%= link_to 'All Charts by Name', overviews_chart_name_path, class:"btn btn-sm btn-primary border border-lg border-dark rounded-pill px-2 py-0 m-1 fw-bold" %>
+      <%= link_to 'All Patient Info', overviews_patient_info_path, class:"btn btn-sm btn-info border border-lg border-dark rounded-pill px-2 py-0 m-1 fw-bold" %>
+      <%= link_to 'Patient List', regis_path, class:"btn btn-sm btn-warning border border-lg border-dark rounded-pill px-2 py-0 m-1 fw-bold" %>
+    </div>
+
+<div class="card shadow border-dark m-4">
+  <br>
+          <div class="card-body fs-6">
+            <table class="table table-sm table-striped table-hover mx-auto mt-0" style="width: 60rem">
+            
+              <thead class="table-primary">
+                <tr class="text-center">
+                  <th>Patients</th>
+                  <th>Male</th>
+                  <th>Female</th>
+                  <th>Other</th>
+                  <th>Records</th>
+                  <th>Charts</th>
+                  <th>Files</th>
+                  <th>Charts/Patient</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="col text-center">
+                  <td><%= @total_patients %></td>
+                  <td><%= @total_male_patients %></td>
+                  <td><%= @total_female_patients %></td>
+                  <td><%= @total_other_patients %></td>
+                  <td><%= @total_info_records %></td>
+                  <td><%= @total_charts %></td>
+                  <td><%= @total_filing %></td>
+                  <td><%= @average_charts_per_patient %></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>

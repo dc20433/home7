@@ -1,8 +1,4 @@
-<div 
-  class="screen"
-  style="background-image: url(<%= asset_path 'pine_trees.jpg' %> );">
-  <div class="color-overlay d-flex justify-content-center mt-5 pt-5">
-    
+
     <div class="card mt-3 mx-auto border-primary" style="width: 33rem;">
         <div class="card shadow border-dark">
           <div class="card-header">
@@ -24,9 +20,13 @@
               <% end %>
 
               <div class="field fs-6">
-                <b>Updated on</b>
-                <%= f.date_field :f_date, class:"form-control form-control-sm border-primary fs-4" %>
-              </div>
+  <b>Filed on</b>
+  <% if f.object.respond_to?(:f_date) %>
+    <%= f.date_field :f_date, class:"form-control form-control-sm border-primary fs-4" %>
+  <% else %>
+    <span class="text-muted small">(Date column missing in DB)</span>
+  <% end %>
+</div>
 
               <div class="field"><br>
                 <%= f.file_field :image,  class:'form-control border-primary' %>
@@ -38,8 +38,9 @@
               </div>
 
               <div class="actions">
-                <%= f.submit "Submit", class: "btn btn-sm btn-success shadow border border-dark rounded-pill px-3 m-2 fw-bold" %>
-                <%= link_to 'Return', regi_filings_path(@filing.regi), class: "btn btn-sm btn-info shadow border border-dark rounded-pill px-3 m-2 fw-bold" %>
+                <%= f.submit "Save", class: "btn btn-sm btn-outline-primary outline-double shadow border border-dark rounded-pill px-3 m-2 fw-bold" %>
+                <%= link_to "Patient Info", regis_path, class: "btn btn-sm btn-outline-success outline-double shadow border border-dark rounded-pill px-1 m-2 fw-bold" %>   
+                <%= link_to 'Last Page', :back, class: "btn btn-sm btn-outline-info outline-double shadow border border-dark rounded-pill px-1 m-2 fw-bold" %>
               </div>
             <% end %>
           </div>

@@ -1,40 +1,69 @@
 @import "bootstrap";
 
-// 1. Reset the body so it doesn't interfere
-body,
-html {
-  margin: 0;
+// 1. GLOBAL LAYOUT & BACKGROUND
+html,
+body {
+  margin: 0px;
   padding: 0;
   height: 100%;
-  background-color: transparent !important; // Prevent the "Grey Paint"
+  // Apply the trees globally so you don't have to add .screen to every page
+  background-image: url('<%= asset_path "pine_trees.jpg" %>');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
 }
 
-// 2. The Screen Container
-.screen {
-  display: block !important;
-  width: 100% !important;
-  min-height: 100vh !important; // Force it to fill the browser height
-  margin: 0 !important;
-  padding: 0 !important;
-
-  // Background logic
-  background-size: cover !important;
-  background-position: center center !important;
-  background-repeat: no-repeat !important;
-  background-attachment: fixed !important;
-
-  // Ensure it sits behind the card content
-  position: relative;
-  z-index: 1;
-}
-
-// 3. The Color Overlay (The "Tint")
+// 2. THE SCREEN & OVERLAY (From your snippet)
+// Use this if you want a specific "tint" over the trees
 .color-overlay {
   width: 100%;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: rgba(0, 0, 0, 0.4) !important; // Darken the trees for readability
+  background-color: rgba(0, 0, 0, 0.2) !important; // Light tint for readability
+}
+
+// 3. THE "SURGERY" - FONT SIZES
+// Your Table "Surgery" Logic
+.table {
+  thead {
+    th {
+      font-size: 1.15rem !important; // No space between number and rem
+      font-weight: 600 !important;
+      white-space: nowrap !important;
+      vertical-align: middle !important;
+      background-color: #e9ecef !important;
+    }
+  }
+
+  tbody {
+    td {
+      font-size: 1.5rem !important; // Matches your fs-4 preference
+      //vertical-align: middle !important;
+    }
+  }
+}
+
+// 4. PROTECTING BUTTONS & SMALL TEXT
+// This ensures btn-sm doesn't grow to 1.5rem
+.btn {
+  font-size: 1rem;
+}
+
+.btn-sm,
+.table-sm,
+.small,
+.fs-6 {
+  font-size: 0.875rem !important;
+}
+
+// 5. UTILITIES
+.logo-float {
+  position: absolute;
+  top: 5px;
+  right: 25px;
+  z-index: 2000;
 }
 
 .table-responsive {
@@ -51,4 +80,43 @@ html {
   outline-width: 5px;
   outline-style: double;
   color: white;
+}
+
+/* Ensure the checkbox and its description always stay on the same line */
+.health-checkbox-pair {
+  display: inline-block;
+  /* Essential for them to sit inline */
+  white-space: nowrap;
+  /* Forces text to NOT wrap */
+  margin-right: 1.2rem;
+  /* Consistent spacing between different issues */
+  font-size: 1rem;
+  /* Keep this smaller for dense lists */
+}
+
+/* Make sure the text is slightly smaller than the checkbox for dense lists */
+.health-checkbox-pair label {
+  font-weight: 400;
+  /* Standard weight */
+  padding-left: 0.3rem;
+  /* Small gap from the box */
+  cursor: pointer;
+  /* Makes the text clickable to check the box */
+}
+
+/* Make the checkboxes bold and blue to match your inputs */
+.form-check-input {
+  border: 2px solid #0d6efd !important;
+  /* This is the Bootstrap primary blue */
+  width: 1.2em;
+  height: 1.2em;
+  cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.8);
+  /* Slight opacity to see the background through it */
+}
+
+/* Ensure they look "pressed" when checked */
+.form-check-input:checked {
+  background-color: #0d6efd !important;
+  border-color: #0d6efd !important;
 }
