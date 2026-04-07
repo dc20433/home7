@@ -16,26 +16,42 @@
             
               <thead class="table-primary">
                 <tr class="text-center">
+                  <th> </th>
                   <th>Patients</th>
-                  <th>Male</th>
-                  <th>Female</th>
-                  <th>Other</th>
                   <th>Records</th>
                   <th>Charts</th>
                   <th>Files</th>
                   <th>Charts/Patient</th>
+                  <th>Charts/Day</th>
                 </tr>
               </thead>
               <tbody>
                 <tr class="col text-center">
+                  <td>Total</td>
                   <td><%= @total_patients %></td>
-                  <td><%= @total_male_patients %></td>
-                  <td><%= @total_female_patients %></td>
-                  <td><%= @total_other_patients %></td>
                   <td><%= @total_info_records %></td>
                   <td><%= @total_charts %></td>
                   <td><%= @total_filing %></td>
                   <td><%= @average_charts_per_patient %></td>
+                  <td><%= @average_charts_per_day %></td>
+                </tr>
+                <tr class="col text-center">
+                  <td>Male</td>
+                  <td><%= @total_male_patients %></td>
+                  <td><%= @male_records %></td>
+                  <td><%= @male_charts %></td>
+                  <td><%= @male_filing %></td>
+                  <td><%= @male_charts_per_patient %></td>
+                  <td><%= @male_charts_per_day %></td>
+                </tr>
+                <tr class="col text-center">
+                  <td>Female</td>
+                  <td><%= @total_female_patients %></td>
+                  <td><%= @female_records %></td>
+                  <td><%= @female_charts %></td>
+                  <td><%= @female_filing %></td>
+                  <td><%= @female_charts_per_patient %></td>
+                  <td><%= @female_charts_per_day %></td>
                 </tr>
               </tbody>
             </table>
