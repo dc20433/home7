@@ -22,7 +22,14 @@ class PatientsController < ApplicationController
   end
 
   # GET regis/1/patients/1/edit
+  # app/controllers/patients_controller.rb
   def edit
+    @patient = Patient.find(params[:id])
+    
+    # SECURITY: If I am a patient, I can ONLY edit my own ID
+    if Current.user.patient? && Current.user.patient_id != @patient.id
+      redirect_to root_path, alert: "You do not have permission to edit this record."
+    end
   end
 
   # POST regis/1/patients
