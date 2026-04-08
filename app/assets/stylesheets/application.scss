@@ -7,7 +7,7 @@ body {
   padding: 0;
   height: 100%;
   // Apply the trees globally so you don't have to add .screen to every page
-  background-image: url('<%= asset_path "pine_trees.jpg" %>');
+  background-image: url("pine_trees.jpg");
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
