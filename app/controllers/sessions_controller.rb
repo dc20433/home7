@@ -9,7 +9,7 @@ class SessionsController < ApplicationController
     if user = User.authenticate_by(params.permit(:email, :password))
       start_new_session_for user
       # Force a full page reload to ensure roles/UI refresh correctly
-      redirect_to root_path, status: :see_other, notice: "Logged in!"
+      redirect_to regis_path, status: :see_other, notice: "Logged in!"
     else
       redirect_to new_session_path, alert: "Try again."
     end
@@ -18,7 +18,7 @@ class SessionsController < ApplicationController
   def destroy
     terminate_session
     # Force a full page reload to clear the cache for different roles
-    redirect_to new_session_path, status: :see_other, notice: "Signed out!"
+    redirect_to root_path, status: :see_other, notice: "Signed out!"
   end # <--- This closes 'destroy'
 
 end # <--- This closes 'class SessionsController'

@@ -7,78 +7,87 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
+    <%# RE-ADDED BOOTSTRAP CSS - This brings back the buttons and grid %>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
+    
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
-    <style>
-      /* This ensures the trees are always the base layer of the site */
-      body {
-  background: 
-    /* Layer 1: The Tint (Must be listed FIRST to sit on TOP) */
-    linear-gradient(rgba(105, 105, 100, 0.2), rgba(105, 105, 100, 0.2)), 
-    /* Layer 2: The Trees */
-    url('<%= asset_path("pine_trees.jpg") %>'); 
 
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-  background-repeat: no-repeat;
-  
-  /* This ensures the colors underneath don't bleed through strangely */
-  background-color: #f4f1ea; 
-  margin: 1px;
-  padding: 1px;
-       
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #f4f1ea;
       }
-      /* For the Big 5 views, we can add a solid background to cover the trees if they make the table hard to read */
-      .full-width-bg {
-        background-color: white; /* Or light grey #f8f9fa */
-        min-height: 100vh;
+
+      /* This wrapper holds the pinetrees background for EVERY page */
+      .main-background-wrapper {
+        background: 
+          linear-gradient(rgba(105, 105, 100, 0.2), rgba(105, 105, 100, 0.2)), 
+          url('<%= asset_path("pine_trees.jpg") %>');
+        background-size: cover;
+        background-position: center top;
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+        
+        /* Ensures it fills the screen height minus the navbar */
+        min-height: calc(100vh - 60px); 
+        width: 100%;
       }
-      .logo-float {
-        position: absolute;
-        top: 5px;
-        bottom: 15px;
-        right: 25px;
-        z-index: 2000;
+
+      /* Clean white box style for data tables (Big 5) */
+      .white-data-card {
+        background-color: rgba(255, 255, 255, 0.95);
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        padding: 30px;
+        margin-bottom: 30px;
       }
     </style>
   </head>
 
   <body>
-  <%# 1. The Logo remains absolute %>
-  <div class="logo-float">
-    <%= image_tag "title_2.png", style: "height: 35px; width: auto;", alt: "Zhang's Acupuncture", class: "pb-2" %>
-  </div>
+    <%# 1. Navbar is absolute top %>
+    <%= render 'layouts/navbar' %>
 
-  <% 
-    # Define the Big 5 that NEED full width
-    full_width_views = [
-      ["charts", "index"], 
-      ["patients", "index"], 
-      ["overviews", "chart_date"], 
-      ["overviews", "chart_name"], 
-      ["overviews", "patient_info"]
-    ]
+    <% 
+      c = params[:controller]
+      a = params[:action]
+      
+      # Determine if we are on a "Big 5" data page
+      is_big_5 = (c == "charts" && a == "index") ||
+                 (c == "patients" && a == "index") ||
+                 (c == "overviews" && ["chart_date", "chart_name", "patient_info"].include?(a))
+      
+      is_landing = (c == "sites" && a == "home")
+      show_full_width = is_big_5 || is_landing
+    %>
 
-    # Check if the current page is in the Big 5 list
-    is_full_width = full_width_views.any? { |c, a| params[:controller] == c && params[:action] == a }
-  %>
+    <%# 2. Main Wrapper ensures the background is always "lowered" below the navbar %>
+    <div class="main-background-wrapper">
+      
+      <%# p-0 for landing page to touch edges, mt-5 for others %>
+      <div class="<%= show_full_width ? 'container-fluid p-0' : 'container pt-5' %>">
+        <%= render "layouts/alert" %>
+        
+        <div class="row m-0 justify-content-center">
+          <div class="<%= show_full_width ? 'col-12' : 'col-lg-10' %>">
+            
+            <%# Wrap Big 5 in a white card for readability %>
+            <% if is_big_5 %>
+              <div class="white-data-card mt-4">
+                <%= yield %>
+              </div>
+            <% else %>
+              <%= yield %>
+            <% end %>
 
-  <%# 2. The Dynamic Container %>
-  <%# If NOT full width (like regis/index), we use 'container mt-5' to show the trees on the sides %>
-  <div class="<%= is_full_width ? 'container-fluid p-0' : 'container mt-5' %>">
-    <%= render "layouts/alert" %>
-    
-    <div class="row m-0 justify-content-center">
-      <%# For non-full-width pages, col-lg-10 keeps the content centered with trees visible %>
-      <div class="<%= is_full_width ? 'col-12' : 'col-lg-10' %>">
-        <%= yield %>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
 
+    <%# RE-ADDED BOOTSTRAP JS - Makes dropdowns and alerts work %>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>

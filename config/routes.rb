@@ -16,5 +16,6 @@ Rails.application.routes.draw do
 
   get "up" => "rails/health#show", as: :rails_health_check
 
-  root "regis#index"
+  #root "regis#index"
+  root "sites#home"
 end

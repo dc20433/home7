@@ -1,0 +1,12 @@
+<div class="d-flex flex-column justify-content-center align-items-center h-100 text-center" style="min-height: calc(100vh - 100px);">
+  <div class="bg-white bg-opacity-75 p-5 rounded-3 shadow border border-dark">
+    <h1 class="display-2 fw-bold mb-4" style="color: #2c3e50;">Welcome to Zhang's Acupuncture</h1>
+    <h2 class="display-6 text-dark">Traditional Chinese Medicine and Medical Treatment</h2>
+    
+    <% if authenticated? %>
+      <div class="mt-4">
+        <%= link_to "Go to Patient List", regis_path, class: "btn btn-lg btn-info rounded-pill border border-dark border-2 fw-bold px-5 shadow" %>
+      </div>
+    <% end %>
+  </div>
+</div>
