@@ -1,43 +1,42 @@
-<%# render "layouts/navbar" %>
 
-  <h2 class="text-center pt-4 pb-2">All Patient Charts by Name as of <%= Time.now.strftime("%Y-%m-%d %H:%M") %></h2>
-  
-  <%= link_to 'All Charts by Date', overviews_chart_date_path, class:"btn btn-sm btn-dark border border-lg border-dark rounded-pill px-2 py-0 m-1 fw-bold" %>
-  <%= link_to 'All Patient Info', overviews_patient_info_path, class:"btn btn-sm btn-info border border-lg border-dark rounded-pill px-2 py-0 m-1 fw-bold" %>
-  <%= link_to 'Patient List', regis_path, class:"btn btn-sm btn-warning border border-lg border-dark rounded-pill px-2 py-0 m-1 fw-bold" %>
-  <button onclick="window.print()", class="btn btn-sm btn-success border border-lg border-dark rounded-pill px-3 py-0 fw-bold" >Print This Page</button>
+<h2 class="text-center pt-4 pb-2">All Patient Charts by Name as of <%= Time.now.strftime("%Y-%m-%d %H:%M") %></h2>
 
-  <table class="table table-sm table-striped table-hover mt-4">
-    <thead class="table-info fs-6">
+<%= link_to 'All Charts by Date', overviews_chart_date_path, class:"btn btn-sm btn-dark border border-lg border-dark rounded-pill px-2 py-0 m-1 fw-bold" %>
+<%= link_to 'All Patient Info', overviews_patient_info_path, class:"btn btn-sm btn-info border border-lg border-dark rounded-pill px-2 py-0 m-1 fw-bold" %>
+<%= link_to 'Patient List', regis_path, class:"btn btn-sm btn-warning border border-lg border-dark rounded-pill px-2 py-0 m-1 fw-bold" %>
+<button onclick="window.print()", class="btn btn-sm btn-secondary border border-lg border-dark rounded-pill px-3 py-0 fw-bold" >Print This Page</button>
+
+<%= render 'shared/search_bar', q: @q, url: request.path, search_key: :regi_p_name_or_regi_first_name_or_regi_last_name_cont, placeholder: "Search charts by patient name..." %>
+
+  <table class="table table-sm table-striped table-hover mt-4" style="table-layout: fixed; width: 100%; border-collapse: collapse;">
+  <thead class="table-info fs-6">
+    <tr>
+      <th style="width: 15%;">Name</th> 
+      <th style="width: 10%;">Date Treated</th>
+      <th style="width: 15%;">Subjective</th>
+      <th style="width: 15%;">Objective</th>
+      <th style="width: 15%;">Assessment</th>
+      <th style="width: 30%;">Plan</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% last_patient_id = nil %>
+    <% @charts.each do |chart| %>
       <tr>
-        <th style="width:150px">Name</th>
-        <th style="width:8vw">Date Treated</th>
-        <th style="width:18vw">Subjective</th>
-        <th style="width:14vw">Objective</th>
-        <th style="width:10vw">Assessment</th>
-        <th style="width:36vw">Plan</th>
+        <td style="word-break: break-all; white-space: normal; overflow: hidden;">
+          <% if chart.regi_id != last_patient_id %>
+            <%= link_to "#{chart.regi.p_name} (#{chart.regi.p_age})", regi_charts_path(chart.regi_id) %>
+          <% end %>
+        </td>
+        <td><%= chart.t_date %></td>
+        <td style="word-break: break-all; white-space: normal;"><%= chart.subj %></td>
+        <td style="word-break: break-all; white-space: normal;"><%= chart.obj %></td>
+        <td style="word-break: break-all; white-space: normal;"><%= chart.assess %></td>
+        <td style="word-break: break-all; white-space: normal;"><%= chart.plan %></td>
       </tr>
-    </thead>
-    <tbody>
-      <% last_patient_id = nil %>
-      
-      <% @charts.each do |chart| %>
-        <tr style="height:15px">
-          <td>
-            <% if chart.regi_id != last_patient_id %>
-              <%= link_to "#{chart.regi.p_name} (#{chart.regi.p_age})", regi_charts_path(chart.regi_id) %>
-            <% end %>
-          </td>
-          
-          <td><%= chart.t_date %></td>
-          <td><%= chart.subj %></td>
-          <td><%= chart.obj %></td>
-          <td><%= chart.assess %></td>
-          <td><%= chart.plan %></td>
-        </tr>
-        
-        <% last_patient_id = chart.regi_id %>
-      <% end %>
-    </tbody>
-  </table>
+      <% last_patient_id = chart.regi_id %>
+    <% end %>
+  </tbody>
+</table>
+
 

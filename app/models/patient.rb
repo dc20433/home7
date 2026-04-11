@@ -79,4 +79,13 @@ def active_health_issues
   issues.to_sentence(words_connector: ' / ', last_word_connector: ' / ', two_words_connector: ' / ')
 end
 
+def self.ransackable_attributes(auth_object = nil)
+  # Attributes from the patients table itself
+  ["v_date", "weight", "com1", "com2", "com3", "d_onset", "referred", "di_list"]
+end
+
+def self.ransackable_associations(auth_object = nil)
+  ["regi"]
+end
+
 end

@@ -5,17 +5,20 @@ class OverviewsController < ApplicationController
   # 2. This specifically locks the statistics page to Admins only
   before_action :ensure_admin, only: [:statistics]
 
-
-  def patient_info
-  @patients = Patient.includes(:regi).order("regis.p_name ASC, patients.v_date DESC")
+  def chart_name
+    @q = Chart.ransack(params[:q])
+    @charts = @q.result.includes(:regi).order("regis.p_name ASC")
   end
   
-  def chart_name
-  @charts = Chart.includes(:regi).order("regis.p_name ASC, charts.t_date DESC")
-  end
-
   def chart_date
-  @charts = Chart.includes(:regi).order(t_date: :desc, "regis.p_name": :asc)
+    @q = Chart.ransack(params[:q])
+    @charts = @q.result.includes(:regi).order(t_date: :desc)
+  end
+  
+  def patient_info
+    # Searching through the Patients table
+    @q = Patient.ransack(params[:q])
+    @patients = @q.result.includes(:regi).order("regis.p_name ASC")
   end
 
   def statistics

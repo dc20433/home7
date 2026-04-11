@@ -1,14 +1,14 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom shadow-sm">
+<nav class="navbar navbar-expand-sm navbar-light bg-light border-bottom shadow-sm">
   <div class="container-fluid">
     <%# Logo on the Left replacing the text %>
     <%= link_to root_path, class: "navbar-brand ms-3" do %>
-      <%= image_tag "title_2.png", style: "height: 40px; width: auto;", alt: "Zhang's Acupuncture" %>
+      <%= image_tag "title_2.png", style: "height: 30px; width: auto;", alt: "Zhang's Acupuncture" %>
     <% end %>
     
     <div class="ms-auto d-flex align-items-center gap-3 me-3">
       <div>
         <% if authenticated? %>
-          <%= button_to "Sign Out", session_path, method: :delete, class: "btn btn-sm btn-outline-danger rounded-pill px-3 fw-bold" %>
+          <%= button_to "Sign Out", session_path, method: :delete, class: "btn btn-sm btn-danger rounded-pill px-3 fw-bold" %>
         <% else %>
           <% unless params[:controller] == 'sessions' %>
             <%= link_to "Sign In", new_session_path, class: "btn btn-sm btn-primary rounded-pill px-4 fw-bold" %>

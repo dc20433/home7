@@ -3,67 +3,71 @@
   <%= link_to 'All Charts by Date', overviews_chart_date_path, class:"btn btn-sm btn-dark border border-lg border-dark rounded-pill px-2 py-0 m-1 fw-bold" %>
   <%= link_to 'All Charts by Name', overviews_chart_name_path, class:"btn btn-sm btn-primary border border-lg border-dark rounded-pill px-2 py-0 m-1 fw-bold" %>
   <%= link_to 'Patient List', regis_path, class:"btn btn-sm btn-warning border border-lg border-dark rounded-pill px-2 py-0 m-1 fw-bold" %>
-  <button onclick="window.print()", class="btn btn-sm btn-success border border-lg border-dark rounded-pill px-3 py-0 fw-bold">Print This Page</button>
+  <button onclick="window.print()", class="btn btn-sm btn-secondary border border-lg border-dark rounded-pill px-3 py-0 fw-bold">Print This Page</button>
 
-  <table class="table table-sm table-striped table-hover mt-4">
-    <thead class="table-success fs-6">
-    <tr style="height:13px">
-        <th>Name</th>
-        <th>Date Entered</th>
-        <th>Contact Info</th>
-        <th>Weight</th>
-        <th>Complaints</th>
-        <th>Onset/Pain</th>
-        <th>Referred</th>
-        <th>Health History</th>
-      </tr>
-    </thead>
-    <tbody>
-  <% last_patient_id = nil %>
-  <% @patients.each do |patient| %>
-    <tr style="height:15px">
-      <td>
-        <%# Only show name if it's a new patient group %>
-        <% if patient.regi_id != last_patient_id %>
-          <%= link_to "#{patient.regi.p_name} (#{patient.regi.p_age})", regi_patient_path(patient.regi_id, patient) %>
-        <% end %>
-      </td>
+  <%= render 'shared/search_bar', q: @q, url: request.path, search_key: :regi_p_name_or_regi_first_name_or_regi_last_name_cont, placeholder: "Search charts by patient name..." %>
 
-      <td><%= patient.v_date %></td>
+  <div class="table-responsive" style="overflow-x: auto;">
+    <table class="table table-sm table-striped table-hover mt-4" style="min-width: 1000px;">
+      <thead class="table-success fs-6">
+      <tr style="height:13px">
+          <th>Name</th>
+          <th>Date Entered</th>
+          <th>Contact Info</th>
+          <th>Weight</th>
+          <th>Complaints</th>
+          <th>Onset/Pain</th>
+          <th>Referred</th>
+          <th>Health History</th>
+        </tr>
+      </thead>
+      <tbody>
+      <% last_patient_id = nil %>
+      <% @patients.each do |patient| %>
+        <tr style="height:15px">
+          <td>
+            <%# Only show name if it's a new patient group %>
+            <% if patient.regi_id != last_patient_id %>
+              <%= link_to "#{patient.regi.p_name} (#{patient.regi.p_age})", regi_patient_path(patient.regi_id, patient) %>
+            <% end %>
+          </td>
 
-      <td>
-        <%= patient.street %><%= ', ' if patient.street.present? %>
-        <%= patient.city %> <%= patient.state %> <%= patient.zip %>
-        <br>
-        <%= "(c)#{patient.cell} " if patient.cell.present? %>
-        <%= "(h)#{patient.home} " if patient.home.present? %>
-        <%= "(w)#{patient.work} " if patient.work.present? %>
-        <%= " #{patient.email}" if patient.email.present? %>
-      </td>
+          <td><%= patient.v_date %></td>
 
-      <td><%= patient.weight %></td>
+          <td>
+            <%= patient.street %><%= ', ' if patient.street.present? %>
+            <%= patient.city %> <%= patient.state %> <%= patient.zip %>
+            <br>
+            <%= "(c)#{patient.cell} " if patient.cell.present? %>
+            <%= "(h)#{patient.home} " if patient.home.present? %>
+            <%= "(w)#{patient.work} " if patient.work.present? %>
+            <%= " #{patient.email}" if patient.email.present? %>
+          </td>
 
-      <td>
-        <%= [patient.com1, patient.com2, patient.com3].select(&:present?).map(&:strip).join(' / ') %>
-      </td>
+          <td><%= patient.weight %></td>
 
-      <td>
-        <%= patient.d_onset %>
-        <%= ' / Pain: ' + patient.pain_scale.to_s if patient.pain_scale.present? %>
-      </td>
+          <td>
+            <%= [patient.com1, patient.com2, patient.com3].select(&:present?).map(&:strip).join(' / ') %>
+          </td>
 
-      <td><%= patient.referred %></td>
+          <td>
+            <%= patient.d_onset %>
+            <%= ' / Pain: ' + patient.pain_scale.to_s if patient.pain_scale.present? %>
+          </td>
 
-      <td>
-        <% if patient.di_list.present? %>
-          <%= patient.di_list.to_sentence(words_connector: '/', last_word_connector: '/').gsub(/_/, ' ').gsub(/;/, '') %>
-        <% end %>
-        <%= ' and ' + patient.o_dis if patient.o_dis.present? %>
-        <%= ' and Pregnant' if patient.preg == 'Yes' %>
-      </td>
-    </tr>
-    <%# Update the tracker at the end of the loop %>
-    <% last_patient_id = patient.regi_id %>
-  <% end %>
-</tbody>
+          <td><%= patient.referred %></td>
+
+          <td>
+            <% if patient.di_list.present? %>
+              <%= patient.di_list.to_sentence(words_connector: '/', last_word_connector: '/').gsub(/_/, ' ').gsub(/;/, '') %>
+            <% end %>
+            <%= ' and ' + patient.o_dis if patient.o_dis.present? %>
+            <%= ' and Pregnant' if patient.preg == 'Yes' %>
+          </td>
+        </tr>
+        <%# Update the tracker at the end of the loop %>
+        <% last_patient_id = patient.regi_id %>
+      <% end %>
+    </tbody>
   </table>
+</div>

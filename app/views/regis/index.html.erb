@@ -1,50 +1,42 @@
+
+
 <div class="card mt-0 mx-auto border-primary" style="width: 70rem;">
   <div class="card shadow border-dark">
     <div class="card-header">
       <h2 class="card-title text-center p-4">Patient List as of <%= Time.now.strftime("%Y-%m-%d %H:%M") %></h2>
     </div>
     <div class="card-body">
-  <%# Main flex container: pushes nav to left, Sign Out to right %>
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    
-    <%# Left Group: All action buttons and search aligned to the left %>
+  <%# Row 1: Action Buttons and Sign Out %>
+  <div class="d-flex justify-content-between align-items-center m2-4">
     <div class="d-flex align-items-center gap-1">
-      <%= link_to "New Patient", new_regi_path, class: "btn btn-sm btn-dark border border-lg border-dark rounded-pill px-2 py-0 fw-bold" %>
-      
-      <%= link_to 'Charts by Date', overviews_chart_date_path, class: "btn btn-sm btn-primary border border-lg border-primary rounded-pill px-2 py-0 fw-bold" %>
-      
-      <%= link_to 'Charts by Name', overviews_chart_name_path, class: "btn btn-sm btn-secondary border border-lg border-secondary rounded-pill px-2 py-0 fw-bold" %>
-      
-      <%= link_to 'Patient Info', overviews_patient_info_path, class: "btn btn-sm btn-info border border-lg border-info rounded-pill px-2 py-0 fw-bold text-white" %>
-      
+      <%= link_to "New Patient", new_regi_path, class: "btn btn-sm btn-dark rounded-pill px-2 py-0 fw-bold" %>
+      <%= link_to 'Charts by Date', overviews_chart_date_path, class: "btn btn-sm btn-primary rounded-pill px-2 py-0 fw-bold" %>
+      <%= link_to 'Charts by Name', overviews_chart_name_path, class: "btn btn-sm btn-secondary rounded-pill px-2 py-0 fw-bold" %>
+      <%= link_to 'Patient Info', overviews_patient_info_path, class: "btn btn-sm btn-info text-white rounded-pill px-2 py-0 fw-bold" %>
       <% if Current.user&.admin? %>
-        <%= link_to 'Statistics', overviews_statistics_path, class: "btn btn-sm btn-warning border border-lg border-dark rounded-pill px-2 py-0 fw-bold" %>
+        <%= link_to 'Usage', overviews_statistics_path, class: "btn btn-sm btn-warning rounded-pill px-2 py-0 fw-bold" %>
       <% end %>
-
-      <%# Search & Reset %>
-      <div class="ms-1 d-flex gap-1 align-items-center">
-        <%= render 'search' %>
-        <%# link_to "Reset", regis_path, class: "btn btn-sm btn-outline-secondary border border-secondary rounded-pill px-2 py-0 fw-bold" %>
-      </div>
     </div>
-
-    <%# Right Group: Sign Out button aligned to the right %>
-    <%# button_to "Sign Out", session_path, method: :delete, class: "btn btn-sm btn-outline-danger border border-lg border-danger rounded-pill px-2 py-0 fw-bold" %>
   </div>
 
+  <%# Row 2: Search Bar (Now truly on its own line) %>
+  <div class="row mb-4 px-3">
+    <div class="col-md-12">
+       <%= render 'shared/search_bar', q: @q, url: regis_path, search_key: :p_name_or_first_name_or_last_name_cont, placeholder: "Search patient list..." %>
+    </div>
 
-      <table class="table table-sm table-striped table-hover mx-auto mt-1">
+      <table class="table table-sm table-striped table-hover mx-auto mt-2">
         <thead class="table-primary">
       
         <tr>
-            <th>Last Name</th>
-            <th>First Name</th>
-            <th>M.I.</th>
-            <th>Gender</th>
-            <th>Age</th>
-            <th class="text-nowrap">Date of Birth</th>
-            <th class="text-nowrap">Created on</th>
-            <th class="text-nowrap"></th>
+            <th style="width: 10%;">Last Name</th>
+            <th style="width: 10%;">First Name</th>
+            <th style="width: 5%;">M.I.</th>
+            <th style="width: 10%;">Gender</th>
+            <th style="width: 5%;">Age</th>
+            <th class="text-nowrap" style="width: 15%;">Date of Birth</th>
+            <th class="text-nowrap" style="width: 15%;">Created on</th>
+            <th class="text-nowrap" style="width: 20%;"></th>
           </tr>
 
         </thead>
