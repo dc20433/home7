@@ -23,6 +23,7 @@
                   <th>Files</th>
                   <th>Charts/Patient</th>
                   <th>Charts/Day</th>
+                  <th>Average Age</th>
                 </tr>
               </thead>
               <tbody>
@@ -34,6 +35,7 @@
                   <td><%= @total_filing %></td>
                   <td><%= @average_charts_per_patient %></td>
                   <td><%= @average_charts_per_day %></td>
+                  <td><%= @average_age %></td>
                 </tr>
                 <tr class="col text-center">
                   <td>Male</td>
@@ -43,6 +45,7 @@
                   <td><%= @male_filing %></td>
                   <td><%= @male_charts_per_patient %></td>
                   <td><%= @male_charts_per_day %></td>
+                  <td><%= @average_male_age %></td>
                 </tr>
                 <tr class="col text-center">
                   <td>Female</td>
@@ -52,6 +55,7 @@
                   <td><%= @female_filing %></td>
                   <td><%= @female_charts_per_patient %></td>
                   <td><%= @female_charts_per_day %></td>
+                  <td><%= @average_female_age %></td>
                 </tr>
               </tbody>
             </table>

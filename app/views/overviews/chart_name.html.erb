@@ -6,7 +6,12 @@
 <%= link_to 'Patient List', regis_path, class:"btn btn-sm btn-warning border border-lg border-dark rounded-pill px-2 py-0 m-1 fw-bold" %>
 <button onclick="window.print()", class="btn btn-sm btn-secondary border border-lg border-dark rounded-pill px-3 py-0 fw-bold" >Print This Page</button>
 
-<%= render 'shared/search_bar', q: @q, url: request.path, search_key: :regi_p_name_or_regi_first_name_or_regi_last_name_cont, placeholder: "Search charts by patient name..." %>
+<%= render 'shared/search_bar', 
+    q: @q, 
+    url: request.path, 
+    search_key_last: :regi_last_name_cont,
+    search_key_first: :regi_first_name_cont,
+    placeholder: "Search Charts..." %>
 
   <table class="table table-sm table-striped table-hover mt-4" style="table-layout: fixed; width: 100%; border-collapse: collapse;">
   <thead class="table-info fs-6">

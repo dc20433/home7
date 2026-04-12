@@ -22,7 +22,11 @@
   <%# Row 2: Search Bar (Now truly on its own line) %>
   <div class="row mb-4 px-3">
     <div class="col-md-12">
-       <%= render 'shared/search_bar', q: @q, url: regis_path, search_key: :p_name_or_first_name_or_last_name_cont, placeholder: "Search patient list..." %>
+    <%= render 'shared/search_bar', 
+        q: @q, 
+        url: regis_path, 
+        search_key_last: :last_name_cont,
+        search_key_first: :first_name_cont %>
     </div>
 
       <table class="table table-sm table-striped table-hover mx-auto mt-2">
