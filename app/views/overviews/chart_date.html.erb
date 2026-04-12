@@ -1,9 +1,11 @@
 <h2 class="text-center pt-4 pb-2">All Patient Charts by Date as of <%= Time.now.strftime("%Y-%m-%d %H:%M") %></h2>
 
-<%= link_to 'All Charts by Name', overviews_chart_name_path, class:"btn btn-sm btn-dark border border-lg border-dark rounded-pill px-2 py-0 m-1 fw-bold" %>
-<%= link_to 'All Patient Info', overviews_patient_info_path, class:"btn btn-sm btn-primary border border-lg border-dark rounded-pill px-2 py-0 m-1 fw-bold" %>
-<%= link_to 'Patient List', regis_path, class:"btn btn-sm btn-warning border border-lg border-dark rounded-pill px-2 py-0 m-1 fw-bold" %>
-<button onclick="window.print()", class="btn btn-sm btn-secondary border border-lg border-dark rounded-pill px-3 py-0 fw-bold">Print This Page</button>
+<%= link_to 'All Charts by Name', overviews_chart_name_path, class:"btn btn-sm btn-outline-dark outline-double border border-lg border-dark rounded-pill px-2 py-0 m-1 fw-bold" %>
+<%= link_to 'All Patient Info', overviews_patient_info_path, class:"btn btn-sm btn-outline-primary outline-double border border-lg border-primary rounded-pill px-2 py-0 m-1 fw-bold" %>
+<%= link_to 'Patient List', regis_path, class:"btn btn-sm btn-outline-success outline-double border border-lg border-success rounded-pill px-2 py-0 m-1 fw-bold" %>
+<%= link_to 'Print All', 
+            url_for(params.to_unsafe_h.merge(print: true)), 
+            class: "btn btn-sm btn-outline-secondary outline-double border border-lg border-secondary rounded-pill px-3 py-0 fw-bold" %>
 
 <%= render 'shared/search_bar', 
     q: @q, 
@@ -11,6 +13,16 @@
     search_key_last: :regi_last_name_cont,
     search_key_first: :regi_first_name_cont,
     placeholder: "Search Charts..." %>
+
+    <div class="d-flex flex-wrap justify-content-center gap-1 my-3">
+      <% ('A'..'Z').each do |letter| %>
+        <%= link_to letter, 
+                    url_for(letter: letter), 
+                    class: "btn btn-sm #{params[:letter] == letter ? 'btn-primary' : 'btn-outline-secondary'} rounded-circle shadow-sm",
+                    style: "width: 35px;" %>
+      <% end %>
+      <%= link_to "All", url_for(letter: "All"), class: "btn btn-sm btn-outline-dark rounded-pill px-3 shadow-sm" %>
+    </div>
 
 <table class="table table-sm table-striped table-hover mt-4">
 
@@ -25,7 +37,7 @@
     </tr>
   </thead>
 
-  </tbody>
+  <tbody>
     <% last_date = nil %>
     <% @charts.each do |chart| %>
     
@@ -45,4 +57,38 @@
     <% end %>
   </tbody>
 </table>
+<div class="d-flex justify-content-center my-4">
+<%== pagy_bootstrap_nav(@pagy) if @pagy&.pages.to_i > 1 %>
+</div>
 
+<% if params[:print] == "true" %>
+  <script>
+    // This function runs as soon as the HTML is parsed
+    (function() {
+      const checkTable = setInterval(() => {
+        // Look for the last row of your table to ensure 970+ records are there
+        const rows = document.querySelectorAll('table tbody tr');
+        if (rows.length > 0) {
+          clearInterval(checkTable);
+          // Small delay to let the browser "paint" the rows
+          setTimeout(() => {
+            window.print();
+          }, 1000);
+        }
+      }, 100);
+    })();
+  </script>
+
+  <style>
+    @media print {
+      /* Hide everything except the title and table */
+      .btn, .nav, .search-bar, .d-flex, footer, .card-header { 
+        display: none !important; 
+      }
+      body { background: white !important; }
+      .table { width: 100% !important; border: 1px solid #000 !important; }
+      /* Ensure text is black and readable */
+      .fs-4 { color: #000 !important; font-size: 11pt !important; }
+    }
+  </style>
+<% end %>

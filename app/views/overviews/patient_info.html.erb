@@ -1,9 +1,11 @@
   <h2 class="text-center m-4">All Patient Information as of <%= Time.now.strftime("%Y-%m-%d %H:%M") %></h2>
 
-  <%= link_to 'All Charts by Date', overviews_chart_date_path, class:"btn btn-sm btn-dark border border-lg border-dark rounded-pill px-2 py-0 m-1 fw-bold" %>
-  <%= link_to 'All Charts by Name', overviews_chart_name_path, class:"btn btn-sm btn-primary border border-lg border-dark rounded-pill px-2 py-0 m-1 fw-bold" %>
-  <%= link_to 'Patient List', regis_path, class:"btn btn-sm btn-warning border border-lg border-dark rounded-pill px-2 py-0 m-1 fw-bold" %>
-  <button onclick="window.print()", class="btn btn-sm btn-secondary border border-lg border-dark rounded-pill px-3 py-0 fw-bold">Print This Page</button>
+  <%= link_to 'All Charts by Date', overviews_chart_date_path, class:"btn btn-sm btn-outline-dark outline-double border border-lg border-dark rounded-pill px-2 py-0 m-1 fw-bold" %>
+  <%= link_to 'All Charts by Name', overviews_chart_name_path, class:"btn btn-sm btn-outline-primary outline-double border border-lg border-primary rounded-pill px-2 py-0 m-1 fw-bold" %>
+  <%= link_to 'Patient List', regis_path, class:"btn btn-sm btn-outline-success outline-double border border-lg border-success rounded-pill px-2 py-0 m-1 fw-bold" %>
+  <%= link_to 'Print All', 
+            url_for(params.to_unsafe_h.merge(print: true)), 
+            class: "btn btn-sm btn-outline-secondary outline-double border border-lg border-secondary rounded-pill px-3 py-0 fw-bold" %>
 
   <%= render 'shared/search_bar', 
     q: @q, 
@@ -11,6 +13,16 @@
     search_key_last: :regi_last_name_cont,
     search_key_first: :regi_first_name_cont,
     placeholder: "Search Patient Info..." %>
+
+    <div class="d-flex flex-wrap justify-content-center gap-1 my-3">
+      <% ('A'..'Z').each do |letter| %>
+        <%= link_to letter, 
+                    url_for(letter: letter), 
+                    class: "btn btn-sm #{params[:letter] == letter ? 'btn-primary' : 'btn-outline-secondary'} rounded-circle shadow-sm",
+                    style: "width: 35px;" %>
+      <% end %>
+      <%= link_to "All", url_for(letter: "All"), class: "btn btn-sm btn-outline-dark rounded-pill px-3 shadow-sm" %>
+    </div> 
 
   <div class="table-responsive" style="overflow-x: auto;">
     <table class="table table-sm table-striped table-hover mt-4" style="min-width: 1000px;">
@@ -75,4 +87,63 @@
       <% end %>
     </tbody>
   </table>
+  <div class="d-flex justify-content-center my-4">
+    <%== pagy_bootstrap_nav(@pagy) if @pagy&.pages.to_i > 1 %>
+  </div>
 </div>
+
+<% if params[:print] == "true" %>
+  <script>
+    (function() {
+      const checkTable = setInterval(() => {
+        const rows = document.querySelectorAll('table tbody tr');
+        if (rows.length > 0) {
+          clearInterval(checkTable);
+          setTimeout(() => {
+            window.print();
+            // Automatically clean the URL after printing
+            window.location.href = window.location.href.replace(/[&?]print=true/, '');
+          }, 1000);
+        }
+      }, 100);
+    })();
+  </script>
+
+  <% if params[:print] == "true" %>
+  <style>
+    @media print {
+      /* 1. Force the table to fit the page width */
+      table { 
+        width: 100% !important; 
+        min-width: 0 !important; 
+        table-layout: fixed !important; /* Forces columns to respect width */
+        word-wrap: break-word;
+      }
+
+      /* 2. Set specific widths for the most crowded columns */
+      th:nth-child(1), td:nth-child(1) { width: 12%; } /* Name */
+      th:nth-child(3), td:nth-child(3) { width: 15%; } /* Contact info */
+      th:nth-child(8), td:nth-child(8) { width: 25%; } /* Health History (The last column) */
+
+      /* 3. Allow text to wrap and shrink font slightly */
+      td, th { 
+        white-space: normal !important; 
+        font-size: 9pt !important; 
+        overflow: visible !important;
+      }
+
+      /* 4. Remove the horizontal scroll wrapper */
+      .table-responsive { 
+        display: block !important; 
+        overflow: visible !important; 
+      }
+
+      /* 5. Hide UI elements */
+      .btn, .nav, .search-bar, .d-flex, footer, .card-header, .pagination { 
+        display: none !important; 
+      }
+    }
+  </style>
+  <%# Keep your existing script below %>
+<% end %>
+<% end %>

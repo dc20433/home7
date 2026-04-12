@@ -7,20 +7,23 @@
     </div>
     <div class="card-body">
   <%# Row 1: Action Buttons and Sign Out %>
-  <div class="d-flex justify-content-between align-items-center m2-4">
+  <div class="d-flex justify-content-between align-items-center mx-2">
     <div class="d-flex align-items-center gap-1">
-      <%= link_to "New Patient", new_regi_path, class: "btn btn-sm btn-dark rounded-pill px-2 py-0 fw-bold" %>
-      <%= link_to 'Charts by Date', overviews_chart_date_path, class: "btn btn-sm btn-primary rounded-pill px-2 py-0 fw-bold" %>
-      <%= link_to 'Charts by Name', overviews_chart_name_path, class: "btn btn-sm btn-secondary rounded-pill px-2 py-0 fw-bold" %>
-      <%= link_to 'Patient Info', overviews_patient_info_path, class: "btn btn-sm btn-info text-white rounded-pill px-2 py-0 fw-bold" %>
+      <%= link_to "New Patient", new_regi_path, class: "btn btn-sm btn-outline-dark outline-double border border-lg border-dark rounded-pill mx-1 px-2 py-0 fw-bold" %>
+      <%= link_to 'Charts by Date', overviews_chart_date_path, class: "btn btn-sm btn-outline-primary outline-double border border-lg border-primary rounded-pill mx-1 px-2 py-0 fw-bold" %>
+      <%= link_to 'Charts by Name', overviews_chart_name_path, class: "btn btn-sm btn-outline-success outline-double border border-lg border-success rounded-pill mx-1 px-2 py-0 fw-bold" %>
+      <%= link_to 'Patient Info', overviews_patient_info_path, class: "btn btn-sm btn-outline-secondary outline-double border border-lg border-secondary rounded-pill mx-1 px-2 py-0 fw-bold" %>
       <% if Current.user&.admin? %>
-        <%= link_to 'Usage', overviews_statistics_path, class: "btn btn-sm btn-warning rounded-pill px-2 py-0 fw-bold" %>
+        <%= link_to 'Usage', overviews_statistics_path, class: "btn btn-sm btn-outline-warning outline-double border border-lg border-warning rounded-pill mx-1 px-2 py-0 fw-bold" %>
       <% end %>
+      <%= link_to 'Print All', 
+            url_for(params.to_unsafe_h.merge(print: true)), 
+            class: "btn btn-sm btn-outline-secondary outline-double border border-lg border-secondary rounded-pill px-3 py-0 fw-bold" %>
     </div>
   </div>
 
-  <%# Row 2: Search Bar (Now truly on its own line) %>
-  <div class="row mb-4 px-3">
+  <%# Row 2: Search Bar %>
+  <div class="row px-3 y-1">
     <div class="col-md-12">
     <%= render 'shared/search_bar', 
         q: @q, 
@@ -28,13 +31,23 @@
         search_key_last: :last_name_cont,
         search_key_first: :first_name_cont %>
     </div>
+  </div>
 
-      <table class="table table-sm table-striped table-hover mx-auto mt-2">
+  <div class="d-flex flex-wrap justify-content-center gap-1 mb-3">
+    <% ('A'..'Z').each do |letter| %>
+      <%= link_to letter, 
+                  url_for(letter: letter), 
+                  class: "btn btn-sm #{params[:letter] == letter ? 'btn-primary' : 'btn-outline-secondary'} rounded-circle shadow-sm",
+                  style: "width: 35px;" %>
+    <% end %>
+    <%= link_to "All", url_for(letter: "All"), class: "btn btn-sm btn-outline-dark rounded-pill px-3 shadow-sm" %>
+  </div>
+
+      <table class="table table-sm table-striped table-hover mx-auto">
         <thead class="table-primary">
-      
-        <tr>
-            <th style="width: 10%;">Last Name</th>
-            <th style="width: 10%;">First Name</th>
+          <tr>
+            <th style="width: 15%;">Last Name</th>
+            <th style="width: 15%;">First Name</th>
             <th style="width: 5%;">M.I.</th>
             <th style="width: 10%;">Gender</th>
             <th style="width: 5%;">Age</th>
@@ -42,26 +55,60 @@
             <th class="text-nowrap" style="width: 15%;">Created on</th>
             <th class="text-nowrap" style="width: 20%;"></th>
           </tr>
-
         </thead>
-      <% @regis.each do |regi| %>
-        <tr>
-          <td><%= link_to regi.last_name, regi_path(regi.id) %></td>
-          <td><%= regi.first_name %></td>
-          <td><%= regi.init? ? regi.init + "." : "" %></td>
-          <td><%= regi.gender %></td>
-          <td><%= regi.p_age %></td>
-          <td><%= regi.dob %></td>
-          <td><%= regi.created_at.strftime("%Y-%m-%d") %></td>             
-          <td>                
-            <%= link_to 'Info', regi_patients_path(regi.id), class: "btn btn-sm btn-outline-info outline-double border border-lg border-info rounded-pill px-2 py-0 fw-bold" %>
-            <%= link_to 'Charts', regi_charts_path(regi.id), class: "btn btn-sm btn-outline-primary outline-double border border-lg border-primary rounded-pill px-1 py-0 fw-bold" %>
-            <%= link_to 'Files', regi_filings_path(regi.id), class: "btn btn-sm btn-outline-success outline-double border border-lg border-success rounded-pill px-2 py-0 fw-bold" %>
-          </td>
-        </tr>
-        <% end %>
+        <tbody class="fs-4">
+          <% @regis.each do |regi| %>
+          <tr>
+            <td><%= link_to regi.last_name, regi_path(regi.id) %></td>
+            <td><%= regi.first_name %></td>
+            <td><%= regi.init? ? regi.init + "." : "" %></td>
+            <td><%= regi.gender %></td>
+            <td><%= regi.p_age %></td>
+            <td><%= regi.dob %></td>
+            <td><%= regi.created_at.strftime("%Y-%m-%d") %></td>             
+            <td>                
+              <%= link_to 'Info', regi_patients_path(regi.id), class: "btn btn-sm btn-outline-dark outline-double border border-lg border-dark rounded-pill px-2 py-0 fw-bold" %>
+              <%= link_to 'Charts', regi_charts_path(regi.id), class: "btn btn-sm btn-outline-primary outline-double border border-lg border-primary rounded-pill px-1 py-0 fw-bold" %>
+              <%= link_to 'Files', regi_filings_path(regi.id), class: "btn btn-sm btn-outline-success outline-double border border-lg border-success rounded-pill px-2 py-0 fw-bold" %>
+            </td>
+          </tr>
+          <% end %>
+        </tbody>
       </table>
+      <div class="d-flex justify-content-center my-2">
+        <%== pagy_bootstrap_nav(@pagy) if @pagy&.pages.to_i > 1 %>
+      </div>
+      </div>
     </div>
   </div>
 </div>
+
+<% if params[:print] == "true" %>
+  <script>
+    (function() {
+      const checkTable = setInterval(() => {
+        const rows = document.querySelectorAll('table tbody tr');
+        if (rows.length > 0) {
+          clearInterval(checkTable);
+          setTimeout(() => {
+            window.print();
+            // Automatically clean the URL after printing
+            window.location.href = window.location.href.replace(/[&?]print=true/, '');
+          }, 1000);
+        }
+      }, 100);
+    })();
+  </script>
+
+  <style>
+    @media print {
+      .btn, .nav, .search-bar, .d-flex, footer, .card-header, .pagination { 
+        display: none !important; 
+      }
+      body { background: white !important; margin: 0; }
+      .table { width: 100% !important; border: 1px solid #000 !important; }
+      .fs-4 { color: #000 !important; font-size: 11pt !important; }
+    }
+  </style>
+<% end %>
 

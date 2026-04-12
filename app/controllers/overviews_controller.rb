@@ -5,20 +5,53 @@ class OverviewsController < ApplicationController
   # 2. This specifically locks the statistics page to Admins only
   before_action :ensure_admin, only: [:statistics]
 
-  def chart_name
-    @q = Chart.ransack(params[:q])
-    @charts = @q.result.includes(:regi).order("regis.p_name ASC")
-  end
-  
   def chart_date
     @q = Chart.ransack(params[:q])
-    @charts = @q.result.includes(:regi).order(t_date: :desc)
+    results = @q.result.includes(:regi).order(t_date: :desc)
+    
+    if params[:letter].present? && params[:letter] != "All"
+      results = results.joins(:regi).where("regis.last_name ILIKE ?", "#{params[:letter]}%")
+    end
+  
+    if params[:print] == "true"
+      @charts = results
+      @pagy = nil # This is what triggers the error if the view doesn't check for nil
+    else
+      @pagy, @charts = pagy(results)
+    end
+  end
+  
+  def chart_name
+    @q = Chart.ransack(params[:q])
+    results = @q.result.includes(:regi).order("regis.p_name ASC, charts.t_date DESC")
+  
+    if params[:q].blank? && params[:letter].present? && params[:letter] != "All"
+      results = results.joins(:regi).where("regis.last_name ILIKE ?", "#{params[:letter]}%")
+    end
+
+    if params[:print] == "true"
+      @charts = results
+      @pagy = nil # This is what triggers the error if the view doesn't check for nil
+    else  
+    @pagy, @charts = pagy(results)
+    end
   end
   
   def patient_info
-    # Searching through the Patients table
     @q = Patient.ransack(params[:q])
-    @patients = @q.result.includes(:regi).order("regis.p_name ASC")
+    results = @q.result.includes(:regi).order("regis.last_name ASC")
+  
+    # Alphabetical letter filter
+    if params[:letter].present? && params[:letter] != "All"
+      results = results.joins(:regi).where("regis.last_name ILIKE ?", "#{params[:letter]}%")
+    end
+  
+    if params[:print] == "true"
+      @patients = results # Ensure this fetches ALL results
+      @pagy = nil
+    else
+      @pagy, @patients = pagy(results)
+    end
   end
 
   def statistics

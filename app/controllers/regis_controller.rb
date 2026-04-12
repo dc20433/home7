@@ -9,11 +9,24 @@ class RegisController < ApplicationController
   before_action :set_regi, only: %i[ show edit update destroy ]
 
   # GET /regis
-  def index
-    # Ransack stays exactly the same!
-    @q = Regi.ransack(params[:q])
-    @regis = @q.result(distinct: true).order("last_name, first_name, init, dob")
+  # app/controllers/regis_controller.rb
+
+# GET /regis
+def index
+  @q = Regi.ransack(params[:q])
+  results = @q.result.order(last_name: :asc)
+
+  if params[:q].blank? && params[:letter].present? && params[:letter] != "All"
+    results = results.where("last_name ILIKE ?", "#{params[:letter]}%")
   end
+
+  if params[:print] == "true"
+    @regis = results # Fetch all without Pagy
+    @pagy = nil
+  else
+    @pagy, @regis = pagy(results)
+  end
+end
 
   # GET /regis/1 or /regis/1.json
   def show

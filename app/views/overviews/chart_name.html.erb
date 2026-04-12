@@ -1,10 +1,11 @@
-
 <h2 class="text-center pt-4 pb-2">All Patient Charts by Name as of <%= Time.now.strftime("%Y-%m-%d %H:%M") %></h2>
 
-<%= link_to 'All Charts by Date', overviews_chart_date_path, class:"btn btn-sm btn-dark border border-lg border-dark rounded-pill px-2 py-0 m-1 fw-bold" %>
-<%= link_to 'All Patient Info', overviews_patient_info_path, class:"btn btn-sm btn-info border border-lg border-dark rounded-pill px-2 py-0 m-1 fw-bold" %>
-<%= link_to 'Patient List', regis_path, class:"btn btn-sm btn-warning border border-lg border-dark rounded-pill px-2 py-0 m-1 fw-bold" %>
-<button onclick="window.print()", class="btn btn-sm btn-secondary border border-lg border-dark rounded-pill px-3 py-0 fw-bold" >Print This Page</button>
+<%= link_to 'All Charts by Date', overviews_chart_date_path, class:"btn btn-sm btn-outline-dark outline-double border border-lg border-dark rounded-pill px-2 py-0 m-1 fw-bold" %>
+<%= link_to 'All Patient Info', overviews_patient_info_path, class:"btn btn-sm btn-outline-primary outline-double border border-lg border-primary rounded-pill px-2 py-0 m-1 fw-bold" %>
+<%= link_to 'Patient List', regis_path, class:"btn btn-sm btn-outline-success outline-double border border-lg border-success rounded-pill px-2 py-0 m-1 fw-bold" %>
+<%= link_to 'Print All', 
+            url_for(params.to_unsafe_h.merge(print: true)), 
+            class: "btn btn-sm btn-outline-secondary outline-double border border-lg border-secondary rounded-pill px-3 py-0 fw-bold" %>
 
 <%= render 'shared/search_bar', 
     q: @q, 
@@ -13,7 +14,17 @@
     search_key_first: :regi_first_name_cont,
     placeholder: "Search Charts..." %>
 
-  <table class="table table-sm table-striped table-hover mt-4" style="table-layout: fixed; width: 100%; border-collapse: collapse;">
+    <div class="d-flex flex-wrap justify-content-center gap-1 my-3">
+  <% ('A'..'Z').each do |letter| %>
+    <%= link_to letter, 
+                url_for(letter: letter), 
+                class: "btn btn-sm #{params[:letter] == letter ? 'btn-primary' : 'btn-outline-secondary'} rounded-circle shadow-sm",
+                style: "width: 35px;" %>
+  <% end %>
+  <%= link_to "All", url_for(letter: "All"), class: "btn btn-sm btn-outline-dark rounded-pill px-3 shadow-sm" %>
+</div>
+
+<table class="table table-sm table-striped table-hover mt-4" style="table-layout: fixed; width: 100%; border-collapse: collapse;">
   <thead class="table-info fs-6">
     <tr>
       <th style="width: 15%;">Name</th> 
@@ -43,5 +54,36 @@
     <% end %>
   </tbody>
 </table>
+<div class="d-flex justify-content-center my-4">
+  <%== pagy_bootstrap_nav(@pagy) if @pagy&.pages.to_i > 1 %>
+</div>
 
+<% if params[:print] == "true" %>
+  <script>
+    (function() {
+      const checkTable = setInterval(() => {
+        const rows = document.querySelectorAll('table tbody tr');
+        if (rows.length > 0) {
+          clearInterval(checkTable);
+          setTimeout(() => {
+            window.print();
+            // Automatically clean the URL after printing
+            window.location.href = window.location.href.replace(/[&?]print=true/, '');
+          }, 1000);
+        }
+      }, 100);
+    })();
+  </script>
+
+  <style>
+    @media print {
+      .btn, .nav, .search-bar, .d-flex, footer, .card-header, .pagination { 
+        display: none !important; 
+      }
+      body { background: white !important; margin: 0; }
+      .table { width: 100% !important; border: 1px solid #000 !important; }
+      .fs-4 { color: #000 !important; font-size: 11pt !important; }
+    }
+  </style>
+<% end %>
 

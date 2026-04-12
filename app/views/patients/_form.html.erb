@@ -140,35 +140,26 @@
   </div>
 </div>
 
-    <%# 1. Start with a clean row, removing any text-size adjustments on the main container %>
 <div class="row mb-1">
-  
-  <%# 2. Left side: Other Issues (Full Width for this column) %>
   <div class="col-md-6 mb-3">
-    <%# Cleaned up label: removed leading spaces %>
-    <b><%= f.label :o_dis, "Other Issues", class:"form-label mt-1 mb-0" %></b>
+    <small><b><%= f.label :o_dis, "Other Issues", class:"form-label mt-1 mb-0" %></b></small>
     <%= f.text_field :o_dis, class: "form-control form-control-sm border-primary fs-4" %>
   </div>
 
-  <%# 3. Middle: Female Patient Specific Data (These columns stack) %>
-  <%# We use the standardized col-md-2 grid size for consistent alignment %>
   <div class="col-md-2 mb-3">
-  <small><i>Female Patient Only:</i></small><br>
-    <b><%= f.label :last_prd, "Date Last Period", class:"form-label mt-0 mb-0" %></b>
+    <small><b><%= f.label :last_prd, "Female: Last Period", class:"form-label mt-0 mb-0" %></b></small><br>
     <%= f.date_field :last_prd, class: "form-control form-control-sm border-primary fs-4" %>
   </div>
   
   <div class="col-md-2 mb-3">
-    <%# Simple BR for spacing; removed complex 'select-label' classes %>
-    <b><%= f.label :preg, "Pregnant?", class:"form-label mt-1 mb-0" %></b><br>
-    <%# The Key fix: removed 'pt-3' from the select box, allowing it to align naturally %>
+    <small><b><%= f.label :preg, "Pregnant?", class:"form-label mt-1 mb-0" %></b></small>
     <%= f.select :preg, Patient::PREG, 
     { },
     { class: "form-select  border-primary fs-5" }%>
   </div>
   
   <div class="col-md-2 mb-3">
-    <b><%= f.label :preg_wks, "In weeks?", class:"form-label mt-1 mb-0" %></b>
+    <small><b><%= f.label :preg_wks, "In weeks?", class:"form-label mt-1 mb-0" %></b></small>
     <%= f.number_field :preg_wks, class: "form-control form-control-sm border-primary fs-4" %>
   </div>
 </div>
@@ -184,6 +175,6 @@
   <% end %>
         <%= button_to 'Delete', [@regi,@patient], method: :delete, class:'btn btn-outline-danger outline-double border border-lg border-dark rounded-pill px-3 mx-2 fw-bold', form: { data: { turbo_confirm: 'Are you sure?' }  } %>
         <%= link_to "Patient Info", regi_patients_path(@regi), class: "btn btn-sm btn-outline-success outline-double border border-lg border-dark rounded-pill px-3 mx-2 pt-2 fw-bold" %> 
-        <%= link_to "Last Page", :back, class:'btn btn-sm btn-outline-secondary outline-double border border-lg border-dark rounded-pill px-3 mx-2 pt-2 fw-bold' %>
+        <%= link_to "Go Back", :back, class:'btn btn-sm btn-outline-secondary outline-double border border-lg border-dark rounded-pill px-3 mx-2 pt-2 fw-bold' %>
     </div>
 </div>
