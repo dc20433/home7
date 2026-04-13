@@ -55,6 +55,7 @@ class OverviewsController < ApplicationController
   end
 
   def statistics
+    return if performed?
     @total_patients = Regi.count
     @total_male_patients = Regi.where(gender: "Male").count
     @total_female_patients = Regi.where(gender: "Female").count

@@ -17,8 +17,6 @@ class SessionsController < ApplicationController
 
   def destroy
     terminate_session
-    # Force a full page reload to clear the cache for different roles
-    redirect_to root_path, status: :see_other, notice: "Signed out!"
-  end # <--- This closes 'destroy'
+  end
 
 end # <--- This closes 'class SessionsController'

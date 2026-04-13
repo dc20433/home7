@@ -45,6 +45,45 @@
       }
     </style>
 
+    <script>
+      (function() {
+        let timeout;
+        let lastHeartbeat = Date.now();
+        const INACTIVITY_LIMIT = 1200000; // 20 minutes in ms 
+
+        function resetTimer() {
+          clearTimeout(timeout);
+          lastHeartbeat = Date.now(); 
+          timeout = setTimeout(logout, INACTIVITY_LIMIT);
+        }
+
+        function logout() {
+          window.location.reload();
+        }
+
+        // This "heartbeat" checks every 10 seconds if the system was asleep
+        setInterval(() => {
+          const currentTime = Date.now();
+          const timeGap = currentTime - lastHeartbeat;
+
+          // If the gap is significantly larger than 10 seconds (e.g., 30s),
+          // it means the system likely slept or the tab was suspended.
+          if (timeGap > 30000) { 
+            logout(); 
+          }
+          lastHeartbeat = currentTime;
+        }, 10000);
+
+        // Standard activity listeners [cite: 30, 31]
+        window.onload = resetTimer;
+        window.onmousemove = resetTimer;
+        window.onmousedown = resetTimer;
+        window.onclick = resetTimer;
+        window.onkeydown = resetTimer;
+        window.addEventListener('scroll', resetTimer, true);
+      })();
+    </script>
+
   </head>
 
   <body>
