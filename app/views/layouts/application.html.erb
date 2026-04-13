@@ -3,120 +3,95 @@
   <head>
     <title>Home 7</title>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-    <%# RE-ADDED BOOTSTRAP CSS - This brings back the buttons and grid %>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
 
     <style>
-      body {
-        margin: 0;
-        padding: 0;
-        background-color: #f4f1ea;
-      }
+      body { margin: 0; padding: 0; background-color: #f4f1ea; }
 
-      /* This wrapper holds the pinetrees background for EVERY page */
       .main-background-wrapper {
-        background: 
-          linear-gradient(rgba(105, 105, 100, 0.2), rgba(105, 105, 100, 0.2)), 
-          url('<%= asset_path("pine_trees.jpg") %>');
+        background: linear-gradient(rgba(105, 105, 100, 0.2), rgba(105, 105, 100, 0.2)), 
+                    url('<%= asset_path("pine_trees.jpg") %>');
         background-size: cover;
         background-position: center top;
         background-attachment: fixed;
-        background-repeat: no-repeat;
-        
-        /* Ensures it fills the screen height minus the navbar */
-        min-height: calc(100vh - 60px); 
+        min-height: calc(100vh - 60px);
         width: 100%;
       }
 
-      /* Clean white box style for data tables (Big 5) */
       .white-data-card {
         background-color: rgba(255, 255, 255, 0.95);
         border-radius: 12px;
         box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-        padding: 30px;
+        padding: 20px; 
         margin-bottom: 30px;
+        width: 100%;
+        max-width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+        overflow: hidden; /* Pins all tables and forms inside the card */
+      }
+
+      @media (max-width: 1024px) {
+        .white-data-card {
+          padding-left: 0 !important;
+          padding-right: 0 !important;
+          border-radius: 8px;
+        }
+        
+        /* Keeps buttons from touching the very edge since card padding is 0 */
+        .alphabet-filter, .search-container, .card-header-actions {
+          padding-left: 10px;
+          padding-right: 10px;
+        }
+
+        .alphabet-filter .btn {
+          padding: 2px 4px !important;
+          font-size: 0.7rem !important;
+          min-width: 20px;
+        }
+      }
+
+      /* Ensures the search form doesn't stretch the card */
+      .search-container {
+        max-width: 95%;
+        margin: 0 auto 1rem auto;
       }
     </style>
-
-    <script>
-      (function() {
-        let timeout;
-        let lastHeartbeat = Date.now();
-        const INACTIVITY_LIMIT = 1200000; // 20 minutes in ms 
-
-        function resetTimer() {
-          clearTimeout(timeout);
-          lastHeartbeat = Date.now(); 
-          timeout = setTimeout(logout, INACTIVITY_LIMIT);
-        }
-
-        function logout() {
-          window.location.reload();
-        }
-
-        // This "heartbeat" checks every 10 seconds if the system was asleep
-        setInterval(() => {
-          const currentTime = Date.now();
-          const timeGap = currentTime - lastHeartbeat;
-
-          // If the gap is significantly larger than 10 seconds (e.g., 30s),
-          // it means the system likely slept or the tab was suspended.
-          if (timeGap > 30000) { 
-            logout(); 
-          }
-          lastHeartbeat = currentTime;
-        }, 10000);
-
-        // Standard activity listeners [cite: 30, 31]
-        window.onload = resetTimer;
-        window.onmousemove = resetTimer;
-        window.onmousedown = resetTimer;
-        window.onclick = resetTimer;
-        window.onkeydown = resetTimer;
-        window.addEventListener('scroll', resetTimer, true);
-      })();
-    </script>
-
   </head>
 
   <body>
-    <%# 1. Navbar is absolute top %>
     <%= render 'layouts/navbar' %>
 
     <% 
       c = params[:controller]
       a = params[:action]
       
-      # Determine if we are on a "Big 5" data page
-      is_big_5 = (c == "charts" && a == "index") ||
-                 (c == "patients" && a == "index") ||
-                 (c == "overviews" && ["chart_date", "chart_name", "patient_info"].include?(a))
+      # Unified logic for all data-heavy pages
+      is_data_page = (c == "charts" && a == "index") ||
+                     (c == "patients" && a == "index") ||
+                     (c == "regis") || 
+                     (c == "overviews") 
       
       is_landing = (c == "sites" && a == "home")
-      show_full_width = is_big_5 || is_landing
+      show_full_width = (is_data_page || is_landing)
     %>
 
-    <%# 2. Main Wrapper ensures the background is always "lowered" below the navbar %>
     <div class="main-background-wrapper">
-      
-      <%# p-0 for landing page to touch edges, mt-5 for others %>
       <div class="<%= show_full_width ? 'container-fluid p-0' : 'container pt-5' %>">
-        <%= render "layouts/alert" %>
-        
         <div class="row m-0 justify-content-center">
-          <div class="<%= show_full_width ? 'col-12' : 'col-lg-10' %>">
+          <div class="<%= show_full_width ? 'col-12' : 'col-lg-11' %>">
             
-            <%# Wrap Big 5 in a white card for readability %>
-            <% if is_big_5 %>
+            <% if is_data_page %>
               <div class="white-data-card mt-4">
-                <%= yield %>
+                <div class="table-responsive">
+                  <%= yield %>
+                </div>
               </div>
             <% else %>
               <%= yield %>
@@ -126,8 +101,5 @@
         </div>
       </div>
     </div>
-
-    <%# RE-ADDED BOOTSTRAP JS - Makes dropdowns and alerts work %>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>

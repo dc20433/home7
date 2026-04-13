@@ -1,13 +1,9 @@
 
 
-<div class="card mt-0 mx-auto border-primary" style="width: 70rem;">
-  <div class="card shadow border-dark">
-    <div class="card-header">
-      <h2 class="card-title text-center p-4">Patient List as of <%= Time.now.strftime("%Y-%m-%d %H:%M") %></h2>
-    </div>
-    <div class="card-body">
-  <%# Row 1: Action Buttons and Sign Out %>
-  <div class="d-flex justify-content-between align-items-center mx-2">
+  <h2 class="card-title text-center p-2">Patient List as of <%= Time.now.strftime("%Y-%m-%d %H:%M") %></h2>
+
+ <%# Row 1: Action Buttons and Sign Out %>
+  <div class="d-flex justify-content-center mx-2">
     <div class="d-flex align-items-center gap-1">
       <%= link_to "New Patient", new_regi_path, class: "btn btn-sm btn-outline-dark outline-double border border-lg border-dark rounded-pill mx-1 px-2 py-0 fw-bold" %>
       <%= link_to 'Charts by Date', overviews_chart_date_path, class: "btn btn-sm btn-outline-primary outline-double border border-lg border-primary rounded-pill mx-1 px-2 py-0 fw-bold" %>
@@ -22,8 +18,8 @@
     </div>
   </div>
 
-  <%# Row 2: Search Bar %>
-  <div class="row px-3 y-1">
+  <%# Search Bar %>
+  <div class="row px-4 y-1">
     <div class="col-md-12">
     <%= render 'shared/search_bar', 
         q: @q, 
@@ -43,7 +39,7 @@
     <%= link_to "All", url_for(letter: "All"), class: "btn btn-sm btn-outline-dark rounded-pill px-3 shadow-sm" %>
   </div>
 
-      <table class="table table-sm table-striped table-hover mx-auto">
+      <table class="table table-sm table-striped table-hover mx-auto mt-2">
         <thead class="table-primary">
           <tr>
             <th style="width: 15%;">Last Name</th>

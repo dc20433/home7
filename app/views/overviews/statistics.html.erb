@@ -1,63 +1,41 @@
-<div class="card mt-0 mx-auto border-primary" style="width: 70rem;">
-  <div class="card shadow border-dark">
-    <div class="card-header">
-      <h2 class="text-center m-4">Patient Statistics as of <%= Time.now.strftime("%Y-%m-%d %H:%M") %></h2>
+<div class="card shadow border-dark">
+  <div class="card-header text-center">
+    <h2 class="m-4">Patient Statistics as of <%= Time.now.strftime("%Y-%m-%d %H:%M") %></h2>
 
-      <%= link_to 'All Charts by Date', overviews_chart_date_path, class:"btn btn-sm btn-dark border-lg border-dark rounded-pill px-2 py-0 m-1 fw-bold" %>
-      <%= link_to 'All Charts by Name', overviews_chart_name_path, class:"btn btn-sm btn-primary border border-lg border-dark rounded-pill px-2 py-0 m-1 fw-bold" %>
-      <%= link_to 'All Patient Info', overviews_patient_info_path, class:"btn btn-sm btn-info border border-lg border-dark rounded-pill px-2 py-0 m-1 fw-bold" %>
-      <%= link_to 'Patient List', regis_path, class:"btn btn-sm btn-warning border border-lg border-dark rounded-pill px-2 py-0 m-1 fw-bold" %>
+    <div class="d-flex flex-wrap justify-content-center gap-2 mb-3">
+      <%= link_to 'All Charts by Date', overviews_chart_date_path, class:"btn btn-sm btn-dark border-dark rounded-pill px-3 fw-bold" %>
+      <%= link_to 'All Charts by Name', overviews_chart_name_path, class:"btn btn-sm btn-primary border-dark rounded-pill px-3 fw-bold" %>
+      <%= link_to 'All Patient Info', overviews_patient_info_path, class:"btn btn-sm btn-info border-dark rounded-pill px-3 fw-bold" %>
+      <%= link_to 'Patient List', regis_path, class:"btn btn-sm btn-warning border-dark rounded-pill px-3 fw-bold" %>
     </div>
+  </div>
 
-<div class="card shadow border-dark m-4">
-  <br>
-          <div class="card-body fs-6">
-            <table class="table table-sm table-striped table-hover mx-auto mt-0" style="width: 60rem">
-            
-              <thead class="table-primary">
-                <tr class="text-center">
-                  <th> </th>
-                  <th>Patients</th>
-                  <th>Records</th>
-                  <th>Charts</th>
-                  <th>Files</th>
-                  <th>Charts/Patient</th>
-                  <th>Charts/Day</th>
-                  <th>Average Age</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class="col text-center">
-                  <td>Total</td>
-                  <td><%= @total_patients %></td>
-                  <td><%= @total_info_records %></td>
-                  <td><%= @total_charts %></td>
-                  <td><%= @total_filing %></td>
-                  <td><%= @average_charts_per_patient %></td>
-                  <td><%= @average_charts_per_day %></td>
-                  <td><%= @average_age %></td>
-                </tr>
-                <tr class="col text-center">
-                  <td>Male</td>
-                  <td><%= @total_male_patients %></td>
-                  <td><%= @male_records %></td>
-                  <td><%= @male_charts %></td>
-                  <td><%= @male_filing %></td>
-                  <td><%= @male_charts_per_patient %></td>
-                  <td><%= @male_charts_per_day %></td>
-                  <td><%= @average_male_age %></td>
-                </tr>
-                <tr class="col text-center">
-                  <td>Female</td>
-                  <td><%= @total_female_patients %></td>
-                  <td><%= @female_records %></td>
-                  <td><%= @female_charts %></td>
-                  <td><%= @female_filing %></td>
-                  <td><%= @female_charts_per_patient %></td>
-                  <td><%= @female_charts_per_day %></td>
-                  <td><%= @average_female_age %></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+  <div class="card-body p-0">
+    <table class="table table-sm table-striped table-hover mb-0">
+      <thead class="table-primary">
+        <tr class="text-center">
+          <th> </th>
+          <th>Patients</th>
+          <th>Records</th>
+          <th>Charts</th>
+          <th>Files</th>
+          <th>Charts/Patient</th>
+          <th>Charts/Day</th>
+          <th>Average Age</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% [["Total", @total_patients, @total_info_records, @total_charts, @total_filing, @average_charts_per_patient, @average_charts_per_day, @average_age],
+            ["Male", @total_male_patients, @male_records, @male_charts, @male_filing, @male_charts_per_patient, @male_charts_per_day, @average_male_age],
+            ["Female", @total_female_patients, @female_records, @female_charts, @female_filing, @female_charts_per_patient, @female_charts_per_day, @average_female_age]].each do |row| %>
+          <tr class="text-center">
+            <td class="fw-bold"><%= row[0] %></td>
+            <% row[1..-1].each do |data| %>
+              <td><%= data %></td>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
