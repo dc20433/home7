@@ -18,10 +18,10 @@
       <% ('A'..'Z').each do |letter| %>
         <%= link_to letter, 
                     url_for(letter: letter), 
-                    class: "btn btn-sm #{params[:letter] == letter ? 'btn-primary' : 'btn-outline-secondary'} rounded-circle shadow-sm",
+                    class: "btn btn-sm btn-warning outline-double #{params[:letter] == letter ? 'btn-primary' : 'btn-outline-secondary'} rounded-circle shadow-sm",
                     style: "width: 35px;" %>
       <% end %>
-      <%= link_to "All", url_for(letter: "All"), class: "btn btn-sm btn-outline-dark rounded-pill px-3 shadow-sm" %>
+      <%= link_to "All", url_for(letter: "All"), class: "btn btn-sm btn-warning outline-double rounded-pill px-3 shadow-sm" %>
     </div> 
 
   <div class="table-responsive" style="overflow-x: auto;">
