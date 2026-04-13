@@ -1,6 +1,5 @@
-<div class="card shadow border-dark">
-  <div class="card-header text-center">
-    <h2 class="m-4">Patient Statistics as of <%= Time.now.strftime("%Y-%m-%d %H:%M") %></h2>
+
+  <h2 class="text-center m-4">Patient Statistics as of <%= Time.now.strftime("%Y-%m-%d %H:%M") %></h2>
 
     <div class="d-flex flex-wrap justify-content-center gap-2 mb-3">
       <%= link_to 'All Charts by Date', overviews_chart_date_path, class:"btn btn-sm btn-dark border-dark rounded-pill px-3 fw-bold" %>
@@ -10,7 +9,9 @@
     </div>
   </div>
 
-  <div class="card-body p-0">
+  <div class="card mt-0 mx-auto border-primary shadow" style="width: 65rem;">      
+  <div class="card-body pt-2">
+
     <table class="table table-sm table-striped table-hover mb-0">
       <thead class="table-primary">
         <tr class="text-center">

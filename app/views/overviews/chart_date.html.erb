@@ -1,12 +1,12 @@
-<h2 class="text-center pt-4 pb-2">All Patient Charts by Date as of <%= Time.now.strftime("%Y-%m-%d %H:%M") %></h2>
-
-<%= link_to 'All Charts by Name', overviews_chart_name_path, class:"btn btn-sm btn-outline-dark outline-double border border-lg border-dark rounded-pill px-2 py-0 m-1 fw-bold" %>
-<%= link_to 'All Patient Info', overviews_patient_info_path, class:"btn btn-sm btn-outline-primary outline-double border border-lg border-primary rounded-pill px-2 py-0 m-1 fw-bold" %>
-<%= link_to 'Patient List', regis_path, class:"btn btn-sm btn-outline-success outline-double border border-lg border-success rounded-pill px-2 py-0 m-1 fw-bold" %>
-<%= link_to 'Print All', 
-            url_for(params.to_unsafe_h.merge(print: true)), 
-            class: "btn btn-sm btn-outline-secondary outline-double border border-lg border-secondary rounded-pill px-3 py-0 fw-bold" %>
-
+<h2 class="text-center py-2">All Patient Charts by Date as of <%= Time.now.strftime("%Y-%m-%d %H:%M") %></h2>
+<div class="d-flex align-items-center justify-content-center mx-2 gap-1">
+  <%= link_to 'All Charts by Name', overviews_chart_name_path, class:"btn btn-sm btn-dark outline-double border border-lg border-dark rounded-pill px-2 py-0 m-1 fw-bold" %>
+  <%= link_to 'All Patient Info', overviews_patient_info_path, class:"btn btn-sm btn-primary outline-double border border-lg border-primary rounded-pill px-2 py-0 m-1 fw-bold" %>
+  <%= link_to 'Patient List', regis_path, class:"btn btn-sm btn-success outline-double border border-lg border-success rounded-pill px-2 py-0 m-1 fw-bold" %>
+  <%= link_to 'Print All', 
+              url_for(params.to_unsafe_h.merge(print: true)), 
+              class: "btn btn-sm btn-secondary outline-double border border-lg border-secondary rounded-pill px-3 py-0 fw-bold" %>
+</div>
 <%= render 'shared/search_bar', 
     q: @q, 
     url: request.path, 
@@ -18,22 +18,22 @@
       <% ('A'..'Z').each do |letter| %>
         <%= link_to letter, 
                     url_for(letter: letter), 
-                    class: "btn btn-sm btn-warning outline-double #{params[:letter] == letter ? 'btn-primary' : 'btn-outline-secondary'} rounded-circle shadow-sm",
+                    class: "btn btn-sm btn-warning outline-double fw-bold #{params[:letter] == letter ? 'btn-primary' : 'btn-outline-secondary'} rounded-circle shadow-sm",
                     style: "width: 35px;" %>
       <% end %>
       <%= link_to "All", url_for(letter: "All"), class: "btn btn-sm btn-warning outline-double rounded-pill px-3 shadow-sm" %>
     </div>
 
-<table class="table table-sm table-striped table-hover mt-4">
+<table class="table table-sm table-striped table-hover border border-dark mt-4">
 
   <thead class="table-info fs-6">
     <tr>
-      <th style="width: 10%;">Date</th>
-      <th style="width: 15%;">Name</th>
-      <th style="width: 15%;">Subjective</th>
+      <th style="width: 8%;">Date</th>
+      <th style="width: 17%;">Name</th>
+      <th style="width: 20%;">Subjective</th>
       <th style="width: 15%;">Objective</th>
-      <th style="width: 15%;">Assessment</th>
-      <th style="width: 30%;">Plan</th>
+      <th style="width: 10%;">Assessment</th>
+      <th class="text-center" style="width: 30%;">Plan</th>
     </tr>
   </thead>
 
