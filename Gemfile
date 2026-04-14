@@ -73,4 +73,4 @@ gem 'ransack'
 gem "bootstrap", "~> 5.3.3"
 gem "dartsass-rails"
 gem "sassc-rails"
-gem "pagy", "~> 9.3"
+gem "pagy", "~> 43.5"
