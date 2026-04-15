@@ -2,11 +2,11 @@
 <%= render 'layouts/identifier' %>
 
 <div class="d-flex align-items-center justify-content-center mx-2 gap-1">
-  <%= link_to 'New Filing', new_regi_filing_path(params[:regi_id]), class: "btn btn-sm btn-dark outline-double rounded-pill px-2 py-0 m-1 fw-bold" %>
-  <%= link_to 'Patient Info', regi_patients_path, class:"btn btn-sm btn-primary outline-double border border-lg border-primary rounded-pill px-2 py-0 m-1 fw-bold" %>
-  <%= link_to 'Patient Charts', regi_charts_path, class:"btn btn-sm btn-success outline-double border border-lg border-success rounded-pill px-2 py-0 m-1 fw-bold" %>
-  <%= link_to 'Patient List', regis_path, class:"btn btn-sm btn-info outline-double border border-lg border-info rounded-pill px-2 py-0 m-1 fw-bold" %>
-  <%= link_to 'Go Back', :back, class:"btn btn-sm btn-secondary outline-double border border-lg border-secondary rounded-pill px-2 py-0 m-1 fw-bold" %>
+  <%= link_to 'New Filing', new_regi_filing_path(params[:regi_id]), class: "btn btn-sm btn-dark border border-light border-3 rounded-pill px-3 py-0 m-1 fw-bold" %>
+  <%= link_to 'Patient Info', regi_patients_path, class:"btn btn-sm btn-primary border border-light border-3 rounded-pill px-3 py-0 m-1 fw-bold" %>
+  <%= link_to 'Patient Charts', regi_charts_path, class:"btn btn-sm btn-success border border-light border-3 rounded-pill px-3 py-0 m-1 fw-bold" %>
+  <%= link_to 'Patient List', regis_path, class:"btn btn-sm btn-warning border border-light border-3 rounded-pill px-3 py-0 m-1 fw-bold" %>
+  <%= link_to 'Go Back', :back, class:"btn btn-sm btn-secondary border border-light border-3 rounded-pill px-3 py-0 m-1 fw-bold" %>
 </div>
 <div class="card-body">
 <div class="card mt-3 mx-auto border-primary" style="width: 48rem;">
@@ -15,14 +15,14 @@
       <table class="table table-sm table-striped table-hover mt-3">
         <thead class="table-info fs-6">
           <tr>
-            <th>Filed on</th>
-            <th>File</th>
+            <th style="width: 20%;">Filing Date</th>
+            <th style="width: 10%;">File</th>
             <th>Description</th>
-            <th class="text-center" style="width: 220px;">Actions</th>
+            <th class="text-center" style="width: 40%;">Actions</th>
           </tr>
         </thead>
         <tbody>
-          <% @regi.filings.order("created_at DESC").each do |filing| %>
+          <% @filings.order("created_at DESC").each do |filing| %>
             <tr>
             <td><%= filing.f_date %></td>
               <td>
@@ -35,9 +35,13 @@
               <td><%= filing.describe %></td>
               <td>
                 <div class="btn-group" role="group">
-                <%= link_to 'View', filing.image, class: "btn btn-sm btn-ooutline-primary shadow border border-dark rounded-pill px-3 m-2 fw-bold" %>
-                <%= link_to 'Change', edit_regi_filing_path(@regi,filing), class: "btn btn-sm btn-ooutline-info shadow border border-dark rounded-pill px-3 m-2 fw-bold" %>
-                <%= button_to "Delete", [@regi,filing], method: :delete, class:"btn btn-sm btn-ooutline-danger shadow border border-dark rounded-pill px-3 m-2 fw-bold", form: { data: { turbo_confirm: "Are you sure?" } } %>
+                <% if filing.image.attached? %>
+                  <%= link_to 'View', filing.image, class: "btn btn-sm btn-outline-primary border border-light border-3 rounded-pill px-3 m-2 fw-bold" %>
+                <% else %>
+                  <button class="btn btn-sm btn-outline-secondary border border-light border-3 rounded-pill px-3 m-2 fw-bold" disabled>No File</button>
+                <% end %>
+                <%= link_to 'Change', edit_regi_filing_path(filing.regi_id, filing), class: "btn btn-sm btn-outline-success border border-light border-3 rounded-pill px-2 m-2 fw-bold" %>
+                <%= button_to "Delete", regi_filing_path(filing.regi_id, filing), method: :delete, class:"btn btn-sm btn-outline-danger border border-light border-3 rounded-pill px-3 m-2 fw-bold", form: { data: { turbo_confirm: "Are you sure?" } } %>
                 </div>
               </td>
             </tr>

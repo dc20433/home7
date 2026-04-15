@@ -14,7 +14,7 @@ module Authentication
 
   private
 
-  # 1. Verification Methods
+  # Verification Methods
   def authenticated?
     resume_session
   end
@@ -25,18 +25,18 @@ module Authentication
     resume_session || (request_authentication unless performed?)
   end
 
-  # 2. Session Lifecycle Logic
+  # Session Lifecycle Logic
   def resume_session
     session = find_session_by_cookie
     return nil unless session
 
-    # The 30-minute inactivity check
+    # Theinactivity check
     if session.updated_at < 20.minutes.ago
       terminate_session
       return nil 
     end
 
-    session.touch # Updates updated_at to reset the 30-minute clock
+    session.touch # Updates updated_at to reset the inactivity clock
     Current.session ||= session
   end
 
@@ -54,7 +54,7 @@ module Authentication
     redirect_to new_session_path, status: :see_other, alert: "Session expired or logged out." and return
   end
 
-  # 3. Helper Logic
+  # Helper Logic
   def find_session_by_cookie
     Session.find_by(id: cookies.signed[:session_id]) if cookies.signed[:session_id]
   end

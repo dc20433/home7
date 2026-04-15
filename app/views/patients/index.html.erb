@@ -1,59 +1,60 @@
 <h1 class="text-center pt-4 pb-0">Patient Information</h1>
 <%= render 'layouts/identifier' %>
+
 <div class="d-flex align-items-center justify-content-center mx-2 gap-1">
-  <%= link_to 'New Record', new_regi_patient_path, class: "btn btn-sm btn-dark outline-double border border-lg border-dark rounded-pill px-2 py-0 m-1 fw-bold" %>
-  <%= link_to 'Patient Charts', regi_charts_path, class:"btn btn-sm btn-primary outline-double border border-lg border-primary rounded-pill px-2 py-0 m-1 fw-bold" %>
-  <%= link_to 'Patient Files', regi_filings_path, class:"btn btn-sm btn-success outline-double border border-lg border-success rounded-pill px-2 py-0 m-1 fw-bold" %>
-  <%= link_to 'Patient List', regis_path, class:"btn btn-sm btn-info outline-double border border-lg border-info rounded-pill px-2 py-0 m-1 fw-bold" %>
-  <%= link_to 'Go Back', :back, class:"btn btn-sm btn-secondary outline-double border border-lg border-secondary rounded-pill px-2 py-0 mt-4 mb-4 fw-bold" %>
+  <%= link_to 'New Record', new_regi_patient_path, class: "btn btn-sm btn-dark border border-light border-3 rounded-pill px-3 py-0 m-1 fw-bold" %>
+  <%= link_to 'Patient Charts', regi_charts_path, class:"btn btn-sm btn-primary border border-light border-3 rounded-pill px-3 py-0 m-1 fw-bold" %>
+  <%= link_to 'Patient Files', regi_filings_path, class:"btn btn-sm btn-info border border-light border-3 rounded-pill px-3 py-0 m-1 fw-bold" %>
+  <%= link_to 'Patient List', regis_path, class:"btn btn-sm btn-warning border border-light border-3 rounded-pill px-3 py-0 m-1 fw-bold" %>
+  <%= link_to 'Go Back', :back, class:"btn btn-sm btn-secondary border border-light border-3 rounded-pill px-3 py-0 mt-4 mb-4 fw-bold" %>
 </div>
-  <table class="table table-sm table-striped table-hover mt-1 mb-4">
-    <thead class="table-success fs-6">
+
+<table class="table table-sm table-striped table-hover mt-1 mb-4">
+  <thead class="table-success fs-6">
+    <tr>
+      <th style="width:145px">Updated On</th>
+      <th>Contact Info</th>
+      <th>Weight</th>
+      <th>Complaints</th>
+      <th>Onset/Pain</th>
+      <th>Referred by</th>
+      <th>Health Issues</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @patients.each do |patient| %>
       <tr>
-        <th style="width:145px">Updated on</th>
-        <th>Contact Info</th>
-        <th>Weight</th>
-        <th>Complaints</th>
-        <th>Onset/Pain</th>
-        <th>Referred by</th>
-        <th>Health Issues</th>
+        <td>
+            <%= link_to patient.v_date, regi_patient_path(@regi,patient) %>
+        </td>  
+        <td>
+          <%= patient.street %><%= ', ' if patient.street? %>
+          <%= patient.city %>
+          <%= patient.state %>
+          <%= patient.zip %>
+          <%= "(c)#{patient.cell} " if patient.cell.present? %>
+          <%= "(h)#{patient.home} " if patient.home.present? %>
+          <%= "(w)#{patient.work} " if patient.work.present? %>
+          <%= " #{patient.email}" if patient.email.present? %>
+        </td>
+        <td>
+          <%= patient.weight %>
+        </td>
+        <td>
+          <%= "#{patient.com1.strip}" if patient.com1? %>
+          <%= " / #{patient.com2.strip}" if patient.com2? %>
+          <%= " / #{patient.com3.strip}" if patient.com3? %>
+        </td>
+        <td>
+          <%= patient.d_onset %><%= '/Pain: ' if patient.pain_scale? %>
+          <%= patient.pain_scale %>
+        </td>
+        <td><%= patient.referred %></td>
+        <td>
+          <%= patient.active_health_issues %>
+        </td>
       </tr>
-    </thead>
-
-    <tbody>
-
-      <% @patients.each do |patient| %>
-        <tr>
-          <td>
-              <%= link_to patient.v_date, regi_patient_path(@regi,patient) %>
-          </td>  
-          <td>
-            <%= patient.street %><%= ', ' if patient.street? %>
-            <%= patient.city %>
-            <%= patient.state %>
-            <%= patient.zip %>
-            <%= "(c)#{patient.cell} " if patient.cell.present? %>
-            <%= "(h)#{patient.home} " if patient.home.present? %>
-            <%= "(w)#{patient.work} " if patient.work.present? %>
-            <%= " #{patient.email}" if patient.email.present? %>
-          </td>
-          <td>
-            <%= patient.weight %>
-          </td>
-          <td>
-            <%= "#{patient.com1.strip}" if patient.com1? %>
-            <%= " / #{patient.com2.strip}" if patient.com2? %>
-            <%= " / #{patient.com3.strip}" if patient.com3? %>
-          </td>
-          <td>
-            <%= patient.d_onset %><%= '/Pain: ' if patient.pain_scale? %>
-            <%= patient.pain_scale %>
-          </td>
-          <td><%= patient.referred %></td>
-          <td>
-            <%= patient.active_health_issues %>
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
+    <% end %>
+  </tbody>
+</table>

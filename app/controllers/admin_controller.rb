@@ -1,4 +1,3 @@
-# Example: app/controllers/admin_controller.rb
 class AdminController < ApplicationController
   before_action :resume_session
   before_action :require_admin!

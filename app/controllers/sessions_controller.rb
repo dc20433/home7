@@ -13,10 +13,9 @@ class SessionsController < ApplicationController
     else
       redirect_to new_session_path, alert: "Try again."
     end
-  end # <--- This closes 'create'
+  end
 
   def destroy
     terminate_session
   end
-
-end # <--- This closes 'class SessionsController'
+end

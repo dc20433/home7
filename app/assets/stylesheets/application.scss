@@ -1,21 +1,19 @@
 @import "bootstrap";
 
-// 1. GLOBAL LAYOUT & BACKGROUND
+// GLOBAL LAYOUT & BACKGROUND
 html,
 body {
   margin: 0px;
   padding: 0;
   height: 100%;
-  // Apply the trees globally so you don't have to add .screen to every page
-  background-image: url("pine_trees.jpg");
+  background-image: url("pine_trees.jpg"); // Apply the trees globally so no need to add .screen to every page
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
   background-repeat: no-repeat;
 }
 
-// 2. THE SCREEN & OVERLAY (From your snippet)
-// Use this if you want a specific "tint" over the trees
+// THE SCREEN & OVERLAY: Use this for a specific "tint" over the trees
 .color-overlay {
   width: 100%;
   min-height: 100vh;
@@ -24,8 +22,15 @@ body {
   background-color: rgba(0, 0, 0, 0.2) !important; // Light tint for readability
 }
 
-// 3. THE "SURGERY" - FONT SIZES
-// Your Table "Surgery" Logic
+// Specifically kills the horizontal slider
+
+.data-container {
+  overflow-x: hidden;
+  /* Specifically kills the horizontal slider */
+  width: 100%;
+}
+
+// TABLE FONT SIZES
 .table {
   thead {
     th {
@@ -45,8 +50,7 @@ body {
   }
 }
 
-// 4. PROTECTING BUTTONS & SMALL TEXT
-// This ensures btn-sm doesn't grow to 1.5rem
+// 4. PROTECTING BUTTONS & SMALL TEXT: This ensures btn-sm doesn't grow to 1.5rem
 .btn {
   font-size: 1rem;
 }
@@ -58,7 +62,7 @@ body {
   font-size: 0.875rem !important;
 }
 
-// 5. UTILITIES
+// UTILITIES
 .logo-float {
   position: absolute;
   top: 5px;
@@ -119,4 +123,8 @@ body {
 .form-check-input:checked {
   background-color: #0d6efd !important;
   border-color: #0d6efd !important;
+}
+
+.text-shadow-custom {
+  text-shadow: 4px 4px 6px rgba(0, 0, 0, 0.5);
 }

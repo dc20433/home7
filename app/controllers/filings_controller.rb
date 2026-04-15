@@ -5,7 +5,12 @@ class FilingsController < ApplicationController
 
   # GET regis/1/filings
   def index
-    @filings = @regi.filings
+    # If @regi was not found by before_action, try to find it from the first filing
+    @filings = @regi ? @regi.filings : Filing.all
+    
+    if @regi.nil? && @filings.any?
+      @regi = @filings.first.regi
+    end
   end
 
   # GET regis/1/filings/1

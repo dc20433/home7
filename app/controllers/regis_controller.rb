@@ -8,9 +8,6 @@ class RegisController < ApplicationController
 
   before_action :set_regi, only: %i[ show edit update destroy ]
 
-  # GET /regis
-  # app/controllers/regis_controller.rb
-
 # GET /regis
 def index
   @q = Regi.ransack(params[:q])
@@ -68,7 +65,7 @@ end
   end
 
   private
-  # This is your custom Role-Based "What-If" logic
+  # This is a custom Role-Based "What-If" logic
   def require_management_access
     # If a user is logged in but is just a 'patient', kick them to the root
     unless Current.user.admin? || Current.user.manager?

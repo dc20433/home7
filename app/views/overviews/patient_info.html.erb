@@ -1,44 +1,46 @@
-  <h2 class="text-center py-2">All Patient Information as of <%= Time.now.strftime("%Y-%m-%d %H:%M") %></h2>
-  <div class="d-flex align-items-center justify-content-center mx-2 gap-1">
-    <%= link_to 'All Charts by Date', overviews_chart_date_path, class:"btn btn-sm btn-dark outline-double border border-lg border-dark rounded-pill px-2 py-0 m-1 fw-bold" %>
-    <%= link_to 'All Charts by Name', overviews_chart_name_path, class:"btn btn-sm btn-primary outline-double border border-lg border-primary rounded-pill px-2 py-0 m-1 fw-bold" %>
-    <%= link_to 'Patient List', regis_path, class:"btn btn-sm btn-success outline-double border border-lg border-success rounded-pill px-2 py-0 m-1 fw-bold" %>
-    <%= link_to 'Print All', 
-            url_for(params.to_unsafe_h.merge(print: true)), 
-            class: "btn btn-sm btn-secondary outline-double border border-lg border-secondary rounded-pill px-3 py-0 fw-bold" %>
-  </div>
-  <%= render 'shared/search_bar', 
-    q: @q, 
-    url: request.path, 
-    search_key_last: :regi_last_name_cont,
-    search_key_first: :regi_first_name_cont,
-    placeholder: "Search Patient Info..." %>
+<h2 class="text-center py-2">All Patient Information as of <%= Time.now.strftime("%Y-%m-%d %H:%M") %></h2>
 
-    <div class="d-flex flex-wrap justify-content-center gap-1 my-3">
-      <% ('A'..'Z').each do |letter| %>
-        <%= link_to letter, 
-                    url_for(letter: letter), 
-                    class: "btn btn-sm btn-warning outline-double fw-bold #{params[:letter] == letter ? 'btn-primary' : 'btn-outline-secondary'} rounded-circle shadow-sm",
-                    style: "width: 35px;" %>
-      <% end %>
-      <%= link_to "All", url_for(letter: "All"), class: "btn btn-sm btn-warning outline-double rounded-pill px-3 shadow-sm" %>
-    </div> 
+<div class="d-flex align-items-center justify-content-center mx-2 gap-1">
+  <%= link_to 'All Charts by Date', overviews_chart_date_path, class:"btn btn-sm btn-primary border border-light border-3 rounded-pill px-2 py-0 m-1 fw-bold" %>
+  <%= link_to 'All Charts by Name', overviews_chart_name_path, class:"btn btn-sm btn-success border border-light border-3 rounded-pill px-2 py-0 m-1 fw-bold" %>
+  <%= link_to 'Patient List', regis_path, class:"btn btn-sm btn-warning border border-light border-3 rounded-pill px-3 py-0 m-1 fw-bold" %>
+  <%= link_to 'Print All', 
+          url_for(params.to_unsafe_h.merge(print: true)), 
+          class: "btn btn-sm btn-secondary border border-light border-3 rounded-pill px-3 py-0 fw-bold" %>
+</div>
+<%= render 'shared/search_bar', 
+  q: @q, 
+  url: request.path, 
+  search_key_last: :regi_last_name_cont,
+  search_key_first: :regi_first_name_cont,
+  placeholder: "Search Patient Info..." %>
 
-  <div class="table-responsive" style="overflow-x: auto;">
-    <table class="table table-sm table-striped table-hover mt-4" style="min-width: 1000px;">
-      <thead class="table-success fs-6">
+<div class="d-flex flex-wrap justify-content-center gap-1 my-3">
+  <% ('A'..'Z').each do |letter| %>
+    <%= link_to letter, 
+                url_for(letter: letter), 
+                class: "btn btn-sm btn-warning border border-light border-3 fw-bold #{params[:letter] == letter ? 'btn-primary' : 'btn-outline-secondary'} rounded-circle shadow-sm",
+                style: "width: 35px;" %>
+  <% end %>
+  <%= link_to "All", url_for(letter: "All"), class: "btn btn-sm btn-warning border border-light border-3 rounded-pill px-3 shadow-sm" %>
+</div> 
+
+<div class="table-responsive" style="overflow-x: auto;">
+  <table class="table table-sm table-striped table-hover border border-dark mt-2" style="min-width: 1000px;">
+    <thead class="table-success fs-6">
       <tr style="height:13px">
-          <th>Name</th>
-          <th>Date Entered</th>
-          <th>Contact Info</th>
-          <th>Weight</th>
-          <th>Complaints</th>
-          <th>Onset/Pain</th>
-          <th>Referred</th>
-          <th>Health History</th>
-        </tr>
-      </thead>
-      <tbody>
+        <th>Name</th>
+        <th>Date</th>
+        <th>Contact Info</th>
+        <th>Weight</th>
+        <th>Complaints</th>
+        <th>Onset/Pain</th>
+        <th>Referred</th>
+        <th>Health Issues</th>
+      </tr>
+    </thead>
+
+    <tbody>
       <% last_patient_id = nil %>
       <% @patients.each do |patient| %>
         <tr style="height:15px">
@@ -110,40 +112,39 @@
   </script>
 
   <% if params[:print] == "true" %>
-  <style>
-    @media print {
-      /* 1. Force the table to fit the page width */
-      table { 
-        width: 100% !important; 
-        min-width: 0 !important; 
-        table-layout: fixed !important; /* Forces columns to respect width */
-        word-wrap: break-word;
-      }
+    <style>
+      @media print {
+        /* 1. Force the table to fit the page width */
+        table { 
+          width: 100% !important; 
+          min-width: 0 !important; 
+          table-layout: fixed !important; /* Forces columns to respect width */
+          word-wrap: break-word;
+        }
 
-      /* 2. Set specific widths for the most crowded columns */
-      th:nth-child(1), td:nth-child(1) { width: 12%; } /* Name */
-      th:nth-child(3), td:nth-child(3) { width: 15%; } /* Contact info */
-      th:nth-child(8), td:nth-child(8) { width: 25%; } /* Health History (The last column) */
+        /* 2. Set specific widths for the most crowded columns */
+        th:nth-child(1), td:nth-child(1) { width: 12%; } /* Name */
+        th:nth-child(3), td:nth-child(3) { width: 15%; } /* Contact info */
+        th:nth-child(8), td:nth-child(8) { width: 25%; } /* Health History (The last column) */
 
-      /* 3. Allow text to wrap and shrink font slightly */
-      td, th { 
-        white-space: normal !important; 
-        font-size: 9pt !important; 
-        overflow: visible !important;
-      }
+        /* 3. Allow text to wrap and shrink font slightly */
+        td, th { 
+          white-space: normal !important; 
+          font-size: 9pt !important; 
+          overflow: visible !important;
+        }
 
-      /* 4. Remove the horizontal scroll wrapper */
-      .table-responsive { 
-        display: block !important; 
-        overflow: visible !important; 
-      }
+        /* 4. Remove the horizontal scroll wrapper */
+        .table-responsive { 
+          display: block !important; 
+          overflow: visible !important; 
+        }
 
-      /* 5. Hide UI elements */
-      .btn, .nav, .search-bar, .d-flex, footer, .card-header, .pagination { 
-        display: none !important; 
+        /* 5. Hide UI elements */
+        .btn, .nav, .search-bar, .d-flex, footer, .card-header, .pagination { 
+          display: none !important; 
+        }
       }
-    }
-  </style>
-  <%# Keep your existing script below %>
-<% end %>
+    </style>
+  <% end %>
 <% end %>

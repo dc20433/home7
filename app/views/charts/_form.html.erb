@@ -1,54 +1,60 @@
-<div class="card mt-0 mx-auto p-4 border-primary" style="width: 70rem;">
-  <div class="card-header">
-    <h2 class="card-title text-center">Patient Chart</h2>
-    <%= render 'layouts/identifier' %>
-  </div> 
+<div class="mx-auto" style="width: 98%; max-width: 100%;">
 
-<%= form_with(model: [@regi, @chart]) do |f| %>
-  <% if @chart.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@chart.errors.count, "error") %> prohibited this chart from being saved:</h2>
+  <h2 class="card-title text-center">Patient Chart</h2>
+  <%= render 'layouts/identifier' %>
 
-      <ul>
-      <% @chart.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
+  <div class="card m-2 p-2 border-primary shadow col-20 col-md-19 col-lg-18 mx-auto">
+    <div class="card shadow m-2 border-dark">
+      
+      <div class="card-body">
+        <%= form_with(model: [@regi, @chart]) do |f| %>
+          <% if @chart.errors.any? %>
+            <div id="error_explanation">
+              <h2><%= pluralize(@chart.errors.count, "error") %> prohibited this chart from being saved:</h2>
+
+              <ul>
+              <% @chart.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+              <% end %>
+              </ul>
+            </div>
+          <% end %>
+
+          <div class="row">
+            <div class="col col-md-3 fs-6">
+              <b>Updated on</b>
+              <%= f.date_field :t_date, class:"form-control form-control-sm border-primary fs-4" %>
+            </div>
+          </div>
+          <br>
+          <div class="col fs-6">
+            <b>Subjective</b>
+            <%= f.text_area :subj, class:"form-control form-control-sm border-primary fs-4", style:"height: 150px" %>
+          </div>
+          <br>
+          <div class="col fs-6">
+            <b>Objective</b>
+            <%= f.text_area :obj, class:"form-control form-control-sm border-primary fs-4", style:"height: 150px" %>
+          </div>
+          <br>
+          <div class="col fs-6">
+            <b>Assessment</b>
+            <%= f.text_area :assess, class:"form-control form-control-sm border-primary fs-4", style:"height: 150px" %>
+          </div>
+          <br>
+          <div class="col fs-6">
+            <b>Plan</b>
+            <%= f.text_area :plan, class:"form-control form-control-sm border-primary fs-4", style:"height: 150px" %>
+          </div>
+          <br>
+          <div class="btn-group m-2 pt-2" role="group">
+            <%= f.submit "Save", class: "btn btn-sm btn-outline-dark outline-double border border-lg border-dark rounded-pill px-3 m-2 fw-bold" %>
+        <% end %>
+            <%= button_to "Delete", [@regi,@chart], method: :delete, class:"btn btn-sm btn-outline-danger outline-double rounded-pill px-3 m-2 fw-bold", form: { data: { turbo_confirm: "Are you sure?" } } %>
+            <%= link_to 'Patient Chart', regi_charts_path, class:"btn btn-sm btn-outline-primary outline-double rounded-pill px-2 m-2 fw-bold" %>
+            <%= link_to 'Go Back', :back, class:"btn btn-sm btn-outline-success outline-double rounded-pill px-3 m-2 fw-bold" %>
+          </div>
+      </div>
     </div>
-  <% end %>
-
-  <div class="row">
-    <div class="col col-md-3 fs-6">
-      <b>Updated on</b>
-      <%= f.date_field :t_date, class:"form-control form-control-sm border-primary fs-4" %>
-    </div>
-  </div>
-  <br>
-  <div class="col fs-6">
-    <b>Subjective</b>
-    <%= f.text_area :subj, class:"form-control form-control-sm border-primary fs-4", style:"height: 150px" %>
-  </div>
-  <br>
-  <div class="col fs-6">
-    <b>Objective</b>
-    <%= f.text_area :obj, class:"form-control form-control-sm border-primary fs-4", style:"height: 150px" %>
-  </div>
-  <br>
-  <div class="col fs-6">
-    <b>Assessment</b>
-    <%= f.text_area :assess, class:"form-control form-control-sm border-primary fs-4", style:"height: 150px" %>
-  </div>
-  <br>
-  <div class="col fs-6">
-    <b>Plan</b>
-    <%= f.text_area :plan, class:"form-control form-control-sm border-primary fs-4", style:"height: 150px" %>
-  </div>
-  <br>
-  <div class="btn-group" role="group">
-    <%= f.submit "Save", class: "btn btn-sm btn-outline-dark outline-double border border-lg border-dark rounded-pill px-3 m-2 fw-bold" %>
-<% end %>
-  <%= button_to "Delete", [@regi,@chart], method: :delete, class:"btn btn-sm btn-outline-danger outline-double border border-lg border-danger rounded-pill px-3 m-2 fw-bold", form: { data: { turbo_confirm: "Are you sure?" } } %>
-  <%= link_to 'Patient Chart', regi_charts_path, class:"btn btn-sm btn-outline-primary outline-double border border-lg border-primary rounded-pill px-2 m-2 fw-bold" %>
-  <%= link_to 'Go Back', :back, class:"btn btn-sm btn-outline-success outline-double border border-lg border-success rounded-pill px-3 m-2 fw-bold" %>
   </div>
 </div>

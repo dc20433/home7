@@ -1,9 +1,6 @@
+<h2 class="text-center pt-2">Clinic Login</h2>
 
-
-<div class="card mt-0 mx-auto p-4 border-primary shadow" style="width: 25rem;">
-  <div class="card-header bg-primary text-white text-center">
-    <h4>Clinic Login</h4>
-  </div>
+<div class="card mt-0 mx-auto p-4 border-primary border-2 shadow p-3 mb-5 bg-body rounded" style="width: 25rem;">
   <div class="card-body">
     <%= form_with url: session_path do |f| %>
       <div class="mb-3">
@@ -11,13 +8,13 @@
         <%= f.email_field :email, required: true, autofocus: true, class: "form-control border-primary" %>
       </div>
 
-      <div class="mb-3">
+      <div class="mb-5">
         <%= f.label :password, "Password", class: "form-label fw-bold" %>
         <%= f.password_field :password, required: true, class: "form-control border-primary" %>
       </div>
 
       <div class="d-grid gap-2">
-        <%= f.submit "Sign In", class: "btn btn-primary rounded-pill shadow" %>
+        <%= f.submit "Sign In", class: "btn btn-primary btn-sm border border-secondary border-3 rounded-pill fw-bold" %>
       </div>
     <% end %>
   </div>

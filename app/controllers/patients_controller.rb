@@ -26,7 +26,7 @@ class PatientsController < ApplicationController
   def edit
     @patient = Patient.find(params[:id])
     
-    # SECURITY: If I am a patient, I can ONLY edit my own ID
+    # SECURITY: A patient can ONLY edit with their own ID
     if Current.user.patient? && Current.user.patient_id != @patient.id
       redirect_to root_path, alert: "You do not have permission to edit this record."
     end
@@ -60,25 +60,25 @@ class PatientsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_regi
-      @regi = Regi.find(params[:regi_id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_regi
+    @regi = Regi.find(params[:regi_id])
+  end
 
-    def set_patient
-      @patient = @regi.patients.find(params[:id])
-    end
+  def set_patient
+    @patient = @regi.patients.find(params[:id])
+  end
 
-    # Only allow a trusted parameter "white list" through.
-    def patient_params
-      params.require(:patient).permit(
-        :name, :v_date, :m_stat, :weight, :height, :street, :city, :state, :zip, 
-        :cell, :home, :work, :email, :referred, :com1, :com2, :com3, 
-        :d_onset, :pain_scale, :diag_given, :aq_b4, :o_dis, :last_prd, 
-        :preg, :preg_wks, :regi_id,
-        # This line replaces 'di_list:[]' and automatically permits 
-        # every key you defined in your Patient model's HEALTH_ISSUES hash
-        *Patient::HEALTH_ISSUES.keys
-      )
-    end
+  # Only allow a trusted parameter "white list" through.
+  def patient_params
+    params.require(:patient).permit(
+      :name, :v_date, :m_stat, :weight, :height, :street, :city, :state, :zip, 
+      :cell, :home, :work, :email, :referred, :com1, :com2, :com3, 
+      :d_onset, :pain_scale, :diag_given, :aq_b4, :o_dis, :last_prd, 
+      :preg, :preg_wks, :regi_id,
+      # This line replaces 'di_list:[]' and automatically permits 
+      # every key you defined in your Patient model's HEALTH_ISSUES hash
+      *Patient::HEALTH_ISSUES.keys
+    )
+  end
 end

@@ -1,32 +1,33 @@
-
 <h2 class="text-center">Patient Charts</h2>
 <%= render 'layouts/identifier' %>
+
 <div class="d-flex align-items-center justify-content-center mx-2 gap-1">
-  <%= link_to 'New Chart', new_regi_chart_path, class: "btn btn-sm btn-dark outline-double border border-lg border-dark rounded-pill px-2 py-0 m-1 fw-bold" %>
-  <%= link_to 'Patient Info', regi_patients_path, class:"btn btn-sm btn-primary outline-double border border-lg border-primary rounded-pill px-2 py-0 m-1 fw-bold" %>
-  <%= link_to 'Patient Files', regi_filings_path, class:"btn btn-sm btn-success outline-double border border-lg border-success rounded-pill px-2 py-0 m-1 fw-bold" %>
-  <%= link_to 'Patient List', regis_path, class:"btn btn-sm btn-info outline-double border border-lg border-info rounded-pill px-2 py-0 m-1 fw-bold" %>
-  <%= link_to 'Go Back', :back, class:"btn btn-sm btn-secondary outline-double border border-lg border-secondary rounded-pill px-2 py-0 mt-4 mb-4 fw-bold" %>
+  <%= link_to 'New Chart', new_regi_chart_path, class: "btn btn-sm btn-dark border border-light border-3 rounded-pill px-3 py-0 m-1 fw-bold" %>
+  <%= link_to 'Patient Info', regi_patients_path, class:"btn btn-sm btn-success border border-light border-3 rounded-pill px-3 py-0 m-1 fw-bold" %>
+  <%= link_to 'Patient Files', regi_filings_path, class:"btn btn-sm btn-info border border-light border-3 rounded-pill px-3 py-0 m-1 fw-bold" %>
+  <%= link_to 'Patient List', regis_path, class:"btn btn-sm btn-warning border border-light border-3 rounded-pill px-3 py-0 m-1 fw-bold" %>
+  <%= link_to 'Go Back', :back, class:"btn btn-sm btn-secondary border border-light border-3 rounded-pill px-3 py-0 mt-4 mb-4 fw-bold" %>
 </div>
-  <table class="table table-sm table-striped table-hover border border-dark mt-1">
-    <thead class="table-info fs-6">
-      <tr>
-        <th style="width:10%">Updated on</th>
-        <th style="width:30%">Subjective</th>
-        <th style="width:15%">Objective</th>
-        <th style="width:10%">Assessment</th>
-        <th style="width:35%">Plan</th>
+
+<table class="table table-sm table-striped table-hover border border-dark mt-1">
+  <thead class="table-info fs-6">
+    <tr>
+      <th style="width:10%">Updated on</th>
+      <th style="width:30%">Subjective</th>
+      <th style="width:15%">Objective</th>
+      <th style="width:10%">Assessment</th>
+      <th style="width:35%">Plan</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @regi.charts.order("t_date DESC").each do |chart| %>
+      <tr style="height:15px">
+        <td><%= link_to chart.t_date, regi_chart_path(@regi,chart) %></td>
+        <td><%= chart.subj %></td>
+        <td><%= chart.obj %></td>
+        <td><%= chart.assess %></td>
+        <td><%= chart.plan %></td>
       </tr>
-    </thead>
-    <tbody>
-      <% @regi.charts.order("t_date DESC").each do |chart| %>
-        <tr style="height:15px">
-          <td><%= link_to chart.t_date, regi_chart_path(@regi,chart) %></td>
-          <td><%= chart.subj %></td>
-          <td><%= chart.obj %></td>
-          <td><%= chart.assess %></td>
-          <td><%= chart.plan %></td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
+    <% end %>
+  </tbody>
+</table>

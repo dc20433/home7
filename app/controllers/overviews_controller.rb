@@ -1,8 +1,8 @@
 class OverviewsController < ApplicationController
-  # 1. This ensures a user is logged in before they can see ANY of these pages
+  # This ensures a user is logged in before they can see ANY of these pages
   before_action :require_authentication
   
-  # 2. This specifically locks the statistics page to Admins only
+  # This specifically locks the statistics page to Admins only
   before_action :ensure_admin, only: [:statistics]
 
   def chart_date
@@ -99,7 +99,7 @@ class OverviewsController < ApplicationController
 
   private
   
-  # 3. This is the helper method that does the actual security check
+  # The helper method that does the actual security check
   def ensure_admin
     unless Current.user&.admin?
       redirect_to root_path, alert: "Access denied. Only Admins can view statistics."

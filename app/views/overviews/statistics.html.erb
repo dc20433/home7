@@ -1,15 +1,14 @@
+<h2 class="text-center m-4">Patient Statistics as of <%= Time.now.strftime("%Y-%m-%d %H:%M") %></h2>
 
-  <h2 class="text-center m-4">Patient Statistics as of <%= Time.now.strftime("%Y-%m-%d %H:%M") %></h2>
+<div class="d-flex flex-wrap justify-content-center gap-2 mb-3">
+  <%= link_to 'All Charts by Date', overviews_chart_date_path, class:"btn btn-sm btn-dark border border-light border-3 rounded-pill px-3 fw-bold" %>
+  <%= link_to 'All Charts by Name', overviews_chart_name_path, class:"btn btn-sm btn-primary border border-light border-3 rounded-pill px-3 fw-bold" %>
+  <%= link_to 'All Patient Info', overviews_patient_info_path, class:"btn btn-sm btn-info border border-light border-3 rounded-pill px-3 fw-bold" %>
+  <%= link_to 'Patient List', regis_path, class:"btn btn-sm btn-warning border border-light border-3 rounded-pill px-3 fw-bold" %>
+</div>
 
-    <div class="d-flex flex-wrap justify-content-center gap-2 mb-3">
-      <%= link_to 'All Charts by Date', overviews_chart_date_path, class:"btn btn-sm btn-dark border-dark rounded-pill px-3 fw-bold" %>
-      <%= link_to 'All Charts by Name', overviews_chart_name_path, class:"btn btn-sm btn-primary border-dark rounded-pill px-3 fw-bold" %>
-      <%= link_to 'All Patient Info', overviews_patient_info_path, class:"btn btn-sm btn-info border-dark rounded-pill px-3 fw-bold" %>
-      <%= link_to 'Patient List', regis_path, class:"btn btn-sm btn-warning border-dark rounded-pill px-3 fw-bold" %>
-    </div>
-  </div>
 
-  <div class="card mt-0 mx-auto border-primary shadow" style="width: 65rem;">      
+<div class="card mt-0 mx-auto border-primary shadow" style="width: 65rem;">      
   <div class="card-body pt-2">
 
     <table class="table table-sm table-striped table-hover mb-0">
@@ -25,6 +24,7 @@
           <th>Average Age</th>
         </tr>
       </thead>
+      
       <tbody>
         <% [["Total", @total_patients, @total_info_records, @total_charts, @total_filing, @average_charts_per_patient, @average_charts_per_day, @average_age],
             ["Male", @total_male_patients, @male_records, @male_charts, @male_filing, @male_charts_per_patient, @male_charts_per_day, @average_male_age],

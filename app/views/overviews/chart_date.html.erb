@@ -1,28 +1,30 @@
 <h2 class="text-center py-2">All Patient Charts by Date as of <%= Time.now.strftime("%Y-%m-%d %H:%M") %></h2>
+
 <div class="d-flex align-items-center justify-content-center mx-2 gap-1">
-  <%= link_to 'All Charts by Name', overviews_chart_name_path, class:"btn btn-sm btn-dark outline-double border border-lg border-dark rounded-pill px-2 py-0 m-1 fw-bold" %>
-  <%= link_to 'All Patient Info', overviews_patient_info_path, class:"btn btn-sm btn-primary outline-double border border-lg border-primary rounded-pill px-2 py-0 m-1 fw-bold" %>
-  <%= link_to 'Patient List', regis_path, class:"btn btn-sm btn-success outline-double border border-lg border-success rounded-pill px-2 py-0 m-1 fw-bold" %>
+  <%= link_to 'All Charts by Name', overviews_chart_name_path, class:"btn btn-sm btn-success border border-light border-3 rounded-pill px-2 py-0 m-1 fw-bold" %>
+  <%= link_to 'All Patient Info', overviews_patient_info_path, class:"btn btn-sm btn-info border border-light border-3 rounded-pill px-2 py-0 m-1 fw-bold" %>
+  <%= link_to 'Patient List', regis_path, class:"btn btn-sm btn-warning border border-light border-3 rounded-pill px-3 py-0 m-1 fw-bold" %>
   <%= link_to 'Print All', 
               url_for(params.to_unsafe_h.merge(print: true)), 
-              class: "btn btn-sm btn-secondary outline-double border border-lg border-secondary rounded-pill px-3 py-0 fw-bold" %>
+              class: "btn btn-sm btn-secondary border border-light border-3 rounded-pill px-3 py-0 fw-bold" %>
 </div>
 <%= render 'shared/search_bar', 
     q: @q, 
     url: request.path, 
     search_key_last: :regi_last_name_cont,
     search_key_first: :regi_first_name_cont,
-    placeholder: "Search Charts..." %>
+    placeholder: "Search Charts..." 
+%>
 
-    <div class="d-flex flex-wrap justify-content-center gap-1 my-3">
-      <% ('A'..'Z').each do |letter| %>
-        <%= link_to letter, 
-                    url_for(letter: letter), 
-                    class: "btn btn-sm btn-warning outline-double fw-bold #{params[:letter] == letter ? 'btn-primary' : 'btn-outline-secondary'} rounded-circle shadow-sm",
-                    style: "width: 35px;" %>
-      <% end %>
-      <%= link_to "All", url_for(letter: "All"), class: "btn btn-sm btn-warning outline-double rounded-pill px-3 shadow-sm" %>
-    </div>
+<div class="d-flex flex-wrap justify-content-center gap-1 my-3">
+  <% ('A'..'Z').each do |letter| %>
+    <%= link_to letter, 
+                url_for(letter: letter), 
+                class: "btn btn-sm btn-warning border border-light border-3 fw-bold #{params[:letter] == letter ? 'btn-primary' : 'btn-outline-secondary'} rounded-circle shadow-sm",
+                style: "width: 35px;" %>
+  <% end %>
+  <%= link_to "All", url_for(letter: "All"), class: "btn btn-sm btn-warning border border-light border-3 rounded-pill px-3 shadow-sm" %>
+</div>
 
 <table class="table table-sm table-striped table-hover border border-dark mt-4">
 
@@ -41,19 +43,19 @@
     <% last_date = nil %>
     <% @charts.each do |chart| %>
     
-    <tr style="height:15px" class="fs-4">
-        <%# Only show the date if it's different from the previous row %>
-      <td><%= chart.t_date != last_date ? chart.t_date : "" %></td>
-        <% last_date = chart.t_date %>
-      <td> 
-        <%= link_to chart.regi.p_name, regi_charts_path(chart.regi_id) %>
-        (<%= chart.regi.p_age %>)
-      </td>
-      <td><%= chart.subj %></td>
-      <td><%= chart.obj %></td>
-      <td><%= chart.assess %></td>
-      <td><%= chart.plan %></td>
-    </tr>
+      <tr style="height:15px" class="fs-4">
+          <%# Only show the date if it's different from the previous row %>
+        <td><%= chart.t_date != last_date ? chart.t_date : "" %></td>
+          <% last_date = chart.t_date %>
+        <td> 
+          <%= link_to chart.regi.p_name, regi_charts_path(chart.regi_id) %>
+          (<%= chart.regi.p_age %>)
+        </td>
+        <td><%= chart.subj %></td>
+        <td><%= chart.obj %></td>
+        <td><%= chart.assess %></td>
+        <td><%= chart.plan %></td>
+      </tr>
     <% end %>
   </tbody>
 </table>
