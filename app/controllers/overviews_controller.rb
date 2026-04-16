@@ -6,16 +6,32 @@ class OverviewsController < ApplicationController
   before_action :ensure_admin, only: [:statistics]
 
   def chart_date
-    @q = Chart.ransack(params[:q])
-    results = @q.result.includes(:regi).order(t_date: :desc)
-    
-    if params[:letter].present? && params[:letter] != "All"
-      results = results.joins(:regi).where("regis.last_name ILIKE ?", "#{params[:letter]}%")
+    # 1. Date Sequence Guard and Reminder
+    if params[:q].present? && params[:q][:t_date_gteq].present? && params[:q][:t_date_lteq].present?
+      if params[:q][:t_date_gteq].to_date > params[:q][:t_date_lteq].to_date
+        redirect_to overviews_chart_date_path, alert: "Reminder: 'From Date' must be earlier than 'To Date'." and return
+      end
     end
   
+    # 2. End-of-day timestamp handling
+    if params[:q] && params[:q][:t_date_lteq].present?
+      params[:q][:t_date_lteq] = params[:q][:t_date_lteq].to_date.end_of_day
+    end
+  
+    @q = Chart.ransack(params[:q])
+    results = @q.result.includes(:regi).joins(:regi)
+  
+    # 3. Conditional Sorting (Search = Oldest First, Default = Newest First)
+    if params[:q].present? && (params[:q][:t_date_gteq].present? || params[:q][:t_date_lteq].present?)
+      results = results.reorder("charts.t_date ASC, regis.last_name ASC")
+    else
+      results = results.reorder("charts.t_date DESC, regis.last_name ASC")
+    end
+  
+    # 4. Pagination/Print
     if params[:print] == "true"
       @charts = results
-      @pagy = nil # This is what triggers the error if the view doesn't check for nil
+      @pagy = nil
     else
       @pagy, @charts = pagy(results)
     end
@@ -23,17 +39,22 @@ class OverviewsController < ApplicationController
   
   def chart_name
     @q = Chart.ransack(params[:q])
-    results = @q.result.includes(:regi).order("regis.p_name ASC, charts.t_date DESC")
+    
+    # 1. Join regis immediately so we can sort by its columns reliably
+    results = @q.result.joins(:regi).includes(:regi)
+    
+    # 2. Use last_name and first_name for the most reliable grouping
+    results = results.order("regis.last_name ASC, regis.first_name ASC, charts.t_date DESC")
   
     if params[:q].blank? && params[:letter].present? && params[:letter] != "All"
-      results = results.joins(:regi).where("regis.last_name ILIKE ?", "#{params[:letter]}%")
+      results = results.where("regis.last_name ILIKE ?", "#{params[:letter]}%")
     end
-
+  
     if params[:print] == "true"
       @charts = results
-      @pagy = nil # This is what triggers the error if the view doesn't check for nil
+      @pagy = nil 
     else  
-    @pagy, @charts = pagy(results)
+      @pagy, @charts = pagy(results)
     end
   end
   

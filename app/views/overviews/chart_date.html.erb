@@ -8,22 +8,28 @@
               url_for(params.to_unsafe_h.merge(print: true)), 
               class: "btn btn-sm btn-secondary border border-light border-3 rounded-pill px-3 py-0 fw-bold" %>
 </div>
-<%= render 'shared/search_bar', 
-    q: @q, 
-    url: request.path, 
-    search_key_last: :regi_last_name_cont,
-    search_key_first: :regi_first_name_cont,
-    placeholder: "Search Charts..." 
-%>
 
-<div class="d-flex flex-wrap justify-content-center gap-1 my-3">
-  <% ('A'..'Z').each do |letter| %>
-    <%= link_to letter, 
-                url_for(letter: letter), 
-                class: "btn btn-sm btn-warning border border-light border-3 fw-bold #{params[:letter] == letter ? 'btn-primary' : 'btn-outline-secondary'} rounded-circle shadow-sm",
-                style: "width: 35px;" %>
-  <% end %>
-  <%= link_to "All", url_for(letter: "All"), class: "btn btn-sm btn-warning border border-light border-3 rounded-pill px-3 shadow-sm" %>
+<div class="row justify-content-center my-3">
+  <div class="col-md-6 border border-primary rounded-pill py-1 bg-warning shadow-sm">
+    <%= search_form_for @q, url: overviews_chart_date_path, method: :get, class: "d-flex gap-3 align-items-center px-4" do |f| %>
+      
+      <div class="d-flex align-items-center gap-2 flex-grow-1">
+        <label class="fw-bold text-nowrap">From:</label>
+        <%= f.date_field :t_date_gteq, class: "form-control form-control-sm rounded-pill border-secondary px-3 fw-bold" %>
+      </div>
+
+      <div class="d-flex align-items-center gap-2 flex-grow-1">
+        <label class="fw-bold text-nowrap">To:</label>
+        <%= f.date_field :t_date_lteq, class: "form-control form-control-sm rounded-pill border-secondary px-3 fw-bold" %>
+      </div>
+
+      <div class="d-flex gap-2">
+        <%= f.submit "Search", class: "btn btn-sm btn-dark border border-light border-3 rounded-pill px-4 fw-bold shadow-sm" %>
+        <%= link_to "Clear", overviews_chart_date_path, class: "btn btn-sm btn-link text-muted text-decoration-none fw-bolder" %>
+      </div>
+      
+    <% end %>
+  </div>
 </div>
 
 <table class="table table-sm table-striped table-hover border border-dark mt-4">

@@ -1,18 +1,17 @@
 <div class="row justify-content-center my-3">
-  <%# Fixed the typo to border-primary %>
-  <div class="col-md-8 border-lg border-primary rounded-pill pt-3 pb-3 bg-warning shadow-sm">
+  <div class="col-md-8 border border-primary rounded-pill py-1 bg-warning shadow-sm">
     <%= search_form_for q, url: url, method: :get, class: "d-flex gap-2 align-items-center" do |f| %>
   
       <%# Use local_assigns to safely check for the variable %>
       <%# Last Name Search %>
       <%= f.search_field (local_assigns[:search_key_last] || :last_name_i_cont), 
                          placeholder: "Last Name...", 
-                         class: "form-control form-control-sm rounded-pill outline-double border-secondary px-3 fw-bold" %>
+                         class: "form-control form-control-sm rounded-pill px-3 fw-bold" %>
 
       <%# First Name Search %>
       <%= f.search_field (local_assigns[:search_key_first] || :first_name_cont),
                          placeholder: "First Name...", 
-                         class: "form-control form-control-sm rounded-pill outline-double border-secondary px-3 fw-bold" %>
+                         class: "form-control form-control-sm rounded-pill px-3 fw-bold" %>
   
       <%= f.submit "Search", class: "btn btn-sm btn-dark border border-light border-3 rounded-pill px-4 fw-bold shadow-sm fw-bold" %>
       <%= link_to "Clear", url, class: "btn btn-sm btn-link text-muted text-decoration-none fw-bold" %>
