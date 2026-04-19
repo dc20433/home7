@@ -51,7 +51,7 @@ module Authentication
     Current.session&.destroy
     cookies.delete(:session_id)
     # Status :see_other is vital for Rails 8 Turbo redirects
-    redirect_to new_session_path, status: :see_other, alert: "Session expired or logged out." and return
+    redirect_to root_path, status: :see_other, alert: "Session expired or logged out." and return
   end
 
   # Helper Logic

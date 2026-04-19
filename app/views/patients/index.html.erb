@@ -18,7 +18,8 @@
       <th>Complaints</th>
       <th>Onset/Pain</th>
       <th>Referred by</th>
-      <th>Health Issues</th>
+      <th class="text-center">Health History / Issues</th>
+      <th class="text-center" style="width:120px">Signature</th>
     </tr>
   </thead>
 
@@ -26,7 +27,7 @@
     <% @patients.each do |patient| %>
       <tr>
         <td>
-            <%= link_to patient.v_date, regi_patient_path(@regi,patient) %>
+        <%= link_to patient.v_date.strftime("%Y-%m-%d"), regi_patient_path(@regi, patient) %>
         </td>  
         <td>
           <%= patient.street %><%= ', ' if patient.street? %>
@@ -52,7 +53,15 @@
         </td>
         <td><%= patient.referred %></td>
         <td>
-          <%= patient.active_health_issues %>
+          <%= (patient.di_list.to_sentence).gsub(/_/, ' ').gsub(/;/, '') %><%= ', ' if patient.o_dis? %>
+          <%= patient.o_dis %><%= ', Pregnant' if patient.preg == 'Yes' %>
+        </td>
+        <td>
+          <% if patient.signature.present? %>
+            <span class="badge bg-success">Digital Sign</span>
+          <% else %>
+            <span class="badge bg-secondary">Paper Only</span>
+          <% end %>
         </td>
       </tr>
     <% end %>

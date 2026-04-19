@@ -1,12 +1,12 @@
 <h2 class="text-center py-2">All Patient Charts by Date as of <%= Time.now.strftime("%Y-%m-%d %H:%M") %></h2>
 
 <div class="d-flex align-items-center justify-content-center mx-2 gap-1">
-  <%= link_to 'All Charts by Name', overviews_chart_name_path, class:"btn btn-sm btn-success border border-light border-3 rounded-pill px-2 py-0 m-1 fw-bold" %>
-  <%= link_to 'All Patient Info', overviews_patient_info_path, class:"btn btn-sm btn-info border border-light border-3 rounded-pill px-2 py-0 m-1 fw-bold" %>
-  <%= link_to 'Patient List', regis_path, class:"btn btn-sm btn-warning border border-light border-3 rounded-pill px-3 py-0 m-1 fw-bold" %>
+  <%= link_to 'All Charts by Name', overviews_chart_name_path, class:"btn btn-success border border-light border-3 rounded-pill px-2 py-0 m-1 fw-bold" %>
+  <%= link_to 'All Patient Info', overviews_patient_info_path, class:"btn btn-info border border-light border-3 rounded-pill px-2 py-0 m-1 fw-bold" %>
+  <%= link_to 'Patient List', regis_path, class:"btn btn-warning border border-light border-3 rounded-pill px-3 py-0 m-1 fw-bold" %>
   <%= link_to 'Print All', 
               url_for(params.to_unsafe_h.merge(print: true)), 
-              class: "btn btn-sm btn-secondary border border-light border-3 rounded-pill px-3 py-0 fw-bold" %>
+              class: "btn btn-secondary border border-light border-3 rounded-pill px-3 py-0 fw-bold" %>
 </div>
 
 <div class="row justify-content-center my-3">

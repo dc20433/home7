@@ -2,12 +2,12 @@
 
 <div class="d-flex align-items-center justify-content-center mx-2 gap-1">
   <%# Row 1: Action Buttons and Sign Out %>
-  <%= link_to "New Patient", new_regi_path, class: "btn btn-sm btn-dark border border-light border-3 rounded-pill mx-1 px-3 py-0 fw-bold" %>
-  <%= link_to 'All Charts by Date', overviews_chart_date_path, class: "btn btn-sm btn-primary border border-light border-3 rounded-pill mx-1 px-2 py-0 fw-bold" %>
-  <%= link_to 'All Charts by Name', overviews_chart_name_path, class: "btn btn-sm btn-success border border-light border-3 rounded-pill mx-1 px-2 py-0 fw-bold" %>
-  <%= link_to 'All Patient Info', overviews_patient_info_path, class: "btn btn-sm btn-info border border-light border-3 rounded-pill mx-1 px-2 py-0 fw-bold" %>
+  <%= link_to "New Patient", new_regi_path, class: "btn btn-dark border border-light border-3 rounded-pill mx-1 px-3 py-0 fw-bold" %>
+  <%= link_to 'All Charts by Date', overviews_chart_date_path, class: "btn btn-primary border border-light border-3 rounded-pill mx-1 px-2 py-0 fw-bold" %>
+  <%= link_to 'All Charts by Name', overviews_chart_name_path, class: "btn btn-success border border-light border-3 rounded-pill mx-1 px-2 py-0 fw-bold" %>
+  <%= link_to 'All Patient Info', overviews_patient_info_path, class: "btn btn-info border border-light border-3 rounded-pill mx-1 px-2 py-0 fw-bold" %>
   <% if Current.user&.admin? %>
-  <%= link_to 'Usage', overviews_statistics_path, class: "btn btn-sm btn-warning border border-light border-3 rounded-pill mx-1 px-3 py-0 fw-bold" %>
+  <%= link_to 'Usage', overviews_statistics_path, class: "btn btn-warning border border-light border-3 rounded-pill mx-1 px-3 py-0 fw-bold" %>
   <% end %>
   <%= link_to 'Print All', 
   url_for(params.to_unsafe_h.merge(print: true)), 

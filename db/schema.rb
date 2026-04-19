@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_09_170039) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_19_185141) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -59,83 +59,45 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_09_170039) do
   create_table "filings", force: :cascade do |t|
     t.datetime "created_at", precision: 0, null: false
     t.text "describe"
-    t.date "f_date"
     t.bigint "regi_id", null: false
     t.datetime "updated_at", precision: 0, null: false
     t.index ["regi_id"], name: "index_filings_on_regi_id"
   end
 
   create_table "patients", force: :cascade do |t|
-    t.string "alcohol"
-    t.boolean "anxiety", default: false
     t.string "aq_b4"
-    t.string "aq_where"
-    t.string "aqrist"
-    t.boolean "back_pain", default: false
-    t.string "better"
-    t.boolean "borderline", default: false
-    t.boolean "bypolar", default: false
-    t.string "c_onset"
-    t.boolean "cancer", default: false
     t.string "cell"
-    t.boolean "chest_pain", default: false
     t.string "city"
-    t.string "com1"
-    t.string "com2"
-    t.string "com3"
-    t.boolean "constipation", default: false
-    t.boolean "crack_cocaine", default: false
-    t.datetime "created_at", precision: 0, null: false
-    t.decimal "d_lost", precision: 4, scale: 1
-    t.date "d_onset"
-    t.decimal "d_restd", precision: 4, scale: 1
-    t.boolean "depression", default: false
+    t.text "com1"
+    t.text "com2"
+    t.text "com3"
+    t.string "company"
+    t.datetime "created_at", null: false
+    t.string "d_onset"
     t.string "di_list", default: [], array: true
-    t.boolean "diabetes", default: false
     t.string "diag_given"
-    t.string "diag_where"
     t.string "email"
-    t.boolean "excess_sweating", default: false
-    t.boolean "frequent_colds", default: false
-    t.date "h_when"
-    t.boolean "heart_disease", default: false
-    t.decimal "height", precision: 2, scale: 1
-    t.boolean "hepatitis", default: false
-    t.boolean "hiv_aids", default: false
+    t.string "height"
     t.string "home"
-    t.string "hosp"
-    t.boolean "hypertension", default: false
-    t.string "inj_surg"
-    t.date "last_prd"
-    t.boolean "lymph", default: false
+    t.string "last_prd"
     t.string "m_stat"
-    t.string "med_taken"
-    t.string "name"
-    t.boolean "neck_stiffness", default: false
-    t.boolean "night_sweating", default: false
     t.string "o_dis"
-    t.string "o_drs"
-    t.date "o_drs_when"
-    t.string "pain_scale"
-    t.boolean "palpitation", default: false
-    t.string "pcp_name"
+    t.string "occup"
+    t.integer "pain_scale"
+    t.boolean "patient_consent"
     t.string "preg"
-    t.integer "preg_wks"
-    t.boolean "ptsd", default: false
+    t.string "preg_wks"
     t.string "referred"
-    t.bigint "regi_id", null: false
-    t.boolean "seizure", default: false
+    t.bigint "regi_id"
+    t.text "signature"
+    t.datetime "signed_at"
     t.string "state"
     t.string "street"
-    t.string "string", default: [], array: true
-    t.string "tobacco"
-    t.datetime "updated_at", precision: 0, null: false
+    t.datetime "updated_at", null: false
     t.date "v_date"
-    t.decimal "weight", precision: 4, scale: 1
+    t.string "weight"
     t.string "work"
-    t.string "worse"
     t.string "zip"
-    t.index ["regi_id"], name: "index_patients_on_regi_id"
   end
 
   create_table "regis", force: :cascade do |t|
@@ -145,7 +107,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_09_170039) do
     t.string "gender"
     t.string "init"
     t.string "last_name"
-    t.string "p_name"
     t.datetime "updated_at", precision: 0, null: false
   end
 
@@ -180,6 +141,5 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_09_170039) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "charts", "regis"
   add_foreign_key "filings", "regis"
-  add_foreign_key "patients", "regis"
   add_foreign_key "sessions", "users"
 end
