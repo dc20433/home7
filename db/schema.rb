@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_19_185141) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_20_195309) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -65,7 +65,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_19_185141) do
   end
 
   create_table "patients", force: :cascade do |t|
+    t.string "alcohol"
     t.string "aq_b4"
+    t.string "aq_where"
+    t.string "aqrist"
+    t.string "better"
+    t.string "c_onset"
     t.string "cell"
     t.string "city"
     t.text "com1"
@@ -73,30 +78,44 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_19_185141) do
     t.text "com3"
     t.string "company"
     t.datetime "created_at", null: false
-    t.string "d_onset"
+    t.decimal "d_lost", precision: 4, scale: 1
+    t.date "d_onset"
+    t.decimal "d_restd", precision: 4, scale: 1
     t.string "di_list", default: [], array: true
     t.string "diag_given"
+    t.string "diag_where"
     t.string "email"
-    t.string "height"
+    t.date "h_when"
+    t.decimal "height", precision: 3, scale: 1
     t.string "home"
-    t.string "last_prd"
+    t.string "hosp"
+    t.string "inj_surg"
+    t.date "last_prd"
     t.string "m_stat"
+    t.string "med_taken"
+    t.string "name"
     t.string "o_dis"
+    t.string "o_drs"
+    t.date "o_drs_when"
     t.string "occup"
     t.integer "pain_scale"
     t.boolean "patient_consent"
+    t.string "pcp_name"
     t.string "preg"
-    t.string "preg_wks"
+    t.integer "preg_wks"
     t.string "referred"
     t.bigint "regi_id"
     t.text "signature"
     t.datetime "signed_at"
     t.string "state"
     t.string "street"
+    t.string "string"
+    t.string "tobacco"
     t.datetime "updated_at", null: false
     t.date "v_date"
-    t.string "weight"
+    t.decimal "weight", precision: 4, scale: 1
     t.string "work"
+    t.string "worse"
     t.string "zip"
   end
 
