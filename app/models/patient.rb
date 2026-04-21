@@ -1,6 +1,6 @@
 class Patient < ApplicationRecord
   belongs_to :regi
-  validates :v_date, presence: true
+  #validates :v_date, presence: true
   #validates :patient_consent, acceptance: true, on: :create
 
   MARITAL_STATUS = 

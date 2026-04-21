@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_20_195309) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_21_170546) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -73,11 +73,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_20_195309) do
     t.string "c_onset"
     t.string "cell"
     t.string "city"
-    t.text "com1"
-    t.text "com2"
-    t.text "com3"
+    t.string "com1"
+    t.string "com2"
+    t.string "com3"
     t.string "company"
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: 0, null: false
     t.decimal "d_lost", precision: 4, scale: 1
     t.date "d_onset"
     t.decimal "d_restd", precision: 4, scale: 1
@@ -86,7 +86,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_20_195309) do
     t.string "diag_where"
     t.string "email"
     t.date "h_when"
-    t.decimal "height", precision: 3, scale: 1
+    t.decimal "height", precision: 2, scale: 1
     t.string "home"
     t.string "hosp"
     t.string "inj_surg"
@@ -98,25 +98,27 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_20_195309) do
     t.string "o_drs"
     t.date "o_drs_when"
     t.string "occup"
-    t.integer "pain_scale"
-    t.boolean "patient_consent"
+    t.string "pain_scale"
+    t.boolean "patient_consent", default: false
     t.string "pcp_name"
     t.string "preg"
     t.integer "preg_wks"
     t.string "referred"
-    t.bigint "regi_id"
+    t.bigint "regi_id", null: false
     t.text "signature"
+    t.string "signed_as"
     t.datetime "signed_at"
     t.string "state"
     t.string "street"
-    t.string "string"
+    t.string "string", default: [], array: true
     t.string "tobacco"
-    t.datetime "updated_at", null: false
+    t.datetime "updated_at", precision: 0, null: false
     t.date "v_date"
     t.decimal "weight", precision: 4, scale: 1
     t.string "work"
     t.string "worse"
     t.string "zip"
+    t.index ["regi_id"], name: "index_patients_on_regi_id"
   end
 
   create_table "regis", force: :cascade do |t|
@@ -131,10 +133,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_20_195309) do
 
   create_table "sessions", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.text "data"
     t.string "ip_address"
+    t.string "session_id"
     t.datetime "updated_at", null: false
     t.string "user_agent"
     t.bigint "user_id", null: false
+    t.index ["session_id"], name: "index_sessions_on_session_id", unique: true
+    t.index ["updated_at"], name: "index_sessions_on_updated_at"
     t.index ["user_id"], name: "index_sessions_on_user_id"
   end
 
@@ -160,5 +166,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_20_195309) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "charts", "regis"
   add_foreign_key "filings", "regis"
+  add_foreign_key "patients", "regis"
   add_foreign_key "sessions", "users"
 end

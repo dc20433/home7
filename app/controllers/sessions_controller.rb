@@ -6,12 +6,14 @@ class SessionsController < ApplicationController
   end
 
   def create
-    if user = User.authenticate_by(params.permit(:email, :password))
+    user = User.find_by(email: params[:email])
+  
+    if user&.authenticate(params[:password])
       start_new_session_for user
-      # Force a full page reload to ensure roles/UI refresh correctly
       redirect_to regis_path, status: :see_other, notice: "Logged in!"
     else
-      redirect_to new_session_path, alert: "Try again."
+      flash.now[:alert] = "Invalid email or password"
+      render :new, status: :unprocessable_entity
     end
   end
 
