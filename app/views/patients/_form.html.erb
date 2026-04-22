@@ -219,13 +219,13 @@
 
         <div class="btn-group" role="group">
         <% if action_name != 'show' %>
-          <%= f.submit "Save", data: { burbo: false}, class:'btn btn-sm btn-outline-success outline-double border border-lg border-dark rounded-pill mx-2 ps-4 pe-4 fw-bold' %>
+          <%= f.submit "Save", data: { burbo: false}, class:'btn btn-sm btn-outline-success outline-double border border-lg border-success rounded-pill mx-2 ps-4 pe-4 fw-bold' %>
         <% end %>
       <% end %>
           
           <%= button_to 'Delete', [@regi,@patient], method: :delete, class:'btn btn-outline-danger outline-double border border-lg border-danger rounded-pill px-3 mx-2 fw-bold', form: { data: { turbo_confirm: 'Are you sure?' }  } %>
-          <%= link_to "Patient Info", regi_patients_path(@regi), class: "btn btn-sm btn-outline-success outline-double border border-lg border-dark rounded-pill px-3 mx-2 pt-2 fw-bold" %> 
-          <%= link_to "Go Back", :back, class:'btn btn-sm btn-outline-secondary outline-double border border-lg border-dark rounded-pill px-3 mx-2 pt-2 fw-bold' %>
+          <%= link_to "Patient Info", regi_patients_path(@regi), class: "btn btn-sm btn-outline-primary outline-double border border-lg border-primary rounded-pill px-3 mx-2 pt-2 fw-bold" %> 
+          <%= link_to "Go Back", :back, class:'btn btn-sm btn-outline-secondary outline-double border border-lg border-secondary rounded-pill px-3 mx-2 pt-2 fw-bold' %>
         </div>
     </div>
   </div>

@@ -30,25 +30,6 @@ body {
   width: 100%;
 }
 
-// TABLE FONT SIZES
-.table {
-  thead {
-    th {
-      font-size: 1.15rem !important; // No space between number and rem
-      font-weight: 600 !important;
-      white-space: nowrap !important;
-      vertical-align: middle !important;
-      background-color: #e9ecef !important;
-    }
-  }
-
-  tbody {
-    td {
-      font-size: 1.5rem !important;
-      //vertical-align: middle !important;
-    }
-  }
-}
 
 // 4. PROTECTING BUTTONS & SMALL TEXT: This ensures btn-sm doesn't grow to 1.5rem
 .btn {
