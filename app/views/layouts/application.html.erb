@@ -62,28 +62,65 @@
         max-width: 95%;
         margin: 0 auto 1rem auto;
       }
-
-      // TABLE FONT SIZES
-      .table {
-        thead {
-          th {
-            font-size: 1.15rem !important; // No space between number and rem
-            font-weight: 600 !important;
-            white-space: nowrap !important;
-            vertical-align: middle !important;
-            background-color: #e9ecef !important;
-          }
-        }
-      
-        tbody {
-          td {
-            font-size: 1.5rem !important;
-            //vertical-align: middle !important;
-          }
-        }
+       
+      /* Add this to app/assets/stylesheets/application.css */
+      .custom-table thead th {
+        font-size: 1.15rem !important;
+        font-weight: bold;
       }
-        
+
+      .custom-table tbody td {
+        font-size: 1.5rem !important;
+      }
+
+      /* 1. Make the base checkbox larger and more visible */
+      input[type="checkbox"] {
+        appearance: none; /* Clear default browser styling */
+        -webkit-appearance: none;
+        width: 1.5rem;
+        height: 1.5rem;
+        border: 2px solid #333; /* Dark, thick border for empty boxes */
+        border-radius: 4px;
+        background-color: #fff;
+        cursor: pointer;
+        vertical-align: middle;
+        position: relative;
+        transition: all 0.2s ease;
+      }
+
+      /* 2. Styling for the Checked state */
+      input[type="checkbox"]:checked {
+        background-color: #0056b3; /* Bold blue background */
+        border-color: #0056b3;
+      }
+
+      /* 3. Add a custom white "Checkmark" inside the box */
+      input[type="checkbox"]:checked::after {
+        content: '✔';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        font-size: 1rem;
+        font-weight: bold;
+      }
+
+      /* 4. Hover effect for better UX */
+      input[type="checkbox"]:hover {
+        border-color: #007bff;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+      }
+
+      /* 5. Keep them pronounced when disabled (readonly mode) */
+      input[type="checkbox"]:disabled {
+        opacity: 0.8;
+        cursor: not-allowed;
+        border-color: #666;
+      }
+
     </style>
+
   </head>
 
   <body>

@@ -139,9 +139,22 @@
           <div class="col-md-12 fs-4">
             <b><%= f.label :di_list, "Major Health Issues:", class:"form-label mt-2 mb-0 fs-6" %></b><br>
             
-            <% Patient::HEALTH.each do |h| %>
-              <%= f.check_box :di_list, { multiple: true, disabled: is_readonly, checked: f.object.di_list&.include?(h.to_s)}, h, nil %>
-              <%= f.label h %>
+            <% Patient::HEALTH.each_with_index do |h, index| %>
+              <%# Generate a unique ID for each checkbox so the label "clicks" it %>
+              <% checkbox_id = "di_list_#{h.to_s.parameterize}_#{index}" %>
+              
+              <%= f.check_box :di_list, 
+                  { 
+                    multiple: true, 
+                    disabled: is_readonly, 
+                    checked: f.object.di_list&.map(&:to_s)&.include?(h.to_s),
+                    id: checkbox_id,
+                    class: "me-2" # Adds a little space between box and text
+                  }, 
+                  h, 
+                  nil 
+              %>
+              <%= f.label h, for: checkbox_id, class: "fs-5 me-4" %>
             <% end %>
           </div>
         </div>
