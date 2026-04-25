@@ -10,7 +10,10 @@ Rails.application.routes.draw do
   get 'overviews/patient_info'
   get 'overviews/chart_name'
   get 'overviews/chart_date'
-  get 'overviews/statistics'
+
+  get "usage_logs", to: "overviews#usage_logs", as: :usage_logs
+  get "signup_records", to: "overviews#signup_records", as: :signup_records
+  get "patient_stats", to: "overviews#patient_stats", as: :patient_stats
 
   get 'filings/image/:id', to: 'filings#image', as: 'image_regi_filing'
 

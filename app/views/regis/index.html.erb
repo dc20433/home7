@@ -6,9 +6,6 @@
   <%= link_to 'All Charts by Date', overviews_chart_date_path, class: "btn btn-primary border border-light border-3 rounded-pill mx-1 px-2 py-0 fw-bold" %>
   <%= link_to 'All Charts by Name', overviews_chart_name_path, class: "btn btn-success border border-light border-3 rounded-pill mx-1 px-2 py-0 fw-bold" %>
   <%= link_to 'All Patient Info', overviews_patient_info_path, class: "btn btn-info border border-light border-3 rounded-pill mx-1 px-2 py-0 fw-bold" %>
-  <% if Current.user&.admin? %>
-  <%= link_to 'Usage', overviews_statistics_path, class: "btn btn-warning border border-light border-3 rounded-pill mx-1 px-3 py-0 fw-bold" %>
-  <% end %>
   <%= link_to 'Print All', 
   url_for(params.to_unsafe_h.merge(print: true)), 
   class: "btn btn-sm btn-secondary border border-light border-3 rounded-pill px-3 py-0 fw-bold" %>
@@ -16,7 +13,7 @@
   
 <%# Row 2: Search Bar %>
 <div class="row px-3 y-1">
-  <div class="col-md-12">
+  <div class="col-md-12" style="position: relative; max-width: 80%;">
     <%= render 'shared/search_bar', 
     q: @q, 
     url: regis_path, 

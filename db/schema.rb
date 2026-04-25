@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_21_170546) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_25_141835) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -145,12 +145,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_21_170546) do
   end
 
   create_table "users", force: :cascade do |t|
+    t.boolean "admin"
     t.datetime "created_at", precision: 0, null: false
     t.datetime "current_sign_in_at", precision: 0
     t.string "current_sign_in_ip"
     t.string "email", default: "", null: false
+    t.boolean "is_active", default: true
     t.datetime "last_sign_in_at", precision: 0
     t.string "last_sign_in_ip"
+    t.datetime "last_sign_out_at"
     t.string "password_digest", default: "", null: false
     t.datetime "remember_created_at", precision: 0
     t.datetime "reset_password_sent_at", precision: 0

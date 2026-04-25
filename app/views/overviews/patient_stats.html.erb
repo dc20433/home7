@@ -1,0 +1,32 @@
+<h2 class="text-center m-4">System Usage Statistics as of <%= Time.now.strftime("%Y-%m-%d %H:%M") %></h2>
+
+<div class="card mt-4 mx-auto border-primary shadow" style="width: 65rem;">
+  <div class="card-header bg-primary text-white fw-bold fs-5">Clinical Data Summary</div>
+  <div class="card-body pt-2">
+    <table class="table table-sm table-striped custom-table mb-0">
+      <thead class="table-primary">
+        <tr class="text-center">
+          <th>Category</th>
+          <th>Patients</th>
+          <th>Records</th>
+          <th>Charts</th>
+          <th>Files</th>
+          <th>Avg Charts/Pt</th>
+          <th>Avg Age</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% [["Total", @total_patients, @total_info_records, @total_charts, @total_filing, @average_charts_per_patient, @average_age],
+            ["Male", @total_male_patients, @male_records, @male_charts, @male_filing, @male_charts_per_patient, @average_male_age],
+            ["Female", @total_female_patients, @female_records, @female_charts, @female_filing, @female_charts_per_patient, @average_female_age]].each do |row| %>
+          <tr class="text-center">
+            <td class="fw-bold"><%= row[0] %></td>
+            <% row[1..-1].each do |data| %>
+              <td><%= data %></td>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

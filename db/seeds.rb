@@ -6,4 +6,14 @@
 #
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+# # Ensure your main account is always an admin after a reset
+User.find_or_create_by!(email: "jz2043@yahoo.com") do |u|
+    u.password = "11Danielz@"
+    u.admin = true
+end
+
+# Check if the column exists before updating to avoid console errors
+if user.respond_to?(:admin)
+  user.update!(admin: true)
+  puts "Admin access granted to jz2043@yahoo.com"
+end

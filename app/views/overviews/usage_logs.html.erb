@@ -1,0 +1,46 @@
+<h2 class="text-center m-4">System Usage Statistics as of <%= Time.now.strftime("%Y-%m-%d %H:%M") %></h2>
+
+<div class="card mt-4 mx-auto border-info shadow" style="width: 65rem;">
+  <div class="card-header bg-info text-white fw-bold fs-5">System Access & Usage Logs</div>
+  <div class="card-body pt-2">
+    <table class="table table-sm table-striped custom-table mb-0">
+      <thead class="table-info">
+        <tr class="text-center">
+          <th>User</th>
+          <th>Role</th>
+          <th>Status</th>
+          <th>Total Logins</th>
+          <th>Last Seen</th>
+          <th>Last Session Duration</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% User.all.order(current_sign_in_at: :desc).each do |u| %>
+          <tr class="text-center">
+            <td class="fw-bold"><%= u.email %></td>
+            <td><%= u.role.capitalize if u.role %></td>
+            <td>
+                <% if u.respond_to?(:is_active) %>
+                    <span class="badge <%= u.is_active ? 'bg-success' : 'bg-danger' %>">
+                    <%= u.is_active ? 'Active' : 'Revoked' %>
+                    </span>
+                <% else %>
+                    <span class="badge bg-secondary">Updating...</span>
+                <% end %>
+            </td>
+            <td><%= u.sign_in_count %></td>
+            <td><%= u.current_sign_in_at&.strftime("%m/%d %H:%M") || "Never" %></td>
+            <td>
+                <% if u.respond_to?(:last_sign_in_at) && u.respond_to?(:last_sign_out_at) && u.last_sign_in_at && u.last_sign_out_at %>
+                    <%# Calculate duration in minutes %>
+                    <%= ((u.last_sign_out_at - u.last_sign_in_at) / 60).round %> min
+                <% else %>
+                    --
+                <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -13,6 +13,18 @@ module Authentication
   end
 
   private
+# Inside your authentication logic
+def authenticated_user
+  # This finds the user via the "sessions" table seen in your logs
+  user = Current.session&.user 
+  
+  if user && user.respond_to?(:is_active) && !user.is_active
+    terminate_session
+    nil
+  else
+    user
+  end
+end
 
   # Verification Methods
   def authenticated?
