@@ -12,7 +12,7 @@ class SessionsController < ApplicationController
       end
 
       # 2. Start the Rails 8 Session
-      start_new_session_for user 
+      start_new_session_for user
 
       # 3. Update tracking columns (using update_columns to skip validations)
       # These columns are used for your Overviews usage logs
@@ -36,8 +36,8 @@ class SessionsController < ApplicationController
       current_user.update_columns(last_sign_out_at: Time.current)
     end
 
-    # 2. Kill the session. 
+    # 2. Kill the session.
     # IMPORTANT: In your app, this method ALREADY redirects to root_path.
-    terminate_session 
+    terminate_session
   end
 end

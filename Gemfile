@@ -9,7 +9,7 @@ gem "pg", "~> 1.1"
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"
 
-gem 'passenger', '~> 6.1'
+gem "passenger", "~> 6.1"
 
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
 gem "importmap-rails"
@@ -69,7 +69,7 @@ group :test do
 end
 
 gem "nested_scaffold"
-gem 'ransack'
+gem "ransack"
 gem "bootstrap", "~> 5.3.3"
 gem "dartsass-rails"
 gem "sassc-rails"

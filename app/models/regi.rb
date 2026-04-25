@@ -7,17 +7,17 @@ class Regi < ApplicationRecord
   before_validation :set_p_name
 
   GENDER_OPTIONS = [
-    ['Select', ''],
-    ['Male', 'Male'],
-    ['Female', 'Female'],
-    ['Other', 'Other']
+    [ "Select", "" ],
+    [ "Male", "Male" ],
+    [ "Female", "Female" ],
+    [ "Other", "Other" ]
   ]
   def self.ransackable_associations(auth_object = nil)
-    ["charts", "filings", "patients"]
+    [ "charts", "filings", "patients" ]
   end
 
   def self.ransackable_attributes(auth_object = nil)
-    ["last_name", "first_name", "p_name", "dob", "gender"]
+    [ "last_name", "first_name", "p_name", "dob", "gender" ]
   end
 
   def p_age
@@ -30,7 +30,7 @@ class Regi < ApplicationRecord
   def p_name
     # read_attribute(:p_name) gets the value from the DB column
     db_value = read_attribute(:p_name)
-    
+
     if db_value.present?
       db_value
     else
@@ -41,9 +41,9 @@ class Regi < ApplicationRecord
 
   def set_p_name
     return if last_name.blank? && first_name.blank?
-    self.p_name = "#{last_name}, #{first_name} #{init}".strip.gsub(/\s+/, ' ')
+    self.p_name = "#{last_name}, #{first_name} #{init}".strip.gsub(/\s+/, " ")
   end
-  
+
   # Move the logic into a public method (remove 'def set_p_gender')
   def p_gender
     gender.present? ? gender : "<No gender data>"

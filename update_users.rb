@@ -11,4 +11,3 @@ users.each do |email, password|
   user.role = (email.include?('jz') || email.include?('dc') ? 2 : 1)
   user.save!
 end
-

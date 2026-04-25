@@ -6,3 +6,18 @@ inherit_gem: { rubocop-rails-omakase: rubocop.yml }
 # # Use `[a, [b, c]]` not `[ a, [ b, c ] ]`
 # Layout/SpaceInsideArrayLiteralBrackets:
 #   Enabled: false
+# Omakase Ruby styling for Rails
+inherit_gem: { rubocop-rails-omakase: rubocop.yml }
+
+AllCops:
+  NewCops: enable
+  Exclude:
+    - 'db/schema.rb'
+    - 'bin/*'
+
+# This helps with the alignment issues you mentioned
+Layout/IndentationConsistency:
+  EnforcedStyle: normal
+
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented

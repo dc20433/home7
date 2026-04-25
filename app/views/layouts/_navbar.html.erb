@@ -5,25 +5,33 @@
     <% end %>
     
     <div class="ms-auto d-flex align-items-center gap-3 me-3">
-      <% if authenticated? %>
-        <div class="dropdown">
-          <button class="btn btn-sm btn-info dropdown-toggle border border-secondary border-3 rounded-pill px-3 fw-bold" type="button" data-bs-toggle="dropdown">
-            Statistics & Logs
-          </button>
-          <ul class="dropdown-menu dropdown-menu-dark shadow">
-            <li><%= link_to 'Usage Logs', usage_logs_path, class: "dropdown-item" %></li>
-            <li><%= link_to 'Sign-Up Records', signup_records_path, class: "dropdown-item" %></li>
-            <li><%= link_to 'Patient Stats', patient_stats_path, class: "dropdown-item" %></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><%= link_to 'Patient List', regis_path, class: "dropdown-item" %></li>
-          </ul>
-        </div>
-        <%= button_to "Sign Out", session_path, method: :delete, data: { turbo: false }, class: "btn btn-sm btn-danger border border-secondary border-3 rounded-pill px-3 fw-bold" %>
-      <% else %>
-        <% unless params[:controller] == 'sessions' %>
-          <%= link_to "Sign In", new_session_path, class: "btn btn-sm btn-primary border border-secondary border-3 rounded-pill px-4 fw-bold" %>
-        <% end %>
-      <% end %>
-    </div>
+  <% if authenticated? %>
+    
+    <%# Wrap the entire dropdown in the admin check %>
+    <% if Current.admin? %>
+      <div class="dropdown">
+        <button class="btn btn-sm btn-info dropdown-toggle border border-secondary border-3 rounded-pill px-3 fw-bold" type="button" data-bs-toggle="dropdown">
+          Statistics & Logs
+        </button>
+        <ul class="dropdown-menu dropdown-menu-dark shadow">
+          <li><%= link_to 'Usage Logs', usage_logs_path, class: "dropdown-item" %></li>
+          <li><%= link_to 'Sign-Up Records', signup_records_path, class: "dropdown-item" %></li>
+          <li><%= link_to 'Patient Stats', patient_stats_path, class: "dropdown-item" %></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><%= link_to 'Manage Staff', admin_users_path, class: "dropdown-item fw-bold text-info" %></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><%= link_to 'Patient List', regis_path, class: "dropdown-item" %></li>
+        </ul>
+      </div>
+    <% end %>
+
+    <%= button_to "Sign Out", session_path, method: :delete, data: { turbo: false }, class: "btn btn-sm btn-danger border border-secondary border-3 rounded-pill px-3 fw-bold" %>
+  
+  <% else %>
+    <% unless params[:controller] == 'sessions' %>
+      <%= link_to "Sign In", new_session_path, class: "btn btn-sm btn-primary border border-secondary border-3 rounded-pill px-4 fw-bold" %>
+    <% end %>
+  <% end %>
+</div>
   </div>
 </nav>

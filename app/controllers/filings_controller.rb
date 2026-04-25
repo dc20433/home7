@@ -1,13 +1,13 @@
 class FilingsController < ApplicationController
-  #before_action :authenticate_user!
+  # before_action :authenticate_user!
   before_action :set_regi
-  before_action :set_filing, only: [:show, :edit, :update, :destroy]
+  before_action :set_filing, only: [ :show, :edit, :update, :destroy ]
 
   # GET regis/1/filings
   def index
     # If @regi was not found by before_action, try to find it from the first filing
     @filings = @regi ? @regi.filings : Filing.all
-    
+
     if @regi.nil? && @filings.any?
       @regi = @filings.first.regi
     end
@@ -17,8 +17,8 @@ class FilingsController < ApplicationController
   def show
   end
 
-  # GET regis/1/filings/new
-  # app/controllers/filings_controller.rb
+# GET regis/1/filings/new
+# app/controllers/filings_controller.rb
 def new
   @regi = Regi.find(params[:regi_id])
   @filing = @regi.filings.build # This ensures @filing.regi is NOT nil
@@ -33,18 +33,18 @@ end
     @filing = @regi.filings.build(filing_params)
 
     if @filing.save
-      redirect_to regi_filings_path(@regi,@filing), notice: 'Patient File created...'
+      redirect_to regi_filings_path(@regi, @filing), notice: "Patient File created..."
     else
-      render action: 'new'
+      render action: "new"
     end
   end
-  
+
   # PUT regis/1/filings/1
   def update
     if @filing.update(filing_params)
-      redirect_to regi_filings_path(@regi,@filing), notice: 'Patient File changed...'
+      redirect_to regi_filings_path(@regi, @filing), notice: "Patient File changed..."
     else
-      render action: 'edit'
+      render action: "edit"
     end
   end
 
@@ -68,11 +68,11 @@ end
     # Only allow a trusted parameter "white list" through.
     def filing_params
       # We list all possible params
-      list = [:title, :describe, :regi_id, :image]
-      
+      list = [ :title, :describe, :regi_id, :image ]
+
       # Only add :f_date to the permit list if the column actually exists
-      list << :f_date if Filing.column_names.include?('f_date')
-      
+      list << :f_date if Filing.column_names.include?("f_date")
+
       params.require(:filing).permit(list)
     end
 end

@@ -1,0 +1,46 @@
+<h2 class="fw-bold text-dark text-center">Access Management</h2>
+<div class="container-fluid px-4 mt-4">
+  <div class="d-flex justify-content-between align-items-center px-4 m-3">
+    <%= link_to "Add New Manager", new_admin_user_path, class: "btn btn-sm btn-dark border border-light border-3 rounded-pill fw-bold" %>
+  </div>
+
+  <div class="table-responsive bg-white rounded shadow-sm border border-primary border-2">
+    <table class="table table-sm table-striped table-hover custom-table mx-auto mb-0">
+      <thead class="table-primary">
+        <tr>
+          <%# Added px-2 for the requested padding %>
+          <th class="py-3 ps-3">User Name</th>
+          <th class="py-3">Role</th>
+          <th class="py-3 text-center">Status</th>
+          <th class="py-3 text-center">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @users.each do |user| %>
+          <tr>
+            <td class="align-middle fw-bold ps-3"><%= user.email %></td>
+            <td class="align-middle"><%= user.role&.titleize %></td>
+            <td class="align-middle text-center px-2">
+  <%# Safe check for active attribute to avoid NoMethodError %>
+  <% user_active = user.respond_to?(:active) ? user.active : true %>
+  
+  <%# Changed rounded-pill to rounded to match the 'Paper Only' button style %>
+  <span class="badge border border-2 shadow-sm <%= user_active ? 'bg-success border-success text-white' : 'bg-danger border-danger text-white' %> rounded px-2 py-1" style="min-width: 80px; font-weight: 600;">
+    <%= user_active ? "Active" : "Disabled" %>
+  </span>
+</td>
+            <td class="align-middle text-center px-2">
+              <div class="d-flex justify-content-center gap-2 align-items-center">
+                <%= link_to "Edit", edit_admin_user_path(user), class: "btn btn-sm btn-outline-primary border border-primary rounded-pill px-3 fw-bold d-inline-flex align-items-center justify-content-center", style: "height: 31px;" %>
+                
+                <% unless user == Current.user %>
+                  <%= button_to "Remove", admin_user_path(user), method: :delete, class: "btn btn-sm btn-outline-danger border border-danger rounded-pill px-3 fw-bold", form: { class: "d-inline", data: { turbo_confirm: "Are you sure?" } } %>
+                <% end %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

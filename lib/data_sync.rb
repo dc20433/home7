@@ -1,7 +1,7 @@
-require 'json'
+require "json"
 
 # Path to your data file
-FILE_PATH = Rails.root.join('patient_data_transfer.json')
+FILE_PATH = Rails.root.join("patient_data_transfer.json")
 
 def sync_patients
   unless File.exist?(FILE_PATH)
@@ -16,17 +16,17 @@ def sync_patients
   error_count = 0
 
   # Clear existing patients to prevent ID conflicts (Optional, but recommended for a clean sync)
-  # Patient.delete_all 
+  # Patient.delete_all
 
   raw_data.each_with_index do |record, index|
     # We use .new(record) because your database columns now match the JSON keys exactly
     patient = Patient.new(record)
 
-    # Use validate: false to bypass 'Regi must exist' or 'Chart must exist' 
+    # Use validate: false to bypass 'Regi must exist' or 'Chart must exist'
     # for legacy records with missing associations.
     if patient.save(validate: false)
       success_count += 1
-      print "." if (index % 10 == 0) # Progress indicator
+      print "." if index % 10 == 0 # Progress indicator
     else
       puts "\n[!] Failed to save record #{index}: #{patient.errors.full_messages.join(', ')}"
       error_count += 1

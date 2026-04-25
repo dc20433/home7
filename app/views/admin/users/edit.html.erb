@@ -1,0 +1,41 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow-sm border border-primary border-2 rounded">
+        <div class="card-header bg-primary text-white py-3">
+          <h4 class="mb-0 fw-bold">Edit Staff Member</h4>
+        </div>
+        <div class="card-body p-4">
+          <%= form_with(model: [:admin, @user], local: true) do |f| %>
+            
+            <div class="mb-3">
+              <%= f.label :email, class: "form-label fw-bold text-dark" %>
+              <%= f.email_field :email, class: "form-control border border-2 rounded-pill shadow-sm px-3", readonly: true %>
+            </div>
+
+            <div class="mb-3">
+              <%= f.label :role, class: "form-label fw-bold text-dark" %>
+              <%= f.select :role, User.roles.keys.map { |r| [r.titleize, r] }, {}, { class: "form-select border border-2 rounded-pill shadow-sm px-3" } %>
+            </div>
+
+            <div class="mb-4 d-flex align-items-center gap-3">
+              <%# Only render checkbox if the method exists, otherwise show a note %>
+              <% if @user.respond_to?(:active) %>
+                <%= f.check_box :active, class: "form-check-input border border-2 border-primary" %>
+                <%= f.label :active, "Account Active", class: "form-check-label fw-bold text-dark mb-0" %>
+              <% else %>
+                <span class="text-muted small italic">Status attribute pending migration</span>
+              <% end %>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+              <%= link_to "Cancel", admin_users_path, class: "text-decoration-none text-muted fw-bold" %>
+              <%= f.submit "Update Manager", class: "btn btn-dark border border-secondary border-3 rounded-pill px-4 fw-bold" %>
+            </div>
+            
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

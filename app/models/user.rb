@@ -7,5 +7,5 @@ class User < ApplicationRecord
   enum :role, { user: 0, manager: 1, admin: 2 }
 
   # Link a user to their specific patient profile
-  belongs_to :patient, optional: true 
+  belongs_to :patient, optional: true
 end

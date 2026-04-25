@@ -11,7 +11,7 @@ class AddTrackingToUsers < ActiveRecord::Migration[8.1]
     end
 
     # 3. Handle any other potentially missing columns safely
-    [:sign_in_count, :current_sign_in_at, :last_sign_in_at, :current_sign_in_ip, :last_sign_in_ip].each do |col|
+    [ :sign_in_count, :current_sign_in_at, :last_sign_in_at, :current_sign_in_ip, :last_sign_in_ip ].each do |col|
       unless column_exists?(:users, col)
         # Define types for columns if they were somehow missing
         type = col == :sign_in_count ? :integer : (col.to_s.include?('ip') ? :string : :datetime)

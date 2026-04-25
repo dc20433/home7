@@ -1,7 +1,7 @@
 class ChartsController < ApplicationController
-  #before_action :authenticate_user!
+  # before_action :authenticate_user!
   before_action :set_regi
-  before_action :set_chart, only: [:show, :edit, :update, :destroy]
+  before_action :set_chart, only: [ :show, :edit, :update, :destroy ]
 
   # GET regis/1/charts
   def index
@@ -15,8 +15,8 @@ class ChartsController < ApplicationController
   # GET regis/1/charts/new
   def new
     if defined?(Chart.where(regi_id: params[:regi_id]).last.id)
-      @chart = @regi.charts.order('t_date ASC').last.dup
-    else 
+      @chart = @regi.charts.order("t_date ASC").last.dup
+    else
       @chart = @regi.charts.build
     end
   end
@@ -30,18 +30,18 @@ class ChartsController < ApplicationController
     @chart = @regi.charts.build(chart_params)
 
     if @chart.save
-      redirect_to regi_charts_path(@regi,@chart), notice: 'Patient Chart created...'
+      redirect_to regi_charts_path(@regi, @chart), notice: "Patient Chart created..."
     else
-      render action: 'new'
+      render action: "new"
     end
   end
 
   # PUT regis/1/charts/1
   def update
     if @chart.update(chart_params)
-      redirect_to regi_charts_path(@regi,@chart), notice: 'Patient Chart updated...'
+      redirect_to regi_charts_path(@regi, @chart), notice: "Patient Chart updated..."
     else
-      render action: 'edit'
+      render action: "edit"
     end
   end
 

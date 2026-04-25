@@ -16,8 +16,8 @@ module Authentication
 # Inside your authentication logic
 def authenticated_user
   # This finds the user via the "sessions" table seen in your logs
-  user = Current.session&.user 
-  
+  user = Current.session&.user
+
   if user && user.respond_to?(:is_active) && !user.is_active
     terminate_session
     nil
@@ -32,7 +32,7 @@ end
   end
 
   def require_authentication
-    # Logic: Try to resume. If it returns nil (expired or no cookie), 
+    # Logic: Try to resume. If it returns nil (expired or no cookie),
     # trigger request_authentication unless a redirect already happened.
     resume_session || (request_authentication unless performed?)
   end
@@ -42,14 +42,13 @@ end
     session = find_session_by_cookie
     return nil unless session
 
-    # Theinactivity check
     if session.updated_at < 20.minutes.ago
       terminate_session
-      return nil 
+      return nil
     end
 
-    session.touch # Updates updated_at to reset the inactivity clock
-    Current.session ||= session
+    session.touch
+    Current.session = session
   end
 
   def start_new_session_for(user)
