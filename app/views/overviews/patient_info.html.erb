@@ -1,6 +1,7 @@
 <h2 class="text-center py-2">All Patient Information as of <%= Time.now.strftime("%Y-%m-%d %H:%M") %></h2>
 
-<div class="d-flex align-items-center justify-content-center mx-2 gap-1">
+<%# Navigation and Search remain unchanged %>
+<div class="d-flex align-items-center justify-content-center mx-2 gap-1 no-print">
   <%= link_to 'All Charts by Date', overviews_chart_date_path, class:"btn btn-primary border border-light border-3 rounded-pill px-2 py-0 m-1 fw-bold" %>
   <%= link_to 'All Charts by Name', overviews_chart_name_path, class:"btn btn-success border border-light border-3 rounded-pill px-2 py-0 m-1 fw-bold" %>
   <%= link_to 'Patient List', regis_path, class:"btn btn-warning border border-light border-3 rounded-pill px-3 py-0 m-1 fw-bold" %>
@@ -8,6 +9,7 @@
           url_for(params.to_unsafe_h.merge(print: true)), 
           class: "btn btn-secondary border border-light border-3 rounded-pill px-3 py-0 fw-bold" %>
 </div>
+
 <%= render 'shared/search_bar', 
   q: @q, 
   url: request.path, 
@@ -15,7 +17,7 @@
   search_key_first: :regi_first_name_cont,
   placeholder: "Search Patient Info..." %>
 
-<div class="d-flex flex-wrap justify-content-center gap-1 my-3">
+<div class="d-flex flex-wrap justify-content-center gap-1 my-3 no-print">
   <% ('A'..'Z').each do |letter| %>
     <%= link_to letter, 
                 url_for(letter: letter), 
@@ -25,66 +27,52 @@
   <%= link_to "All", url_for(letter: "All"), class: "btn btn-sm btn-warning border border-light border-3 rounded-pill px-3 shadow-sm" %>
 </div> 
 
-<div class="table-responsive" style="overflow-x: auto;">
-  <table class="table table-sm table-striped table-hover custom-table border border-dark mt-2" style="min-width: 1000px;">
+<%# THE FIX: Single wrapper, no card, no fixed height containers %>
+<div class="table-responsive" style="overflow-x: auto !important; overflow-y: visible !important; -webkit-overflow-scrolling: touch;">
+  <table class="table table-sm table-striped table-hover custom-table mb-4" 
+         style="table-layout: auto !important; width: auto !important; min-width: 1100px !important;">
     <thead class="table-success fs-6">
       <tr style="height:13px">
-        <th>Name</th>
+        <th class="ps-4">Name</th>
         <th>Date</th>
         <th>Contact Info</th>
         <th>Weight</th>
-        <th>Complaints</th>
-        <th>Onset/Pain</th>
-        <th>Referred</th>
+        <th>Complaints/Pain Scale</th>
+        <th>Referral</th>
         <th class="text-center">Health History / Issues</th>
-        <th class="text-center" style="width:120px">Signature</th>
+        <th class="text-center pe-4" style="width:120px">Signature</th>
       </tr>
     </thead>
-
     <tbody>
       <% last_patient_id = nil %>
       <% @patients.each do |patient| %>
         <tr style="height:15px">
-          <td>
-            <%# Only show name if it's a new patient group %>
+          <td class="fw-bold ps-4">
             <% if patient.regi_id != last_patient_id %>
               <%= link_to "#{patient.regi.p_name} (#{patient.regi.p_age})", regi_patient_path(patient.regi_id, patient) %>
             <% end %>
           </td>
-
-          <td><%= patient.v_date %></td>
-
-          <td>
+          <td class="small text-nowrap"><%= patient.v_date %></td>
+          <td class="small">
             <%= patient.street %><%= ', ' if patient.street.present? %>
-            <%= patient.city %> <%= patient.state %> <%= patient.zip %>
-            <br>
-            <%= "(c)#{patient.cell} " if patient.cell.present? %>
-            <%= "(h)#{patient.home} " if patient.home.present? %>
-            <%= "(w)#{patient.work} " if patient.work.present? %>
-            <%= " #{patient.email}" if patient.email.present? %>
+            <%= patient.city %> <%= patient.state %> <%= patient.zip %><br>
+            <span class="text-muted">
+              <%= "(c)#{patient.cell} " if patient.cell.present? %>
+              <%= "(h)#{patient.home} " if patient.home.present? %>
+            </span>
           </td>
-
           <td><%= patient.weight %></td>
-
-          <td>
-            <%= [patient.com1, patient.com2, patient.com3].select(&:present?).map(&:strip).join(' / ') %>
+          <td class="small">
+            <%= [patient.com1, patient.com2, patient.com3, patient.pain_scale].select(&:present?).map(&:strip).join(' / ') %>
+          </td>
+          <td class="small"><%= patient.referred %></td>
+          <td class="small">
+            <%= (patient.di_list.to_sentence).gsub(/_/, ' ').gsub(/;/, '') %><%= ', ' if patient.o_dis? %>
+            <%= patient.o_dis %><%= ', Pregnant' if patient.preg == 'Yes' %>
           </td>
 
-          <td>
-            <%= patient.d_onset %>
-            <%= ' / Pain: ' + patient.pain_scale.to_s if patient.pain_scale.present? %>
-          </td>
-
-          <td><%= patient.referred %></td>
-
-          <td>
-            <% if patient.di_list.present? %>
-              <%= patient.di_list.to_sentence(words_connector: '/', last_word_connector: '/').gsub(/_/, ' ').gsub(/;/, '') %>
-            <% end %>
-            <%= '/ ' + patient.o_dis if patient.o_dis.present? %>
-            <%= '/ Pregnant' if patient.preg == 'Yes' %>
-          </td>
-          <td class="text-center">
+          <%# Restored Paper Only badge %>
+          <td class="text-center pe-4">
             <% if patient.signature.present? %>
               <span class="badge bg-success">Digital Sign</span>
             <% else %>
@@ -92,16 +80,17 @@
             <% end %>
           </td>
         </tr>
-        <%# Update the tracker at the end of the loop %>
         <% last_patient_id = patient.regi_id %>
       <% end %>
     </tbody>
   </table>
-  <div class="d-flex justify-content-center my-4">
-    <%== pagy_bootstrap_nav(@pagy) if @pagy&.pages.to_i > 1 %>
-  </div>
 </div>
 
+<div class="d-flex justify-content-center my-4 no-print">
+  <%== pagy_bootstrap_nav(@pagy) if @pagy&.pages.to_i > 1 %>
+</div>
+
+<%# SCRIPT & STYLE BLOCK: One logic flow to prevent syntax errors %>
 <% if params[:print] == "true" %>
   <script>
     (function() {
@@ -111,7 +100,6 @@
           clearInterval(checkTable);
           setTimeout(() => {
             window.print();
-            // Automatically clean the URL after printing
             window.location.href = window.location.href.replace(/[&?]print=true/, '');
           }, 1000);
         }
@@ -119,40 +107,29 @@
     })();
   </script>
 
-  <% if params[:print] == "true" %>
-    <style>
-      @media print {
-        /* 1. Force the table to fit the page width */
-        table { 
-          width: 100% !important; 
-          min-width: 0 !important; 
-          table-layout: fixed !important; /* Forces columns to respect width */
-          word-wrap: break-word;
-        }
-
-        /* 2. Set specific widths for the most crowded columns */
-        th:nth-child(1), td:nth-child(1) { width: 12%; } /* Name */
-        th:nth-child(3), td:nth-child(3) { width: 15%; } /* Contact info */
-        th:nth-child(8), td:nth-child(8) { width: 25%; } /* Health History (The last column) */
-
-        /* 3. Allow text to wrap and shrink font slightly */
-        td, th { 
-          white-space: normal !important; 
-          font-size: 9pt !important; 
-          overflow: visible !important;
-        }
-
-        /* 4. Remove the horizontal scroll wrapper */
-        .table-responsive { 
-          display: block !important; 
-          overflow: visible !important; 
-        }
-
-        /* 5. Hide UI elements */
-        .btn, .nav, .search-bar, .d-flex, footer, .card-header, .pagination { 
-          display: none !important; 
-        }
-      }
-    </style>
-  <% end %>
+  <style>
+    @media print {
+      @page { size: landscape; margin: 0.5cm; }
+      .btn, .nav, .search-bar, .d-flex, footer, .pagination, .no-print { display: none !important; }
+      .table-responsive { display: block !important; overflow: visible !important; }
+      table { width: 100% !important; table-layout: fixed !important; border: 1px solid #000 !important; }
+      
+      th:nth-child(1), td:nth-child(1) { width: 15%; }
+      th:nth-child(3), td:nth-child(3) { width: 18%; }
+      th:nth-child(5), td:nth-child(5) { width: 22%; }
+      th:nth-child(6), td:nth-child(6) { width: 25%; }
+      
+      td, th { font-size: 8pt !important; border: 1px solid #ccc !important; padding: 2px !important; }
+    }
+  </style>
 <% end %>
+
+<style>
+  @media screen {
+    .table-responsive { width: 100% !important; overflow-x: auto !important; }
+    .custom-table td, .custom-table th { 
+      white-space: normal !important; 
+      word-wrap: break-word; 
+    }
+  }
+</style>

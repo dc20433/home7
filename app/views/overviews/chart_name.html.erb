@@ -27,7 +27,7 @@
 <table class="table table-sm table-striped custom-table border border-dark table-hover mt-4" style="table-layout: fixed; width: 100%; border-collapse: collapse;">
   <thead class="table-info fs-6">
     <tr>
-      <th style="width: 17%;">Name</th> 
+      <th class="ps-3" style="width: 17%;">Name</th> 
       <th style="width: 8%;">Date</th>
       <th style="width: 20%;">Subjective</th>
       <th style="width: 15%;">Objective</th>
@@ -39,7 +39,7 @@
     <% last_patient_id = nil %>
     <% @charts.each do |chart| %>
       <tr>
-        <td style="word-break: break-all; white-space: normal; overflow: hidden;">
+        <td class="ps-3" style="word-break: break-all; white-space: normal; overflow: hidden;">
           <% if chart.regi_id != last_patient_id %>
             <%= link_to "#{chart.regi.p_name} (#{chart.regi.p_age})", regi_charts_path(chart.regi_id) %>
           <% end %>

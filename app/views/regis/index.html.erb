@@ -12,13 +12,12 @@
 </div>
   
 <%# Row 2: Search Bar %>
-<div class="row px-3 y-1">
-  <div class="col-md-12" style="position: relative; max-width: 80%;">
-    <%= render 'shared/search_bar', 
-    q: @q, 
-    url: regis_path, 
-    search_key_last: :last_name_cont,
-    search_key_first: :first_name_cont %>
+<%# Row 2: Search Bar - Updated for perfect alignment %>
+<div class="container-fluid px-4">
+  <div class="d-flex justify-content-center w-100 mb-3">
+    <div style="max-width: 900px; width: 100%;">
+      <%= render "shared/search_bar", q: @q, url: regis_path %>
+    </div>
   </div>
 </div>
 

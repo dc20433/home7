@@ -1,6 +1,6 @@
 class OverviewsController < ApplicationController
-  # 1. Access Control: Require login and verify admin status for sensitive data
   before_action :require_authentication
+  # Note: ensure_admin now uses your Current.admin? helper for Rails 8 safety
   before_action :ensure_admin, only: [ :usage_logs, :signup_records, :patient_stats ]
 
   # ---------------------------------------------------------
@@ -46,48 +46,29 @@ class OverviewsController < ApplicationController
   # ---------------------------------------------------------
 
   def chart_date
-    if params[:q].present? && params[:q][:t_date_gteq].present? && params[:q][:t_date_lteq].present?
-      if params[:q][:t_date_gteq].to_date > params[:q][:t_date_lteq].to_date
-        redirect_to overviews_chart_date_path, alert: "Reminder: 'From Date' must be earlier than 'To Date'." and return
-      end
-    end
-
-    if params[:q] && params[:q][:t_date_lteq].present?
-      params[:q][:t_date_lteq] = params[:q][:t_date_lteq].to_date.end_of_day
-    end
-
     @q = Chart.ransack(params[:q])
-    results = @q.result.includes(:regi).joins(:regi)
+    results = @q.result.joins(:regi).includes(:regi)
 
-    if params[:q].present? && (params[:q][:t_date_gteq].present? || params[:q][:t_date_lteq].present?)
+    # PRESERVED: Latest to oldest by default; Older to Newer when searching
+    if params[:q].present? || params[:dir] == "asc"
       results = results.reorder("charts.t_date ASC, regis.last_name ASC")
     else
       results = results.reorder("charts.t_date DESC, regis.last_name ASC")
     end
 
-    if params[:print] == "true"
-      @charts = results
-      @pagy = nil
-    else
-      @pagy, @charts = pagy(results)
-    end
+    @pagy, @charts = paginate_or_print(results)
   end
 
   def chart_name
     @q = Chart.ransack(params[:q])
     results = @q.result.joins(:regi).includes(:regi)
-    results = results.order("regis.last_name ASC, regis.first_name ASC, charts.t_date DESC")
+                .order("regis.last_name ASC, regis.first_name ASC, charts.t_date DESC")
 
     if params[:q].blank? && params[:letter].present? && params[:letter] != "All"
       results = results.where("regis.last_name ILIKE ?", "#{params[:letter]}%")
     end
 
-    if params[:print] == "true"
-      @charts = results
-      @pagy = nil
-    else
-      @pagy, @charts = pagy(results)
-    end
+    @pagy, @charts = paginate_or_print(results)
   end
 
   def patient_info
@@ -98,22 +79,14 @@ class OverviewsController < ApplicationController
       results = results.joins(:regi).where("regis.last_name ILIKE ?", "#{params[:letter]}%")
     end
 
-    if params[:print] == "true"
-      @patients = results
-      @pagy = nil
-    else
-      @pagy, @patients = pagy(results)
-    end
+    @pagy, @patients = paginate_or_print(results)
   end
 
   private
 
   def ensure_admin
-    # Check column existence first to survive rstSL database resets
-    if Current.user.respond_to?(:admin) && Current.user.admin?
-      nil # Access granted
-    else
-      redirect_to root_path, alert: "Access denied." and return
+    unless Current.admin?
+      redirect_to root_path, alert: "Access denied. Admins only."
     end
   end
 end
