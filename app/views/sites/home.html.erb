@@ -3,10 +3,29 @@
     <h1 class="display-4 fw-bolder text-dark mb-4 text-shadow-custom" style="color: #2c3e50;">Welcome to Zhang's Acupuncture</h1>
     <h2 class="display-6 text-dark fw-bolder text-shadow-custom">Traditional Chinese Medical Treatment and Medicine</h2>
     
-    <% if authenticated? %>
-      <div class="mt-4">
-        <%= link_to "Go to Patient List", regis_path, class: "btn btn-lg btn-info rounded-pill border border-dark border-3 fw-bold px-5 shadow" %>
-      </div>
+    <%# app/views/sites/home.html.erb %>
+
+<div class="mt-4 d-grid gap-3 d-sm-flex justify-content-sm-center">
+  <% if authenticated? %>
+    <% if Current.user.admin? || Current.user.manager? %>
+      <%= link_to "Go to Patient List", regis_path, class: "btn btn-lg btn-info rounded-pill border border-dark border-3 fw-bold px-5 shadow" %>
+    <% elsif Current.user.regi.present? %>
+      <% if Current.user.regi.patients.any? %>
+        <%# Returning Patient: Edit their most recent record %>
+        <%= link_to "Update My Info", edit_regi_patient_path(Current.user.regi, Current.user.regi.patients.last), 
+            class: "btn btn-lg btn-success rounded-pill border border-dark border-3 fw-bold px-5 shadow" %>
+      <% else %>
+        <%# New Patient: Start a fresh intake form %>
+        <%= link_to "Fill Out My Info", new_regi_patient_path(Current.user.regi), 
+            class: "btn btn-lg btn-success rounded-pill border border-dark border-3 fw-bold px-5 shadow" %>
+      <% end %>
+    <% else %>
+      <div class="alert alert-warning rounded-pill px-4">Account active. No patient record linked.</div>
     <% end %>
+  <% else %>
+    <%= link_to "Staff Sign-In", new_session_path, class: "btn btn-lg btn-primary rounded-pill border border-dark border-3 fw-bold px-5 shadow" %>
+    <%= link_to "Patient Access", new_session_path, class: "btn btn-lg btn-outline-dark outline-double rounded-pill border border-dark border-3 fw-bold px-5 shadow" %>
+  <% end %>
+</div>
   </div>
 </div>

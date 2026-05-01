@@ -1,1 +1,24 @@
-<%= render 'form' %>
+<div class="container-fluid mt-3">
+  <% if Current.user&.patient? %>
+    <%# --- SECTION 1: PATIENT VIEW --- %>
+    <script type="text/javascript">
+      window.history.forward();
+      function noback() { window.history.forward(); }
+      window.onload = noback;
+      window.onpageshow = function(evt) { if (evt.persisted) noback(); };
+    </script>
+   
+    <%= render "patientConsentForm", selection_mode: true %>
+
+  <% else %>
+    <%# --- SECTION 2: MANAGER/ADMIN EDIT VIEW --- %>
+    <h2 class="text-center">Edit Patient Record</h2>
+    
+    <%= form_with(model: [@regi, @patient], local: true) do |f| %>
+      <%= render "patientConsentForm", f: f %>
+      
+      <%# --- Action Buttons Aligned Left --- %>
+      
+    <% end %>
+  <% end %>
+</div>

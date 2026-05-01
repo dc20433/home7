@@ -1,0 +1,16 @@
+<div class="container text-center mt-5 p-5 border rounded shadow-sm bg-white">
+  <h2 class="text-danger mb-4">Notice: Consent Not Provided</h2>
+  
+  <p class="fs-5 mb-4">
+    You have chosen <strong>not to provide</strong> your digital signature and consent at this time. 
+    Your health information has been saved for the clinic's records, but treatment may be affected.
+  </p>
+
+  <div class="alert alert-warning mb-5">
+    Please <strong>hand this device back to a staff member</strong>.
+  </div>
+
+  <div class="d-grid gap-2 col-md-4 mx-auto">
+  <%= button_to "Sign Out Safely", session_path, method: :delete, class: "btn btn-dark btn-lg shadow" %>
+  </div>
+</div>

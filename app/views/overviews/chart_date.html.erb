@@ -3,14 +3,14 @@
 <div class="d-flex align-items-center justify-content-center mx-2 gap-1">
   <%= link_to 'All Charts by Name', overviews_chart_name_path, class:"btn btn-success border border-light border-3 rounded-pill px-2 py-0 m-1 fw-bold" %>
   <%= link_to 'All Patient Info', overviews_patient_info_path, class:"btn btn-info border border-light border-3 rounded-pill px-2 py-0 m-1 fw-bold" %>
-  <%= link_to 'Patient List', regis_path, class:"btn btn-warning border border-light border-3 rounded-pill px-3 py-0 m-1 fw-bold" %>
+  <%= link_to 'Patient Registration', regis_path, class:"btn btn-warning border border-light border-3 rounded-pill px-2 py-0 m-1 fw-bold" %>
   <%= link_to 'Print All', 
               url_for(params.to_unsafe_h.merge(print: true)), 
               class: "btn btn-secondary border border-light border-3 rounded-pill px-3 py-0 fw-bold" %>
 </div>
 
 <div class="row justify-content-center my-3">
-  <div class="col-md-6 border border-primary rounded-pill py-1 bg-warning shadow-sm">
+  <div class="col-8 border border-primary rounded-pill py-1 bg-info shadow-sm">
     <%= search_form_for @q, url: overviews_chart_date_path, method: :get, class: "d-flex gap-3 align-items-center px-4" do |f| %>
       
       <div class="d-flex align-items-center gap-2 flex-grow-1">
@@ -25,7 +25,7 @@
 
       <div class="d-flex gap-2">
         <%= f.submit "Search", class: "btn btn-sm btn-dark border border-light border-3 rounded-pill px-4 fw-bold shadow-sm" %>
-        <%= link_to "Clear", overviews_chart_date_path, class: "btn btn-sm btn-link text-muted text-decoration-none fw-bolder" %>
+        <%= link_to "Clear", overviews_chart_date_path, class: "btn btn-sm btn-outline-dark rounded-pill text-muted text-decoration-none fw-bold bg-white px-4" %>
       </div>
       
     <% end %>

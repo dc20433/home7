@@ -1,21 +1,27 @@
 class SessionsController < ApplicationController
-  allow_unauthenticated_access only: %i[ new create destroy ]
+  skip_before_action :resume_session, only: :destroy
+  skip_before_action :check_patient_activation, only: :destroy
+  skip_before_action :set_session_timestamp, only: :destroy
+
+  allow_unauthenticated_access only: %i[ new create ]
 
   def new
   end
 
   def create
-    if user = User.authenticate_by(params.permit(:email, :password))
-      # 1. Account Status Check (with safety for database resets)
+    login_id = params[:email]
+
+    if login_id.present? && !login_id.include?("@")
+      login_id = params[:email].to_s.downcase.strip
+    end
+
+    if user = User.authenticate_by(email: login_id, password: params[:password])
       if user.respond_to?(:is_active) && !user.is_active
-        redirect_to login_path, alert: "This account has been deactivated." and return
+        redirect_to new_session_path, alert: "This account has been deactivated." and return
       end
 
-      # 2. Start the Rails 8 Session
       start_new_session_for user
 
-      # 3. Update tracking columns (using update_columns to skip validations)
-      # These columns are used for your Overviews usage logs
       user.update_columns(
         last_sign_in_at: user.current_sign_in_at,
         current_sign_in_at: Time.current,
@@ -23,21 +29,42 @@ class SessionsController < ApplicationController
         current_sign_in_ip: request.remote_ip
       )
 
-      redirect_to root_path, notice: "Logged in successfully!" and return
+      # --- START REDIRECT LOGIC ---
+      if user.role == "patient"
+        regi = Regi.find_by(user_id: user.id)
+
+        if regi
+          # Find the latest patient record associated with this registration
+          patient = regi.patients.last
+
+          if patient
+            # 1. Form exists: Go to Show view (where Update/No Update choices live)
+            redirect_to regi_patient_path(regi, patient), notice: "Welcome back!"
+          else
+            # 2. No patient record yet: Go to the 'new' info flow
+            redirect_to new_regi_patient_path(regi), notice: "Please complete your information."
+          end
+        else
+          redirect_to root_path, alert: "Registration record not found."
+        end
+      else
+        redirect_to root_path, notice: "Logged in successfully!"
+      end
+      # --- END REDIRECT LOGIC ---
+
     else
-      flash.now[:alert] = "Invalid email or password."
+      flash.now[:alert] = "Invalid username/email or password."
       render :new, status: :unprocessable_entity
     end
-  end
+  end # This closes 'def create'
 
+  # app/controllers/sessions_controller.rb
   def destroy
-    # 1. Safely update timestamp if column exists
-    if current_user && current_user.respond_to?(:last_sign_out_at)
-      current_user.update_columns(last_sign_out_at: Time.current)
-    end
-
-    # 2. Kill the session.
-    # IMPORTANT: In your app, this method ALREADY redirects to root_path.
     terminate_session
+    # If terminate_session already redirects (standard in Rails 8 auth),
+    # any code after it will cause the DoubleRenderError unless we stop.
+    return if performed?
+
+    redirect_to new_session_path, status: :see_other
   end
 end

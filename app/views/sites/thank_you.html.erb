@@ -1,0 +1,17 @@
+<div class="container text-center mt-5">
+  <div class="card shadow p-5 border-success">
+    <h1 class="text-success mb-4">Submission Received</h1>
+    <p class="lead">Thank you for updating your information and signing the consent form.</p>
+    <hr class="my-4">
+    
+    <%# Display the timestamp if it was saved %>
+    <% if @patient&.signed_at.present? %>
+       <p class="text-muted italic">Signed on: <%= @patient.signed_at.strftime("%B %d, %Y at %I:%M %p") %></p>
+    <% end %>
+
+    <p>Your session is complete. You may now safely sign out and handover your device to a staff member.</p>
+    
+    <%= button_to "Sign Out", session_path, method: :delete, data: { turbo: false }, 
+        class: "btn btn-danger rounded-pill px-5 fw-bold shadow-sm" %>
+  </div>
+</div>

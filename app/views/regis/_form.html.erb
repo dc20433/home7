@@ -62,11 +62,55 @@
       </div>
     </div>
   
-    <div class="btn-group m-2 pt-2" role="group"> 
-      <%= form.submit "Save", class: "btn btn-sm btn-outline-dark outline-double rounded-pill px-3 m-2 fw-bold" %>
-  <% end %>      
-      <%= button_to "Delete", @regi, method: :delete, class:"btn btn-sm btn-outline-danger outline-double rounded-pill px-3 m-2 fw-bold" %>
-      <%= link_to "Patient List", regis_path, class: "btn btn-sm btn-outline-success outline-double rounded-pill px-1 m-2 fw-bold" %>     
-      <%= link_to "Go Back", :back, class:"btn btn-sm btn-outline-info outline-double rounded-pill px-2 m-2 fw-bold" %>
+    <%# --- KEEP DOB FIELD ABOVE --- %>
+    <div class="row mt-3">
+
+    <%# --- 1. STAFF ACTIONS SECTION (The logic "Surgery") --- %>
+    <% if @regi.persisted? %> <%# Only show on Edit, not New %>
+      <div class="row mt-4 mb-2">
+        <div class="col-12 text-center">
+          <div class="border p-3 rounded bg-light shadow-sm">
+            <h6 class="fw-bold text-primary border-bottom pb-2">Patient Portal Access</h6>
+            
+            <% if @regi.user.present? %>
+              <span class="badge bg-success px-3 py-2 fs-6 mb-2">ACCOUNT ISSUED</span>
+              <div class="small text-muted mb-2">Login: <%= @regi.user.email %></div>
+              
+              <button type="submit" form="unissue-form" class="btn btn-sm btn-outline-danger outline-double rounded-pill px-3 fw-bold">
+                Un-issue Access
+              </button>
+            <% else %>
+              <span class="badge bg-secondary px-3 py-2 fs-6 mb-2">NOT ISSUED</span>
+              <br>
+              <%# This button "points" to the form at the bottom %>
+              <button type="submit" form="issue-form" class="btn btn-sm btn-primary border border-white border-2 rounded-pill px-4 fw-bold shadow-sm">
+                Issue Access
+              </button>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <%# --- 2. THE MAIN SAVE BUTTON --- %>
+    <div class="text-center mt-3">
+      <%= form.submit "Save Registration", class: "btn btn-sm btn-outline-dark outline-double rounded-pill px-4 fw-bold" %>
     </div>
-</div>
+
+  <% end %> <%# --- THIS END CLOSES THE MAIN form_with (@regi) --- %>
+
+  <%# --- 3. SECONDARY LINKS (Outside the main form) --- %>
+  <div class="d-flex justify-content-center gap-2 mt-3">
+    <% if @regi.persisted? %>
+      <%= button_to "Delete", @regi, method: :delete, class: "btn btn-sm btn-outline-danger outline-double rounded-pill px-3 fw-bold", data: { turbo_confirm: 'Are you sure?' } %>
+    <% end %>
+    <%= link_to "Back", regis_path, class: "btn btn-sm btn-outline-secondary outline-double rounded-pill px-3 fw-bold pt-1" %>
+  </div>
+
+</div> <%# Closes the 35rem card %>
+
+<%# --- 4. THE HIDDEN ENGINES (Outside the UI card entirely) --- %>
+<% if @regi.persisted? %>
+  <%= form_with url: signup_patient_regi_path(@regi), method: :patch, id: "issue-form", class: "d-none" do %><% end %>
+  <%= form_with url: destroy_patient_user_regi_path(@regi), method: :delete, id: "unissue-form", class: "d-none" do %><% end %>
+<% end %>

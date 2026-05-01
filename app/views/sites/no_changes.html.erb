@@ -1,0 +1,12 @@
+<div class="container text-center mt-5 p-5 border rounded shadow-sm bg-white">
+  <div class="mb-4">
+    <i class="bi bi-file-earmark-check text-success" style="font-size: 4rem;"></i>
+  </div>
+  <h2 class="text-success mb-3">No Updates Required</h2>
+  <p class="fs-5 mb-5">
+    Thank you! We have recorded that your information is up to date for today's visit.<br>
+    <strong>Please hand this device back to a staff member.</strong>
+  </p>
+
+  <%= button_to "Sign Out Safely", session_path, method: :delete, class: "btn btn-dark btn-lg px-5 shadow" %>
+</div>

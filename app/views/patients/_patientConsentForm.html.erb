@@ -1,0 +1,277 @@
+<style>
+.signature-wrapper {
+  border: 2px solid #000;
+  background-color: #fff;
+  height: 200px; /* Force a height */
+  width: 100%;
+  position: relative;
+}
+
+.signature-pad {
+  cursor: crosshair;
+  width: 100%;
+  height: 100%;
+}
+
+
+</style>
+
+<h2 class="text-center">Patient Charts</h2>
+<%= render 'layouts/identifier' %>
+
+<div class="container mt-4">
+
+<div class="card shadow-sm border-secondary mb-4">
+<div class="card-body p-4">
+
+<%= form_with(model: [@regi, @patient], id: "consent-form") do |f| %>
+  <%# --- Section 1: Demographics (Editable by Patient) --- %>
+  <div class="row mb-1">
+    <div class="col-md-2"><b>Updated on</b> <%= f.date_field :v_date, class: "form-control border-primary" %></div>
+    <div class="col-md-4"><b>Street</b> <%= f.text_field :street, class: "form-control border-primary" %></div>
+    <div class="col-md-3"><b>City</b> <%= f.text_field :city, class: "form-control border-primary" %></div>
+    <div class="col-md-1"><b>State</b> <%= f.text_field :state, class: "form-control border-primary" %></div>
+    <div class="col-md-2"><b>Zip Code</b> <%= f.text_field :zip, class: "form-control border-primary" %></div>
+  </div>
+
+  <%# --- Section 2: Contact --- %>
+  <div class="row mb-1">
+    <div class="col-md-3"><b>Cell Phone</b> <%= f.text_field :cell, class: "form-control border-primary" %></div>
+    <div class="col-md-3"><b>Home Phone</b> <%= f.text_field :home, class: "form-control border-primary" %></div>
+    <div class="col-md-3"><b>Work Phone</b> <%= f.text_field :work, class: "form-control border-primary" %></div>
+    <div class="col-md-3"><b>Email</b> <%= f.text_field :email, class: "form-control border-primary" %></div>
+  </div>
+
+  <%# --- Section 3: Vitals & History --- %>
+  <div class="row mb-1">
+    <div class="col-md-2"><b>Height</b> <%= f.text_field :height, class: "form-control border-primary" %></div>
+    <div class="col-md-2"><b>Weight</b> <%= f.text_field :weight, class: "form-control border-primary" %></div>
+    <div class="col-md-2"><b>Marital Status</b> <%= f.select :m_stat, Patient::MARITAL_STATUS, {include_blank: "Select"}, class: "form-select border-primary" %></div>
+    <div class="col-md-2"><b>Occupation</b> <%= f.text_field :occup, class: "form-control border-primary" %></div>
+    <div class="col-md-2"><b>Company</b> <%= f.text_field :company, class: "form-control border-primary" %></div>
+    <div class="col-md-2"><b>Referred by</b> <%= f.text_field :referred, class: "form-control border-primary" %></div>
+  </div>
+
+  <%# --- Section 4: Complaints & Health Issues --- %>
+  <div class="row mb-1">
+    <div class="col-md-4"><b>Complaint 1</b> <%= f.text_field :com1, class: "form-control border-primary" %></div>
+    <div class="col-md-4"><b>Complaint 2</b> <%= f.text_field :com2, class: "form-control border-primary" %></div>
+    <div class="col-md-4"><b>Complaint 3</b> <%= f.text_field :com3, class: "form-control border-primary" %></div>
+  </div>
+
+  <div class="row mb-1">
+  <div class="col-12">
+    <b class="d-block mb-2">Major Health Issues:</b>
+    <div class="small border p-3 bg-light rounded shadow-sm">
+      <div class="row g-2"> <%# Using a nested grid for better control %>
+        <% Patient::DI_LIST.each do |h| %>
+          <div class="col-6 col-md-4 col-lg-3">
+            <div class="form-check d-flex align-items-center mb-0">
+              <%= f.check_box :di_list, 
+                  { 
+                    multiple: true, 
+                    checked: f.object.di_list&.include?(h), 
+                    class: "form-check-input mt-0 me-2 border-primary" 
+                  }, h, nil %>
+              <%= f.label "di_list_#{h.parameterize.underscore}", h, class: "form-check-label mb-0 lh-1" %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+ <%# --- Section 5: Female patient only --- %>
+  <div class="row mb-1">
+    <div class="col-6">
+      <b>Other Issues</b>
+      <%= f.text_area :o_dis, rows: 1, class: "form-control border-primary" %>
+    </div>
+    <div class="col-2 text-muted">
+    <i><small>Female only:</small></i><b>Last period</b>
+    <%= f.date_field :last_prd, class: "form-control border-primary" %></div>
+    <div class="col-md-2"><b>Are you pregnant?</b> <%= f.select :preg, ["Yes", "No", "Not applicable"], {}, class: "form-select border-primary" %></div>
+    <div class="col-md-2"><b>In weeks?</b> <%= f.text_field :preg_wks, class: "form-control border-primary" %></div>
+  </div>
+
+  <hr>
+
+  <%# --- LEGAL ACKNOWLEDGMENT & SIGNATURE --- %>
+  <h5 class="mx-5 mb-3 fw-bold">NOTICE OF PRIVACY PRACTICES AND PATIENT ACKNOWLEDGMENT:</h5>
+  
+  <div class="fs-5 mx-5 border-bottom pb-3 text-justify text-muted" style="text-align: justify;">
+  I consent to acupuncture treatments and other procedures associated with Chinese Medicine by the practitioner at Zhang's Acupuncture, Inc. I understand that the methods of treatment may include, but not limited to acupuncture and Chinese herbs. By voluntarily signing below I show that I have read, or have had read to me, this consent to treatment I have been told about the risks and benefits of acupuncture and other procedures, and have had all opportunity to ask questions. I intend this consent form to cover the entire course of treatment for my present and future conditions for which I seek treatment.
+
+  I understand that, under The Health Insurance Portability Accountability of 1996, I have certain rights to privacy in regards to my protected health information (PHI). I have received, read and understood The Notice of Privacy Practice. The Practice reserves the right to change the terms of its Notice of Privacy Practice. I understand the Practice will provide current Notice of Practice on request.</p>
+</div>
+
+<%# --- SIGNATURE & BUTTON SECTION --- %>
+    <div class="row mt-4">
+      <div class="col-12">
+        <% if (defined?(manager_edit) && manager_edit) || (Current.user&.manager? || Current.user&.admin?) %>
+          <%# --- 1. MANAGER VIEW: Static Signature & Navigation --- %>
+          <b class="d-block text-center mb-2">Signature on File:</b>
+          <div class="p-2 border rounded bg-light text-center mb-4 mx-auto" style="min-height: 120px; max-width: 500px;">
+            <% if @patient.signature.present? %>
+              <img src="<%= @patient.signature %>" class="img-fluid" style="max-height: 100px;">
+            <% else %>
+              <em class="text-muted d-block mt-4">No signature captured.</em>
+            <% end %>
+          </div>
+
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="d-flex gap-2">
+              <%= link_to "Cancel", regi_patients_path(@regi), class: "btn btn-secondary px-3" %>
+              <% if @patient.persisted? %>
+                <%= link_to regi_patient_path(@regi, @patient), 
+                            class: "btn btn-outline-danger", 
+                            data: { turbo_method: :delete, turbo_confirm: "Permanently delete this record?" } do %>
+                  Delete
+                <% end %>
+              <% end %>
+              <%= link_to 'javascript:history.back()', class: "btn btn-outline-secondary px-3" do %>
+                <i class="bi bi-arrow-left"></i> Go Back
+              <% end %>        
+            </div>
+            <div>
+              <%= f.submit "Save and Return to Index", class: "btn btn-success btn-lg px-5 shadow fw-bold" %>
+            </div>
+          </div>
+
+        <% elsif defined?(selection_mode) && selection_mode %>
+          <%# --- 2. SELECTION MODE: Review & Choice --- %>
+          <div class="mt-4 border-top pt-4">
+            <div class="text-center mb-4">
+              <h4 class="text-primary">Review Your Current Record</h4>
+              <p class="text-muted">Below is the information we have on file.</p>
+            </div>
+
+            <div class="mb-4 text-center">
+              <label class="fw-bold d-block mb-2">Your Signature on File:</label>
+              <div class="p-3 border rounded bg-light shadow-sm mx-auto" style="max-width: 400px;">
+                <% if @patient.signature.present? %>
+                  <img src="<%= @patient.signature %>" alt="Patient Signature" class="img-fluid" style="max-height: 100px;">
+                <% else %>
+                  <em class="text-muted">No signature on file.</em>
+                <% end %>
+              </div>
+            </div>
+
+            <div class="text-center py-4 bg-white border rounded shadow-sm">
+              <h5 class="mb-4">Has any of this information changed?</h5>
+              <div class="d-flex justify-content-center gap-3 px-3">
+                <%= link_to edit_regi_patient_path(@regi, @patient), class: "btn btn-primary btn-lg rounded-pill px-4 shadow" do %>
+                  <i class="bi bi-pencil-square"></i> Yes, Update My Info
+                <% end %>
+                <%= link_to no_changes_path, class: "btn btn-outline-secondary btn-lg rounded-pill px-4" do %>
+                  No, Everything is the Same
+                <% end %>
+              </div>
+            </div>
+          </div>
+
+          <% else %>
+          <%# --- 3. PATIENT ACTION VIEW (The Edit Page) --- %>
+          <div class="mt-4 border-top pt-4">
+            <div class="mx-auto" style="max-width: 800px;">
+              <b class="d-block mb-2">Sign Here:</b>
+              
+              <%# The style below prevents the 'split-second' closure by locking height %>
+              <div class="signature-wrapper border border-2 border-primary rounded bg-white shadow-sm mb-2" 
+                   style="position: relative; width: 100%; height: 200px; min-height: 200px; overflow: hidden; touch-action: none;">
+                <canvas id="signature-canvas" style="width: 100%; height: 200px; display: block; cursor: crosshair;"></canvas>
+              </div>
+              
+              <div class="mb-3 text-end">
+                <button type="button" id="clear-signature" class="btn btn-sm btn-outline-danger rounded-pill px-3">
+                  <i class="bi bi-eraser"></i> Clear and Start Over
+                </button>
+              </div>
+              
+              <div class="form-check mb-4 p-3 bg-light rounded border">
+                <%= f.check_box :privacy_ack, class: "form-check-input ms-0 me-2", required: true %>
+                <label class="form-check-label fw-bold">
+                  I acknowledge the Notice of Privacy Practices.
+                </label>
+              </div>
+          
+              <div class="d-flex gap-3 justify-content-center mb-4">
+                <%= f.submit "Submit Signed Consent", class: "btn btn-primary btn-lg rounded-pill px-5 shadow" %>
+                <%= link_to "No Consent", regi_patients_path(@regi), class: "btn btn-outline-danger btn-lg rounded-pill px-5" %>
+              </div>
+              
+              <%= f.hidden_field :signature, id: "signature-data-input" %>
+            </div>
+          </div>
+          <% end %> <%# End of if/elsif/else logic block %> <%# Closes the if/elsif/else button logic %>
+      </div> <%# Closes card-body %>
+    </div> <%# Closes card %>
+  <% end %> <%# Closes form_with %>
+</div> <%# Closes container %>
+
+  <script>
+  (function() {
+    let signaturePad;
+
+    function initSignaturePad() {
+      // Use a unique ID for the canvas element itself
+      const canvas = document.getElementById("signature-canvas");
+      const form = document.getElementById("consent-form");
+      const input = document.getElementById("signature-data-input");
+
+      // Safety 1: Exit silently if canvas or form missing (Normal for Manager or Selection View)
+      if (!canvas || !form) return;
+
+      // Safety 2: Check if SignaturePad library is actually loaded
+      if (typeof SignaturePad === 'undefined') {
+        console.error("SignaturePad library is not loaded.");
+        return;
+      }
+
+      // Initialize the pad with specific settings for ink clarity
+      signaturePad = new SignaturePad(canvas, {
+        penColor: "rgb(0, 0, 0)",
+        backgroundColor: "rgb(255, 255, 255)"
+      });
+
+      // Handle High-DPI screens to ensure 'ink' follows the cursor/finger exactly
+      function resizeCanvas() {
+        const ratio = Math.max(window.devicePixelRatio || 1, 1);
+        canvas.width = canvas.offsetWidth * ratio;
+        canvas.height = canvas.offsetHeight * ratio;
+        canvas.getContext("2d").scale(ratio, ratio);
+        signaturePad.clear(); // Pad must be cleared after resize to reset coordinate system
+      }
+
+      window.addEventListener("resize", resizeCanvas);
+      resizeCanvas();
+
+      // Clear button logic
+      const clearBtn = document.getElementById("clear-signature");
+      if (clearBtn) {
+        clearBtn.onclick = (e) => {
+          e.preventDefault();
+          signaturePad.clear();
+        };
+      }
+
+      // Submission Logic
+      form.onsubmit = (e) => {
+        // Enforce signature only if the canvas is part of the current view
+        if (signaturePad && !signaturePad.isEmpty()) {
+          input.value = signaturePad.toDataURL();
+        } else if (document.getElementById("signature-canvas")) {
+          alert("Please provide a signature before submitting.");
+          e.preventDefault();
+        }
+      };
+    }
+
+    // Bind to Turbo and Standard Load
+    document.addEventListener("turbo:load", initSignaturePad);
+    if (document.readyState !== 'loading') {
+      initSignaturePad();
+    }
+  })();
+</script>

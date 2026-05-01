@@ -67,27 +67,19 @@ body {
   color: white;
 }
 
-/* Ensure the checkbox and its description always stay on the same line */
+/* 1. Container: Ensures checkbox and text are pinned together and centered */
 .health-checkbox-pair {
-  display: inline-block;
-  /* Essential for them to sit inline */
-  white-space: nowrap;
-  /* Forces text to NOT wrap */
+  display: inline-flex !important;
+  align-items: center !important;
+  white-space: nowrap !important;
+  /* Prevents text from dropping to next line */
   margin-right: 1.2rem;
-  /* Consistent spacing between different issues */
-  font-size: 1rem;
-  /* Keep this smaller for dense lists */
+  margin-bottom: 0.5rem;
+  vertical-align: middle;
 }
 
-/* Make sure the text is slightly smaller than the checkbox for dense lists */
-.health-checkbox-pair label {
-  font-weight: 400;
-  /* Standard weight */
-  padding-left: 0.3rem;
-  /* Small gap from the box */
-  cursor: pointer;
-  /* Makes the text clickable to check the box */
-}
+/* 2. The Box: Pronounced, blue border, and "Clean Reset" */
+
 
 /* Make the checkboxes bold and blue to match your inputs */
 .form-check-input {
@@ -108,4 +100,20 @@ body {
 
 .text-shadow-custom {
   text-shadow: 4px 4px 6px rgba(0, 0, 0, 0.5);
+}
+
+/* Removes the button-like appearance to make it feel integrated */
+#toggle-password {
+  border-left: none;
+  background: white;
+  color: #6c757d;
+}
+
+#password-field {
+  border-right: none;
+}
+
+#password-field:focus+#toggle-password {
+  border-color: #0d6efd;
+  /* Match the focus color of the input */
 }

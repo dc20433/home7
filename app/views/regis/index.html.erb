@@ -1,4 +1,66 @@
-<h2 class="text-center pb-3">Patient List as of <%= Time.now.strftime("%Y-%m-%d %H:%M") %></h2>
+<style>
+  .table { table-layout: auto !important; width: 100%; border-collapse: collapse; }
+  .table th, .table td { padding: 4px 4px !important; vertical-align: middle; }
+
+  /* 1. NAME FIX: Force names to shrink so they don't push the dates */
+  .col-name { 
+    width: 1% !important; 
+    max-width: 130px !important; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    white-space: nowrap; 
+  }
+
+  /* 2. DATE LOCK: Rigid width to prevent wrapping */
+  .col-date { 
+    width: 115px !important; 
+    min-width: 115px !important; 
+    white-space: nowrap !important;
+    text-align: center; 
+  }
+
+  /* 3. ACTION COMPRESSION: Compact 4-button group */
+  .col-actions { 
+    width: 1% !important; 
+    white-space: nowrap !important;
+    text-align: center;
+    padding: 4px 6px !important;
+  }
+
+  /* 4. UTILITY COLUMNS: Fixed widths */
+  .col-mi     { width: 35px !important; text-align: center; }
+  .col-gender { width: 70px !important; text-align: center; }
+  .col-age    { width: 45px !important; text-align: center; }
+
+  /* 5. UNIFIED BUTTONS & BADGES */
+  .btn-mini, .status-badge {
+    font-size: 0.65rem !important;
+    height: 24px !important;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    margin: 0 1px;
+  }
+
+  .btn-mini { padding: 1px 6px !important; }
+  
+  .status-badge {
+    width: 70px !important;
+    border-width: 2px !important;
+    font-weight: 800 !important;
+    text-transform: uppercase;
+  }
+
+  @media print {
+    .btn, .nav, .search-bar, .d-flex, footer, .card-header, .pagination { display: none !important; }
+    body { background: white !important; margin: 0; }
+    .table { width: 100% !important; font-size: 10pt; }
+  }
+</style>
+
+<h2 class="text-center pb-3">Patient Registration as of <%= Time.now.strftime("%Y-%m-%d %H:%M %p") %></h2>
 
 <div class="d-flex align-items-center justify-content-center mx-2 gap-1">
   <%# Row 1: Action Buttons and Sign Out %>
@@ -26,28 +88,28 @@
   <% ('A'..'Z').each do |letter| %>
     <%= link_to letter, 
     url_for(letter: letter), 
-    class: "btn btn-sm btn-warning border border-light border-3 fw-bold #{params[:letter] == letter ? 'btn-primary' : 'btn-outline-secondary'} rounded-circle shadow-sm",
+    class: "btn btn-sm btn-info text-white border border-light border-3 fw-bolder #{params[:letter] == letter ? 'btn-info' : 'btn-outline-secondary'} rounded-circle shadow-sm",
       style: "width: 35px;" %>
   <% end %>
-  <%= link_to "All", url_for(letter: "All"), class: "btn btn-sm btn-warning border border-light border-3 rounded-pill px-3 shadow-sm" %>
+  <%= link_to "All", url_for(letter: "All"), class: "btn btn-sm btn-info text-white border border-light border-3 fw-bolder rounded-pill px-3 shadow-sm" %>
 </div>
 
-<div class="card mt-0 mx-auto border-primary shadow" style="width: 67rem;">     
+<div class="card mt-0 mx-auto border-primary shadow" style="width: 68rem;">     
   <div class="card-body pt-2">
 
     <table class="table table-sm table-striped table-hover custom-table mx-auto">
-      <thead class="table-primary">
-        <tr>
-          <th style="width: 15%;">Last Name</th>
-          <th style="width: 15%;">First Name</th>
-          <th class="text-center", style="width: 5%;">M.I.</th>
-          <th style="width: 10%;">Gender</th>
-          <th class="text-center", style="width: 5%;">Age</th>
-          <th class="text-nowrap text-center" style="width: 15%;">Date of Birth</th>
-          <th class="text-nowrap text-center" style="width: 15%;">Created on</th>
-          <th class="text-nowrap text-center" style="width: 20%;">Actions</th>
-        </tr>
-      </thead>
+    <thead class="table-primary">
+  <tr>
+    <th class="col-name">Last Name</th>
+    <th class="col-name">First Name</th>
+    <th class="col-mi">M.I.</th>
+    <th class="col-gender">Gender</th>
+    <th class="col-age">Age</th>
+    <th class="col-date">Date of Birth</th>
+    <th class="col-date">Created on</th>
+    <th class="col-actions">Actions</th>
+  </tr>
+</thead>
       <tbody class="fs-4">
         <% @regis.each do |regi| %>
         <tr>
@@ -57,12 +119,33 @@
           <td><%= regi.gender %></td>
           <td class="text-center"><%= regi.p_age %></td>
           <td class="text-center"><%= regi.dob %></td>
-          <td class="text-center"><%= regi.created_at.strftime("%Y-%m-%d") %></td>             
-          <td class="text-center">                
-            <%= link_to 'Info', regi_patients_path(regi.id), class: "btn btn-sm btn-outline-dark outline-double border border-lg border-dark rounded-pill px-2 py-0 fw-bold" %>
-            <%= link_to 'Charts', regi_charts_path(regi.id), class: "btn btn-sm btn-outline-primary outline-double border border-lg border-primary rounded-pill px-1 py-0 fw-bold" %>
-            <%= link_to 'Files', regi_filings_path(regi.id), class: "btn btn-sm btn-outline-success outline-double border border-lg border-success rounded-pill px-2 py-0 fw-bold" %>
-          </td>
+          <td class="text-center"><%= regi.created_at.strftime("%Y-%m-%d") %></td>
+                       
+          <td class="col-actions align-middle">
+  <div class="d-flex align-items-center justify-content-center">
+    
+    <%= link_to 'Chart', regi_charts_path(regi.id), 
+        class: "btn btn-mini btn-outline-primary outline-double border border-lg border-primary rounded-pill fw-bold" %>
+
+    <%= link_to 'Info', regi_patients_path(regi.id), 
+        class: "btn btn-mini btn-outline-dark outline-double border border-lg border-dark rounded-pill fw-bold" %>
+    
+    <%= link_to 'Files', regi_filings_path(regi.id), 
+        class: "btn btn-mini btn-outline-success outline-double border border-lg border-success rounded-pill fw-bold" %>
+
+    <% case regi.onboarding_status %>
+    <% when "DigiSigned" %>
+      <span class="badge bg-success text-white rounded-pill border border-light status-badge shadow-sm">Signed</span>
+    <% when "Issued" %>
+      <span class="badge bg-primary text-white rounded-pill border border-light status-badge shadow-sm">Issued</span>
+    <% else %>
+      <%= button_to 'SignUp', signup_patient_regi_path(regi), 
+          method: :patch, 
+          form: { class: "d-inline m-0 p-0" }, 
+          class: "btn btn-mini btn-outline-warning outline-double border border-lg border-warning rounded-pill fw-bold text-dark status-badge" %>
+    <% end %>
+  </div>
+</td>
         </tr>
         <% end %>
       </tbody>
@@ -92,15 +175,6 @@
     })();
   </script>
 
-  <style>
-    @media print {
-      .btn, .nav, .search-bar, .d-flex, footer, .card-header, .pagination { 
-        display: none !important; 
-      }
-      body { background: white !important; margin: 0; }
-      .table { width: 100% !important; border: 1px solid #000 !important; }
-      .fs-4 { color: #000 !important; font-size: 11pt !important; }
-    }
-  </style>
+  
 <% end %>
 

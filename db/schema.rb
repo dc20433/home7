@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_25_180836) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_28_025020) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -128,7 +128,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_25_180836) do
     t.string "gender"
     t.string "init"
     t.string "last_name"
+    t.string "p_name"
     t.datetime "updated_at", precision: 0, null: false
+    t.bigint "user_id"
+    t.index ["user_id"], name: "index_regis_on_user_id"
   end
 
   create_table "sessions", force: :cascade do |t|
@@ -145,6 +148,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_25_180836) do
   end
 
   create_table "users", force: :cascade do |t|
+    t.boolean "activated", default: true
     t.boolean "active", default: true, null: false
     t.boolean "admin"
     t.datetime "created_at", precision: 0, null: false
@@ -155,6 +159,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_25_180836) do
     t.datetime "last_sign_in_at", precision: 0
     t.string "last_sign_in_ip"
     t.datetime "last_sign_out_at"
+    t.boolean "needs_password_change"
     t.string "password_digest", default: "", null: false
     t.datetime "remember_created_at", precision: 0
     t.datetime "reset_password_sent_at", precision: 0
@@ -162,8 +167,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_25_180836) do
     t.integer "role", default: 0
     t.integer "sign_in_count", default: 0, null: false
     t.datetime "updated_at", precision: 0, null: false
+    t.string "username"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["username"], name: "index_users_on_username"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
@@ -171,5 +178,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_25_180836) do
   add_foreign_key "charts", "regis"
   add_foreign_key "filings", "regis"
   add_foreign_key "patients", "regis"
+  add_foreign_key "regis", "users"
   add_foreign_key "sessions", "users"
 end

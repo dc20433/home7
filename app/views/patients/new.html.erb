@@ -1,1 +1,18 @@
-<%= render 'form' %>
+<div class="container-fluid mt-3">
+  <% if Current.user&.patient? %>
+    <%# Disable back button for patients %>
+    <script type="text/javascript">
+      window.history.forward();
+      function noback() { window.history.forward(); }
+      window.onload = noback;
+      window.onpageshow = function(evt) { if (evt.persisted) noback(); };
+    </script>
+
+    <%# --- PATIENT LANDS HERE --- %>
+    <%= render "patientConsentForm" %>
+
+  <% else %>
+    <%# --- MANAGER/ADMIN LANDS HERE --- %>
+    <%= render "patientInfoForm" %>
+  <% end %>
+</div>

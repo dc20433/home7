@@ -1,35 +1,53 @@
 class PasswordsController < ApplicationController
-  allow_unauthenticated_access
-  before_action :set_user_by_token, only: %i[ edit update ]
-  rate_limit to: 10, within: 3.minutes, only: :create, with: -> { redirect_to new_password_path, alert: "Try again later." }
+  allow_unauthenticated_access only: %i[ new create ]
+
+  # Remove the rate_limit line temporarily to see if it's interfering,
+  # or ensure it's below allow_unauthenticated_access
+
+  before_action :set_user, only: %i[ edit update ]
+  before_action :require_authentication
 
   def new
   end
 
   def create
-    if user = User.find_by(email_address: params[:email_address])
+    # Use the column name 'email' to match your User model
+    if user = User.find_by(email: params[:email])
       PasswordsMailer.reset(user).deliver_later
+      redirect_to new_session_path, notice: "Password reset instructions sent."
+    else
+      flash.now[:alert] = "Email not found."
+      render :new, status: :unprocessable_entity
     end
-
-    redirect_to new_session_path, notice: "Password reset instructions sent (if user with that email address exists)."
   end
 
   def edit
   end
 
+  # app/controllers/passwords_controller.rb
   def update
-    if @user.update(params.permit(:password, :password_confirmation))
-      @user.sessions.destroy_all
-      redirect_to new_session_path, notice: "Password has been reset."
+    # Use Current.user since they are logged in with 'temp123'
+    if Current.user.update(params.require(:user).permit(:password, :password_confirmation).merge(activated: true))
+      # Redirect to root_path where your RegisController#index logic
+      # will then zip them to the signature form
+      redirect_to root_path, notice: "Account activated! You can now sign your forms."
     else
-      redirect_to edit_password_path(params[:token]), alert: "Passwords did not match."
+      render :edit, status: :unprocessable_entity
     end
   end
 
   private
-    def set_user_by_token
+  def set_user
+    if authenticated?
+      @user = Current.user
+    else
       @user = User.find_by_password_reset_token!(params[:token])
-    rescue ActiveSupport::MessageVerifier::InvalidSignature
-      redirect_to new_password_path, alert: "Password reset link is invalid or has expired."
     end
+  rescue ActiveSupport::MessageVerifier::InvalidSignature
+    redirect_to new_password_path, alert: "Password reset link is invalid or has expired."
+  end
+
+  def password_params
+    params.require(:user).permit(:password, :password_confirmation, :password_challenge)
+  end
 end

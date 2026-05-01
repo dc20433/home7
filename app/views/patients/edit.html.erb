@@ -1,2 +1,17 @@
-<%= render 'form' %>  
-
+<%# app/views/patients/edit.html.erb %>
+<div class="mt-3"> 
+  <% if Current.user&.patient? %>
+    <%# Keep your existing navigation security script %>
+    <script type="text/javascript">
+      window.history.forward();
+      function noback() { window.history.forward(); }
+      window.onload = noback;
+      window.onpageshow = function(evt) { if (evt.persisted) noback(); };
+    </script>
+    
+    <%= render "patientConsentForm" %>
+  <% else %>
+    <h2 class="text-center mb-4">Edit Patient Record</h2>
+    <%= render "patientConsentForm", manager_edit: true %>
+  <% end %>
+</div>

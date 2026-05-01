@@ -1,8 +1,8 @@
 class Regi < ApplicationRecord
-  has_many :filings
   has_many :filings, dependent: :destroy
-  has_many :patients, dependent: :destroy
   has_many :charts, dependent: :destroy
+  has_many :patients, dependent: :destroy
+  belongs_to :user, optional: true, dependent: :destroy# Link to the login credentials
   validates :last_name, :first_name, :gender, presence: true
   before_validation :set_p_name
 
@@ -47,5 +47,18 @@ class Regi < ApplicationRecord
   # Move the logic into a public method (remove 'def set_p_gender')
   def p_gender
     gender.present? ? gender : "<No gender data>"
+  end
+
+  def onboarding_status
+    # 1. Check if a signature exists
+    if patients.any? { |p| p.signature.present? }
+      "DigiSigned"
+    # 2. Check if an account has been created (Issued)
+    # Using 'user' instead of 'user_id' is more reliable here
+    elsif user.present?
+      "Issued"
+    else
+      "New"
+    end
   end
 end

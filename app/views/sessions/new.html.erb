@@ -1,21 +1,73 @@
 <h2 class="text-center pt-2">Clinic Login</h2>
 
 <div class="card mt-0 mx-auto p-4 border-primary border-2 shadow p-3 mb-5 bg-body rounded" style="width: 25rem;">
-  <div class="card-body">
-    <%= form_with url: session_path do |f| %>
+  <div class="card-body p-4">
+    <%= form_with url: session_path do |form| %>
       <div class="mb-3">
-        <%= f.label :email, "Email", class: "form-label fw-bold" %>
-        <%= f.email_field :email, required: true, autofocus: true, class: "form-control border-primary" %>
+        <%= form.label :email, "Username or Email", class: "form-label fw-bold" %>
+        <%= form.text_field :email, 
+            autofocus: true, 
+            placeholder: "e.g. smithjohn05", 
+            class: "form-control rounded-pill border-primary border-2 shadow-sm" %>
       </div>
 
-      <div class="mb-5">
-        <%= f.label :password, "Password", class: "form-label fw-bold" %>
-        <%= f.password_field :password, required: true, class: "form-control border-primary" %>
+      <div class="mb-4">
+        <%= form.label :password, "Password", class: "form-label fw-bold" %>
+        <div class="input-group">
+          <%= form.password_field :password, 
+              required: true, 
+              autocomplete: "current-password", 
+              placeholder: "Enter your password",
+              class: "form-control border-primary border-2 shadow-sm", 
+              id: "password-field",
+              style: "border-top-left-radius: 50rem; border-bottom-left-radius: 50rem; border-right: none;" %>
+          
+          <span class="input-group-text bg-white border-primary border-2 shadow-sm" 
+                id="toggle-password" 
+                style="border-top-right-radius: 50rem; border-bottom-right-radius: 50rem; border-left: none; cursor: pointer;">
+            <i class="bi bi-eye-slash text-primary" id="toggle-icon"></i>
+          </span>
+        </div>
       </div>
 
-      <div class="d-grid gap-2">
-        <%= f.submit "Sign In", class: "btn btn-primary btn-sm border border-secondary border-3 rounded-pill fw-bold" %>
+      <div class="d-grid">
+        <%= form.submit "Sign In", class: "btn btn-primary rounded-pill fw-bold py-2 shadow" %>
       </div>
     <% end %>
   </div>
 </div>
+
+<script>
+  (function() {
+    function setupPasswordToggle() {
+      const toggleBtn = document.getElementById("toggle-password");
+      const passwordField = document.getElementById("password-field");
+      const icon = document.getElementById("toggle-icon");
+
+      if (toggleBtn && passwordField && icon) {
+        // Clear any existing listeners to prevent double-firing
+        toggleBtn.replaceWith(toggleBtn.cloneNode(true));
+        const newToggleBtn = document.getElementById("toggle-password");
+        const newIcon = document.getElementById("toggle-icon");
+
+        newToggleBtn.addEventListener("click", function(e) {
+          e.preventDefault();
+          // Toggle type
+          const isPassword = passwordField.getAttribute("type") === "password";
+          passwordField.setAttribute("type", isPassword ? "text" : "password");
+          
+          // Toggle icon classes
+          newIcon.classList.toggle("bi-eye");
+          newIcon.classList.toggle("bi-eye-slash");
+        });
+      }
+    }
+
+    // Attach to Turbo and standard page load
+    document.addEventListener("turbo:load", setupPasswordToggle);
+    // Standard load fallback
+    if (document.readyState !== 'loading') {
+      setupPasswordToggle();
+    }
+  })();
+</script>
