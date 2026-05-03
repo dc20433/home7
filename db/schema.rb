@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_28_025020) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_02_142551) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -85,6 +85,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_28_025020) do
     t.string "diag_given"
     t.string "diag_where"
     t.string "email"
+    t.json "f_list"
     t.date "h_when"
     t.decimal "height", precision: 2, scale: 1
     t.string "home"
@@ -98,6 +99,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_28_025020) do
     t.string "o_drs"
     t.date "o_drs_when"
     t.string "occup"
+    t.text "other_issues"
     t.string "pain_scale"
     t.boolean "patient_consent", default: false
     t.string "pcp_name"
@@ -128,7 +130,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_28_025020) do
     t.string "gender"
     t.string "init"
     t.string "last_name"
+    t.string "login_username"
     t.string "p_name"
+    t.string "status"
     t.datetime "updated_at", precision: 0, null: false
     t.bigint "user_id"
     t.index ["user_id"], name: "index_regis_on_user_id"
@@ -161,6 +165,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_28_025020) do
     t.datetime "last_sign_out_at"
     t.boolean "needs_password_change"
     t.string "password_digest", default: "", null: false
+    t.integer "regi_id"
     t.datetime "remember_created_at", precision: 0
     t.datetime "reset_password_sent_at", precision: 0
     t.string "reset_password_token"

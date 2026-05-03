@@ -5,15 +5,24 @@ class RegisController < ApplicationController
   skip_before_action :ensure_staff_only, only: [ :index ]
 
   def index
-    if Current.user&.patient?
-      @regi = Regi.find_by(user_id: Current.user.id)
+    # DEBUG: This will show in your terminal exactly what the app sees
+    if Current.user
+      Rails.logger.info "LOGGING IN AS: #{Current.user.id} | ROLE: #{Current.user.role.inspect}"
+    end
+  
+    # Use the explicit string 'patient' which we know is index 3
+    if Current.user&.role.to_s == "patient"
+      # We use the 'regi_id' column on the User table
+      @regi = Regi.find_by(id: Current.user.regi_id)
+      
       if @regi
-        # Send to signature form if not signed
-        redirect_to new_regi_patient_path(@regi) and return unless @regi.patients.any?
+        # Force the redirect to the patient's specific record
+        # Using the helper we put in the Authentication concern
+        redirect_to route_for_user(Current.user) and return
       else
-        # Safety net: if somehow they have no link, don't show the background image
+        # If no link exists, don't show the index!
         reset_session
-        redirect_to login_path, alert: "No clinical record linked. Please contact the manager." and return
+        redirect_to new_session_path, alert: "No clinical record linked." and return
       end
     end
 
@@ -96,6 +105,41 @@ class RegisController < ApplicationController
     @regi.destroy
 
     redirect_to regis_path, status: :see_other, notice: "Patient record and access removed."
+  end
+
+  def issue_access
+    @regi = Regi.find(params[:id])
+    
+    # Convention: lastname + firstname + month
+    dob_m = @regi.dob&.strftime('%m') || "00"
+    login_handle = "#{@regi.last_name}#{@regi.first_name}#{dob_m}".downcase.gsub(/\s+/, "")
+    login_email = "#{login_handle}@clinic.local"
+  
+    user = User.find_or_initialize_by(regi_id: @regi.id)
+    user.assign_attributes(
+      email: login_email,
+      password: "temp123",
+      password_confirmation: "temp123",
+      role: "patient" # Use the lowercase string to match the Enum key
+    )
+  
+    if user.save && @regi.update(status: :issued)
+      redirect_back fallback_location: regis_path, notice: "Access Issued: #{login_email}"
+    else
+      redirect_back fallback_location: regis_path, alert: "Error: #{user.errors.full_messages.to_sentence}"
+    end
+  end
+  
+  def revoke_access
+    @regi = Regi.find(params[:id])
+    # Look specifically for the user linked by the ID
+    user = User.find_by(regi_id: @regi.id)
+    
+    if user&.destroy && @regi.update(status: :signup)
+      redirect_back fallback_location: regis_path, notice: "Access revoked."
+    else
+      redirect_back fallback_location: regis_path, alert: "Could not find user to revoke."
+    end
   end
 
   private

@@ -19,44 +19,54 @@
 <h2 class="text-center">Patient Charts</h2>
 <%= render 'layouts/identifier' %>
 
-<div class="container mt-4">
+<div class="container-fluid mt-4">
 
 <div class="card shadow-sm border-secondary mb-4">
 <div class="card-body p-4">
 
+<% is_readonly = defined?(selection_mode) && selection_mode %>
+
 <%= form_with(model: [@regi, @patient], id: "consent-form") do |f| %>
+
+  <% if defined?(selection_mode) && selection_mode %>
+    <div class="text-center mb-4 mt-2 p-3 bg-light rounded border border-primary shadow-sm">
+      <h4 class="text-primary fw-bold">Review Your Current Record</h4>
+      <p class="text-muted mb-0">Below is the information we have on file. If everything is correct, select <b>"No Update"</b> at the bottom. To make changes, select <b>"Update"</b>.</p>
+    </div>
+  <% end %>
+
   <%# --- Section 1: Demographics (Editable by Patient) --- %>
   <div class="row mb-1">
-    <div class="col-md-2"><b>Updated on</b> <%= f.date_field :v_date, class: "form-control border-primary" %></div>
-    <div class="col-md-4"><b>Street</b> <%= f.text_field :street, class: "form-control border-primary" %></div>
-    <div class="col-md-3"><b>City</b> <%= f.text_field :city, class: "form-control border-primary" %></div>
-    <div class="col-md-1"><b>State</b> <%= f.text_field :state, class: "form-control border-primary" %></div>
-    <div class="col-md-2"><b>Zip Code</b> <%= f.text_field :zip, class: "form-control border-primary" %></div>
+    <div class="col-md-2"><b>Updated on</b> <%= f.date_field :v_date, class: "form-control border-primary", readonly: is_readonly %></div>
+    <div class="col-md-4"><b>Street</b> <%= f.text_field :street, class: "form-control border-primary", readonly: is_readonly %></div>
+    <div class="col-md-3"><b>City</b> <%= f.text_field :city, class: "form-control border-primary", readonly: is_readonly %></div>
+    <div class="col-md-1"><b>State</b> <%= f.text_field :state, class: "form-control border-primary", readonly: is_readonly %></div>
+    <div class="col-md-2"><b>Zip Code</b> <%= f.text_field :zip, class: "form-control border-primary", readonly: is_readonly %></div>
   </div>
 
   <%# --- Section 2: Contact --- %>
   <div class="row mb-1">
-    <div class="col-md-3"><b>Cell Phone</b> <%= f.text_field :cell, class: "form-control border-primary" %></div>
-    <div class="col-md-3"><b>Home Phone</b> <%= f.text_field :home, class: "form-control border-primary" %></div>
-    <div class="col-md-3"><b>Work Phone</b> <%= f.text_field :work, class: "form-control border-primary" %></div>
-    <div class="col-md-3"><b>Email</b> <%= f.text_field :email, class: "form-control border-primary" %></div>
+    <div class="col-md-3"><b>Cell Phone</b> <%= f.text_field :cell, class: "form-control border-primary", readonly: is_readonly %></div>
+    <div class="col-md-3"><b>Home Phone</b> <%= f.text_field :home, class: "form-control border-primary", readonly: is_readonly %></div>
+    <div class="col-md-3"><b>Work Phone</b> <%= f.text_field :work, class: "form-control border-primary", readonly: is_readonly %></div>
+    <div class="col-md-3"><b>Email</b> <%= f.text_field :email, class: "form-control border-primary", readonly: is_readonly %></div>
   </div>
 
   <%# --- Section 3: Vitals & History --- %>
   <div class="row mb-1">
-    <div class="col-md-2"><b>Height</b> <%= f.text_field :height, class: "form-control border-primary" %></div>
-    <div class="col-md-2"><b>Weight</b> <%= f.text_field :weight, class: "form-control border-primary" %></div>
-    <div class="col-md-2"><b>Marital Status</b> <%= f.select :m_stat, Patient::MARITAL_STATUS, {include_blank: "Select"}, class: "form-select border-primary" %></div>
-    <div class="col-md-2"><b>Occupation</b> <%= f.text_field :occup, class: "form-control border-primary" %></div>
-    <div class="col-md-2"><b>Company</b> <%= f.text_field :company, class: "form-control border-primary" %></div>
-    <div class="col-md-2"><b>Referred by</b> <%= f.text_field :referred, class: "form-control border-primary" %></div>
+    <div class="col-md-2"><b>Height</b> <%= f.text_field :height, class: "form-control border-primary", readonly: is_readonly %></div>
+    <div class="col-md-2"><b>Weight</b> <%= f.text_field :weight, class: "form-control border-primary", readonly: is_readonly %></div>
+    <div class="col-md-2"><b>Marital Status</b> <%= f.select :m_stat, Patient::MARITAL_STATUS, {include_blank: "Select"}, class: "form-select border-primary", disabled: is_readonly %></div>
+    <div class="col-md-2"><b>Occupation</b> <%= f.text_field :occup, class: "form-control border-primary", readonly: is_readonly %></div>
+    <div class="col-md-2"><b>Company</b> <%= f.text_field :company, class: "form-control border-primary", readonly: is_readonly %></div>
+    <div class="col-md-2"><b>Referred by</b> <%= f.text_field :referred, class: "form-control border-primary", readonly: is_readonly %></div>
   </div>
 
   <%# --- Section 4: Complaints & Health Issues --- %>
   <div class="row mb-1">
-    <div class="col-md-4"><b>Complaint 1</b> <%= f.text_field :com1, class: "form-control border-primary" %></div>
-    <div class="col-md-4"><b>Complaint 2</b> <%= f.text_field :com2, class: "form-control border-primary" %></div>
-    <div class="col-md-4"><b>Complaint 3</b> <%= f.text_field :com3, class: "form-control border-primary" %></div>
+    <div class="col-md-4"><b>Complaint 1</b> <%= f.text_field :com1, class: "form-control border-primary", readonly: is_readonly %></div>
+    <div class="col-md-4"><b>Complaint 2</b> <%= f.text_field :com2, class: "form-control border-primary", readonly: is_readonly %></div>
+    <div class="col-md-4"><b>Complaint 3</b> <%= f.text_field :com3, class: "form-control border-primary", readonly: is_readonly %></div>
   </div>
 
   <div class="row mb-1">
@@ -71,7 +81,8 @@
                   { 
                     multiple: true, 
                     checked: f.object.di_list&.include?(h), 
-                    class: "form-check-input mt-0 me-2 border-primary" 
+                    class: "form-check-input mt-0 me-2 border-primary",
+                    disabled: is_readonly 
                   }, h, nil %>
               <%= f.label "di_list_#{h.parameterize.underscore}", h, class: "form-check-label mb-0 lh-1" %>
             </div>
@@ -86,13 +97,13 @@
   <div class="row mb-1">
     <div class="col-6">
       <b>Other Issues</b>
-      <%= f.text_area :o_dis, rows: 1, class: "form-control border-primary" %>
+      <%= f.text_area :o_dis, rows: 1, class: "form-control border-primary", readonly: is_readonly %>
     </div>
     <div class="col-2 text-muted">
     <i><small>Female only:</small></i><b>Last period</b>
-    <%= f.date_field :last_prd, class: "form-control border-primary" %></div>
-    <div class="col-md-2"><b>Are you pregnant?</b> <%= f.select :preg, ["Yes", "No", "Not applicable"], {}, class: "form-select border-primary" %></div>
-    <div class="col-md-2"><b>In weeks?</b> <%= f.text_field :preg_wks, class: "form-control border-primary" %></div>
+    <%= f.date_field :last_prd, class: "form-control border-primary", readonly: is_readonly %></div>
+    <div class="col-md-2"><b>Are you pregnant?</b> <%= f.select :preg, ["Not applicable", "Yes", "No"], {}, class: "form-select border-primary", disabled: is_readonly %></div>
+    <div class="col-md-2"><b>In weeks?</b> <%= f.text_field :preg_wks, class: "form-control border-primary", readonly: is_readonly %></div>
   </div>
 
   <hr>
@@ -142,10 +153,7 @@
         <% elsif defined?(selection_mode) && selection_mode %>
           <%# --- 2. SELECTION MODE: Review & Choice --- %>
           <div class="mt-4 border-top pt-4">
-            <div class="text-center mb-4">
-              <h4 class="text-primary">Review Your Current Record</h4>
-              <p class="text-muted">Below is the information we have on file.</p>
-            </div>
+            
 
             <div class="mb-4 text-center">
               <label class="fw-bold d-block mb-2">Your Signature on File:</label>
@@ -177,7 +185,6 @@
             <div class="mx-auto" style="max-width: 800px;">
               <b class="d-block mb-2">Sign Here:</b>
               
-              <%# The style below prevents the 'split-second' closure by locking height %>
               <div class="signature-wrapper border border-2 border-primary rounded bg-white shadow-sm mb-2" 
                    style="position: relative; width: 100%; height: 200px; min-height: 200px; overflow: hidden; touch-action: none;">
                 <canvas id="signature-canvas" style="width: 100%; height: 200px; display: block; cursor: crosshair;"></canvas>
@@ -189,8 +196,8 @@
                 </button>
               </div>
               
-              <div class="form-check mb-4 p-3 bg-light rounded border">
-                <%= f.check_box :privacy_ack, class: "form-check-input ms-0 me-2", required: true %>
+              <div class="form-check mb-4 p-3 bg-light rounded border d-flex align-items-center">
+                <%= f.check_box :privacy_ack, class: "form-check-input ms-0 me-2 ", required: true %>
                 <label class="form-check-label fw-bold">
                   I acknowledge the Notice of Privacy Practices.
                 </label>
@@ -198,7 +205,7 @@
           
               <div class="d-flex gap-3 justify-content-center mb-4">
                 <%= f.submit "Submit Signed Consent", class: "btn btn-primary btn-lg rounded-pill px-5 shadow" %>
-                <%= link_to "No Consent", regi_patients_path(@regi), class: "btn btn-outline-danger btn-lg rounded-pill px-5" %>
+                <%= link_to "No Consent", no_consent_path(@regi), class: "btn btn-outline-danger btn-lg rounded-pill px-5" %>
               </div>
               
               <%= f.hidden_field :signature, id: "signature-data-input" %>

@@ -12,32 +12,51 @@ module Authentication
     end
   end
 
-  private
-# Inside your authentication logic
-def authenticated_user
-  # This finds the user via the "sessions" table seen in your logs
-  user = Current.session&.user
-
-  if user && user.respond_to?(:is_active) && !user.is_active
-    terminate_session
-    nil
-  else
-    user
+  def route_for_user(user, password_used = nil)
+    user_role = user.role.to_s.downcase
+  
+    if user_role == "patient"
+      regi = Regi.find_by(id: user.regi_id)
+      # Check for any existing patient forms linked to this registration
+      patient = regi&.patients&.last
+  
+      if password_used == "temp123"
+        "/password/edit"
+      elsif regi && patient
+        # If they have a form, show it
+        regi_patient_path(regi, patient)
+      elsif regi
+        # If they have no form, send them to the 'new' form page
+        new_regi_patient_path(regi)
+      else
+        # Final safety fallback
+        root_path
+      end
+    else
+      regis_path
+    end
   end
-end
 
-  # Verification Methods
+  private
+
+  def authenticated_user
+    user = Current.session&.user
+    if user && user.respond_to?(:is_active) && !user.is_active
+      terminate_session
+      nil
+    else
+      user
+    end
+  end
+
   def authenticated?
-    resume_session
+    Current.user.present?
   end
 
   def require_authentication
-    # Logic: Try to resume. If it returns nil (expired or no cookie),
-    # trigger request_authentication unless a redirect already happened.
     resume_session || (request_authentication unless performed?)
   end
 
-  # Session Lifecycle Logic
   def resume_session
     session = find_session_by_cookie
     return nil unless session
@@ -51,6 +70,8 @@ end
     Current.session = session
   end
 
+  # (DELETE THE SECOND ROUTE_FOR_USER DEFINITION THAT WAS HERE)
+
   def start_new_session_for(user)
     user.sessions.create!(user_agent: request.user_agent, ip_address: request.remote_ip).tap do |session|
       Current.session = session
@@ -61,11 +82,9 @@ end
   def terminate_session
     Current.session&.destroy
     cookies.delete(:session_id)
-    # Status :see_other is vital for Rails 8 Turbo redirects
     redirect_to root_path, status: :see_other, alert: "Session expired or logged out." and return
   end
 
-  # Helper Logic
   def find_session_by_cookie
     Session.find_by(id: cookies.signed[:session_id]) if cookies.signed[:session_id]
   end

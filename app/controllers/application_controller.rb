@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
   before_action :check_patient_activation
   before_action :set_session_timestamp
   before_action :ensure_staff_only
+  before_action :redirect_patients_from_manager_zone
 
   def current_user
     return @current_user if defined?(@current_user)
@@ -35,31 +36,45 @@ class ApplicationController < ActionController::Base
   def set_session_timestamp
     Current.session.update_columns(updated_at: Time.current) if Current.session
   end
+  
+  def ensure_staff_only
+    return unless authenticated?
+    
+    # Use .to_s.downcase to match the Enum keys we found ["user", "manager", "admin", "patient"]
+    user_role = Current.user.role.to_s.downcase
+    return if %w[manager admin].include?(user_role)
+  
+    # Strict whitelist for patients
+    allowed_controllers = %w[sites patients sessions passwords users]
+    
+    unless allowed_controllers.include?(controller_name)
+      # If a patient is where they shouldn't be, force them to their route
+      redirect_to route_for_user(Current.user), alert: "Access restricted." and return
+    end
+  end
 
-  # app/controllers/application_controller.rb
   def check_patient_activation
     return unless authenticated?
-
-    # The bouncer now looks at the column you just created
-    if Current.user.patient? && !Current.user.activated?
+    
+    # If a patient isn't activated, force them to the password/activation page
+    # unless they are already on a controller that handles authentication
+    if Current.user.role == "patient" && !Current.user.activated?
       unless %w[passwords sessions].include?(controller_name)
-        redirect_to edit_authenticated_password_path, alert: "Activation required." and return
+        # Using route_for_user here with 'temp123' logic is also an option
+        redirect_to edit_user_path(Current.user), alert: "Activation required." and return
       end
     end
   end
 
-  def ensure_staff_only
-    return unless authenticated?
-
-    # 1. Staff can go anywhere
-    return if Current.user.manager? || Current.user.admin?
-
-    # 2. Allow patients ONLY in these controllers
-    allowed_controllers = %w[sites patients sessions passwords]
-
-    unless allowed_controllers.include?(controller_name)
-      # If a patient tries to go to /regis or /charts, push them to the home page
-      redirect_to root_path, alert: "Access restricted." and return
+  def redirect_patients_from_manager_zone
+    # This will print to your 'rails s' window
+    puts "Checking Bouncer: User=#{Current.user&.id}, Role=#{Current.user&.role}"
+  
+    if Current.user && Current.user.role.to_s.downcase == "patient"
+      if controller_name == "regis"
+        puts "Bouncer Triggered! Redirecting patient..."
+        redirect_to route_for_user(Current.user) and return
+      end
     end
   end
 

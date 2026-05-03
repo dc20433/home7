@@ -6,6 +6,15 @@ class Regi < ApplicationRecord
   validates :last_name, :first_name, :gender, presence: true
   before_validation :set_p_name
 
+  attribute :status, :string, default: "signup"
+
+  # 2. Use explicit string-to-string mapping
+  enum :status, { 
+    signup: "signup", 
+    issued: "issued", 
+    signed: "signed" 
+  }, suffix: true
+
   GENDER_OPTIONS = [
     [ "Select", "" ],
     [ "Male", "Male" ],
@@ -50,12 +59,11 @@ class Regi < ApplicationRecord
   end
 
   def onboarding_status
-    # 1. Check if a signature exists
+    # 1. If any patient associated has a signature, it's Signed
     if patients.any? { |p| p.signature.present? }
       "DigiSigned"
-    # 2. Check if an account has been created (Issued)
-    # Using 'user' instead of 'user_id' is more reliable here
-    elsif user.present?
+    # 2. If a User record exists linked to this Regi, it's Issued
+    elsif User.exists?(regi_id: self.id)
       "Issued"
     else
       "New"

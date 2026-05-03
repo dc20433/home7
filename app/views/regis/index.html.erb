@@ -60,7 +60,7 @@
   }
 </style>
 
-<h2 class="text-center pb-3">Patient Registration as of <%= Time.now.strftime("%Y-%m-%d %H:%M %p") %></h2>
+<h2 class="text-center pb-3">Patient Registration as of <%= Time.now.strftime("%Y-%m-%d %I:%M %p") %></h2>
 
 <div class="d-flex align-items-center justify-content-center mx-2 gap-1">
   <%# Row 1: Action Buttons and Sign Out %>
@@ -133,17 +133,18 @@
     <%= link_to 'Files', regi_filings_path(regi.id), 
         class: "btn btn-mini btn-outline-success outline-double border border-lg border-success rounded-pill fw-bold" %>
 
-    <% case regi.onboarding_status %>
-    <% when "DigiSigned" %>
-      <span class="badge bg-success text-white rounded-pill border border-light status-badge shadow-sm">Signed</span>
-    <% when "Issued" %>
-      <span class="badge bg-primary text-white rounded-pill border border-light status-badge shadow-sm">Issued</span>
-    <% else %>
-      <%= button_to 'SignUp', signup_patient_regi_path(regi), 
-          method: :patch, 
-          form: { class: "d-inline m-0 p-0" }, 
-          class: "btn btn-mini btn-outline-warning outline-double border border-lg border-warning rounded-pill fw-bold text-dark status-badge" %>
-    <% end %>
+          <% status = regi.onboarding_status %>
+
+          <% if status == "DigiSigned" %>
+            <span class="badge rounded-pill bg-primary">Signed</span>
+          <% elsif status == "Issued" %>
+            <%= link_to "Issued", revoke_access_regi_path(regi), data: { turbo_method: :post }, 
+                class: "badge rounded-pill bg-success text-decoration-none" %>
+          <% else %>
+            <%= link_to "SignUp", issue_access_regi_path(regi), data: { turbo_method: :post }, 
+                class: "badge rounded-pill bg-warning text-dark text-decoration-none" %>
+          <% end %>
+
   </div>
 </td>
         </tr>

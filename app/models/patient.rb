@@ -8,7 +8,7 @@ class Patient < ApplicationRecord
   # Update your validation to respect this flag
   validates :patient_consent, acceptance: { accept: "true" },
     unless: -> { skip_patient_validation || Current.user&.manager? || Current.user&.admin? }
-  validate :v_date_uniqueness_on_create, on: :create
+  validates :v_date, uniqueness: { scope: :regi_id, message: "already has a record for this date" }
   before_save :sync_consent_with_signature
 
   def self.ransackable_attributes(auth_object = nil)

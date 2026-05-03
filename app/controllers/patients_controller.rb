@@ -26,13 +26,17 @@ class PatientsController < ApplicationController
     @patients = @regi.patients.order(v_date: :desc)
   end
 
+  # Example: app/controllers/patients_controller.rb
   def show
-    @regi = Regi.find(params[:regi_id]) # THIS LINE IS CRITICAL
-    @patient = @regi.patients.find(params[:id])
-  end
-
-  def no_changes
-    # Just renders the view
+    # Priority 1: URL Param | Priority 2: Link in User Table
+    @regi = Regi.find_by(id: params[:regi_id]) || Regi.find_by(id: current_user.regi_id)
+  
+    if @regi
+      @patient = @regi.patients.first # Or find by params[:id]
+    else
+      # This is what you see now because current_user.regi_id is currently NULL
+      render "no_record_found" 
+    end
   end
 
   def new
@@ -62,8 +66,17 @@ class PatientsController < ApplicationController
 
   def create
     @regi = Regi.find(params[:regi_id])
-    @patient = @regi.patients.build(patient_params)
+    
+    # Normalize the date to ensure the database find_by works perfectly
+    submitted_date = patient_params[:v_date].to_date rescue nil
 
+    # Look for the record. If it exists, we load it. If not, we build a new one.
+    @patient = @regi.patients.find_by(v_date: submitted_date) || @regi.patients.build
+
+    # Update the attributes (either on the found record or the new one)
+    @patient.assign_attributes(patient_params)
+
+    # --- Your existing logic remains exactly the same ---
     if Current.user&.manager? || Current.user&.admin?
       @patient.skip_patient_validation = true
     else
@@ -76,7 +89,6 @@ class PatientsController < ApplicationController
       if Current.user&.manager? || Current.user&.admin?
         redirect_to regi_patients_path(@regi), notice: "Record saved."
       else
-        # Redirect to your existing exit page
         redirect_to sites_thank_you_path, notice: "Thank you for your submission."
       end
     else
@@ -84,9 +96,20 @@ class PatientsController < ApplicationController
     end
   end
 
-  def update
+def update
     @regi = Regi.find(params[:regi_id])
     @patient = @regi.patients.find(params[:id])
+
+    # --- NEW GUARD: Prevent updating this record to a date that already has a different record ---
+    new_v_date = patient_params[:v_date]
+    duplicate = @regi.patients.where(v_date: new_v_date).where.not(id: @patient.id).first
+
+    if duplicate
+      flash[:alert] = "A record for #{new_v_date} already exists. You cannot change this record to that date."
+      render :edit, status: :unprocessable_entity
+      return # Stop execution
+    end
+    # --- END GUARD ---
 
     # --- 1. Check if "No Consent" button was clicked ---
     if params[:no_consent_exit] == "true"
@@ -96,7 +119,6 @@ class PatientsController < ApplicationController
       @patient.skip_patient_validation = true
 
       if @patient.save(validate: false)
-        # Redirect to the specific No Consent landing page
         redirect_to no_consent_exit_page_path, notice: "Selection recorded: Consent declined."
       else
         render :edit, status: :unprocessable_entity
@@ -107,11 +129,9 @@ class PatientsController < ApplicationController
       if Current.user.patient?
         redirect_to sites_thank_you_path, notice: "Thank you for your submission."
       else
-        # Manager/Admin lands back at the patient history list
         redirect_to regi_patients_path(@regi), notice: "Record updated successfully."
       end
     else
-      # Handle validation failures (e.g., if a manager missed a field)
       render :edit, status: :unprocessable_entity
     end
   end

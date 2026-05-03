@@ -8,8 +8,7 @@ class User < ApplicationRecord
 
   validates :email, presence: true, uniqueness: true
 
-  # This matches the 3-tier requirement for user roles: user, manager, admin
-  enum :role, { user: 0, manager: 1, admin: 2, patient: 3 }
+  enum :role, { standard: 0, manager: 1, admin: 2, patient: 3 }
 
   def needs_password_change?
     # If you don't have an 'activated' boolean, you can check if

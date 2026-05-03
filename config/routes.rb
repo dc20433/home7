@@ -4,6 +4,8 @@ Rails.application.routes.draw do
     member do
       patch :signup_patient
       delete :destroy_patient_user
+      post :issue_access
+      post :revoke_access
     end
 
     # Everything inside this block gets the "regi_" prefix

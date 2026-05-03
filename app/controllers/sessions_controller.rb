@@ -9,54 +9,32 @@ class SessionsController < ApplicationController
   end
 
   def create
-    login_id = params[:email]
-
-    if login_id.present? && !login_id.include?("@")
-      login_id = params[:email].to_s.downcase.strip
-    end
-
+    login_id = params[:email].to_s.downcase.strip
+  
     if user = User.authenticate_by(email: login_id, password: params[:password])
       if user.respond_to?(:is_active) && !user.is_active
         redirect_to new_session_path, alert: "This account has been deactivated." and return
       end
-
+  
       start_new_session_for user
-
+  
       user.update_columns(
         last_sign_in_at: user.current_sign_in_at,
         current_sign_in_at: Time.current,
         sign_in_count: (user.sign_in_count || 0) + 1,
         current_sign_in_ip: request.remote_ip
       )
-
-      # --- START REDIRECT LOGIC ---
-      if user.role == "patient"
-        regi = Regi.find_by(user_id: user.id)
-
-        if regi
-          # Find the latest patient record associated with this registration
-          patient = regi.patients.last
-
-          if patient
-            # 1. Form exists: Go to Show view (where Update/No Update choices live)
-            redirect_to regi_patient_path(regi, patient), notice: "Welcome back!"
-          else
-            # 2. No patient record yet: Go to the 'new' info flow
-            redirect_to new_regi_patient_path(regi), notice: "Please complete your information."
-          end
-        else
-          redirect_to root_path, alert: "Registration record not found."
-        end
-      else
-        redirect_to root_path, notice: "Logged in successfully!"
-      end
-      # --- END REDIRECT LOGIC ---
-
+  
+      # Use the logic from the Authentication Concern
+      # Passing params[:password] to check for "temp123"
+      destination = route_for_user(user, params[:password])
+      
+      redirect_to destination, notice: "Logged in successfully!"
     else
       flash.now[:alert] = "Invalid username/email or password."
       render :new, status: :unprocessable_entity
     end
-  end # This closes 'def create'
+  end
 
   # app/controllers/sessions_controller.rb
   def destroy
