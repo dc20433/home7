@@ -64,20 +64,24 @@ class RegisController < ApplicationController
       redirect_to regis_path, alert: "User creation failed."
     end
   end
+  
   def destroy_patient_user
     @regi = Regi.find(params[:id])
-
-    # Find user via the link OR via the calculated email (to catch orphans)
+  
+    # 1. Generate the expected email to find potential orphans
     prefix = "#{@regi.last_name}#{@regi.first_name}#{@regi.dob.strftime('%m')}".downcase.gsub(/\s+/, "")
-    email_to_clean = "#{prefix}@local.clinic"
+    email_to_clean = "#{prefix}@clinic.local" # Matches your recycling requirement
+  
+    # 2. Find the user via the association OR the email
     user = @regi.user || User.find_by(email: email_to_clean)
-
+  
     if user
       user.destroy
-      @regi.update(user_id: nil)
-      redirect_to regis_path, notice: "Login deleted. You can now issue a fresh one."
+      # If the user was linked via ID, clear that column so a new one can be issued
+      @regi.update(user_id: nil) if @regi.respond_to?(:user_id)
+      redirect_to regis_path, notice: "Login ID #{email_to_clean} deleted. You can now recycle this ID."
     else
-      redirect_to regis_path, alert: "No login found to delete."
+      redirect_to regis_path, alert: "No login found for #{email_to_clean}."
     end
   end
 

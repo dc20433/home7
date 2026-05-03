@@ -85,15 +85,15 @@
     <%# --- 2. THE BUTTONS --- %>
     <div class="d-flex justify-content-center gap-2 mt-4">
       <%# Changed 'f.submit' to 'form.submit' to match line 5 %>
-      <%= form.submit "Save Registration", class: "btn btn-outline-dark rounded-pill px-4 shadow-sm fw-bold" %>
+      <%= form.submit "Save Registration", class: "btn btn-sm btn-outline-dark outline-double rounded-pill px-2 m-2 fw-bold" %>
     
       <% if @regi.persisted? %>
         <%= link_to "Delete", regi_path(@regi), 
-                    class: "btn btn-outline-danger rounded-pill px-4", 
+                    class: "btn btn-sm btn-outline-danger outline-double rounded-pill px-2 m-2 fw-bold", 
                     data: { turbo_method: :delete, turbo_confirm: "Permanently delete this registration?" } %>
       <% end %>
     
-      <%= link_to "Back", regis_path, class: "btn btn-outline-secondary rounded-pill px-4" %>
+      <%= link_to "Back", regis_path, class: "btn btn-sm btn-outline-primary outline-double rounded-pill px-2 m-2 fw-bold" %>
     </div>
 
   <% end %> <%# --- THIS IS THE MISSING END FOR THE MAIN FORM (Line 5) --- %>

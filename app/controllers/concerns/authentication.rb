@@ -13,26 +13,30 @@ module Authentication
   end
 
   def route_for_user(user, password_used = nil)
+    # Convert role to string to avoid Enum/Class naming conflicts
     user_role = user.role.to_s.downcase
   
     if user_role == "patient"
+      # Find the linked registration record using the regi_id we added to Users
       regi = Regi.find_by(id: user.regi_id)
-      # Check for any existing patient forms linked to this registration
+      # Check if this registration already has any patient forms filled out
       patient = regi&.patients&.last
   
       if password_used == "temp123"
-        "/password/edit"
+        # First stop: Force password change
+        "/password/edit" 
       elsif regi && patient
-        # If they have a form, show it
+        # Second stop: If a form exists, go to the show page
         regi_patient_path(regi, patient)
       elsif regi
-        # If they have no form, send them to the 'new' form page
+        # Third stop: If no form exists, go to the NEW form page
         new_regi_patient_path(regi)
       else
-        # Final safety fallback
+        # Final safety fallback to root
         root_path
       end
     else
+      # Admins, Managers, and Staff go to the main index
       regis_path
     end
   end

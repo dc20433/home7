@@ -2,7 +2,10 @@ class Regi < ApplicationRecord
   has_many :filings, dependent: :destroy
   has_many :charts, dependent: :destroy
   has_many :patients, dependent: :destroy
-  belongs_to :user, optional: true, dependent: :destroy# Link to the login credentials
+  
+  # Use has_one to match the 'regi_id' foreign key on the User table
+  has_one :user, dependent: :destroy 
+  
   validates :last_name, :first_name, :gender, presence: true
   before_validation :set_p_name
 

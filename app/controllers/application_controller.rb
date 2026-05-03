@@ -70,10 +70,15 @@ class ApplicationController < ActionController::Base
     # This will print to your 'rails s' window
     puts "Checking Bouncer: User=#{Current.user&.id}, Role=#{Current.user&.role}"
   
-    if Current.user && Current.user.role.to_s.downcase == "patient"
-      if controller_name == "regis"
-        puts "Bouncer Triggered! Redirecting patient..."
-        redirect_to route_for_user(Current.user) and return
+    if authenticated? && Current.user.role.to_s.downcase == "patient"
+    
+      # If they are on the manager index (regis) OR the home page (root)
+      if controller_name == "regis" || request.path == "/"
+        # Use our single source of truth for where they should actually be
+        destination = route_for_user(Current.user)
+        
+        # If the destination is DIFFERENT from where they are now, move them
+        redirect_to destination and return unless request.path == destination
       end
     end
   end
