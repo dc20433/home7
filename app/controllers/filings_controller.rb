@@ -31,20 +31,41 @@ end
   # POST regis/1/filings
   def create
     @filing = @regi.filings.build(filing_params)
-
+    
+    # Check for existing filing on this date
+    collision = @regi.filings.find_by(f_date: filing_params[:f_date])
+  
+    if collision && params[:overwrite] != "true"
+      @show_overwrite_warning = true
+      # THIS STATUS CODE IS THE KEY
+      render :new, status: :unprocessable_entity and return
+    end
+  
     if @filing.save
-      redirect_to regi_filings_path(@regi, @filing), notice: "Patient File created..."
+      redirect_to regi_filings_path(@regi), status: :see_other, notice: "File saved."
     else
-      render action: "new"
+      render :new, status: :unprocessable_entity
     end
   end
-
+  
   # PUT regis/1/filings/1
   def update
+    # Use the correct Filing column: f_date
+    target_date = filing_params[:f_date]
+  
+    # Find ANY record for this patient with this filing date
+    collision = @regi.filings.find_by(f_date: target_date)
+  
+    if collision && params[:overwrite] != "true"
+      @show_overwrite_warning = true
+      @filing.assign_attributes(filing_params)
+      render :edit, status: :unprocessable_entity and return
+    end
+  
     if @filing.update(filing_params)
-      redirect_to regi_filings_path(@regi, @filing), notice: "Patient File changed..."
+      redirect_to regi_filings_path(@regi), status: :see_other, notice: "Filing updated."
     else
-      render action: "edit"
+      render :edit, status: :unprocessable_entity
     end
   end
 
@@ -67,12 +88,6 @@ end
 
     # Only allow a trusted parameter "white list" through.
     def filing_params
-      # We list all possible params
-      list = [ :title, :describe, :regi_id, :image ]
-
-      # Only add :f_date to the permit list if the column actually exists
-      list << :f_date if Filing.column_names.include?("f_date")
-
-      params.require(:filing).permit(list)
+      params.require(:filing).permit(:title, :describe, :regi_id, :image, :f_date)
     end
 end

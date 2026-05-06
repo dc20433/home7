@@ -7,7 +7,28 @@
     <div class="card shadow m-2 border-dark">
       
       <div class="card-body">
-        <%= form_with(model: [@regi, @chart]) do |f| %>
+      <%= form_with(model: [@regi, @chart]) do |f| %>
+        <% if @show_overwrite_warning %>
+        <div class="alert alert-danger p-4 mb-4 border-start border-5 border-danger shadow-sm">
+          <h5 class="fw-bold"><i class="bi bi-exclamation-triangle-fill"></i> Confirm Overwrite</h5>
+          <p class="mb-3">
+            A record with this treatment date (<strong><%= @chart.t_date %></strong>) is already existing. 
+            Do you want to <strong>Continue to Overwrite</strong> (i.e., proceed to save), or <strong>Cancel</strong>?
+          </p>
+          
+          <div class="d-flex gap-2">
+            <%# Hidden field to signal the bypass to the controller %>
+            <%= hidden_field_tag :overwrite, "true" %>
+            
+            <%= f.submit "Continue to Overwrite", class: "btn btn-danger px-4 fw-bold" %>
+            
+            <%# Cancel simply reloads the edit page to clear the warning %>
+            <%= link_to "Cancel", edit_regi_chart_path(@regi, @chart), 
+                        class: "btn btn-outline-secondary px-4" %>
+          </div>
+        </div>
+      <% end %>
+
           <% if @chart.errors.any? %>
             <div id="error_explanation">
               <h2><%= pluralize(@chart.errors.count, "error") %> prohibited this chart from being saved:</h2>
@@ -51,8 +72,8 @@
             <%= f.submit "Save", class: "btn btn-sm btn-outline-dark outline-double border border-lg border-dark rounded-pill px-3 m-2 fw-bold" %>
         <% end %>
             <%= button_to "Delete", [@regi,@chart], method: :delete, class:"btn btn-sm btn-outline-danger outline-double rounded-pill px-3 m-2 fw-bold", form: { data: { turbo_confirm: "Are you sure?" } } %>
-            <%= link_to 'Patient Chart', regi_charts_path, class:"btn btn-sm btn-outline-primary outline-double rounded-pill px-2 m-2 fw-bold" %>
-            <%= link_to 'Go Back', :back, class:"btn btn-sm btn-outline-success outline-double rounded-pill px-3 m-2 fw-bold" %>
+            <%= link_to 'Back to Charts', regi_charts_path, class:"btn btn-sm btn-outline-primary outline-double rounded-pill px-2 m-2 fw-bold" %>
+            <%= link_to 'Previous Page', :back, class:"btn btn-sm btn-outline-success outline-double rounded-pill px-3 m-2 fw-bold" %>
           </div>
       </div>
     </div>
