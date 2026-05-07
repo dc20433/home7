@@ -30,12 +30,12 @@ class PatientsController < ApplicationController
   def show
     # Priority 1: URL Param | Priority 2: Link in User Table
     @regi = Regi.find_by(id: params[:regi_id]) || Regi.find_by(id: current_user.regi_id)
-  
+
     if @regi
       @patient = @regi.patients.first # Or find by params[:id]
     else
       # This is what you see now because current_user.regi_id is currently NULL
-      render "no_record_found" 
+      render "no_record_found"
     end
   end
 
@@ -66,7 +66,7 @@ class PatientsController < ApplicationController
 
   def create
     @regi = Regi.find(params[:regi_id])
-    
+
     # Normalize the date to ensure the database find_by works perfectly
     submitted_date = patient_params[:v_date].to_date rescue nil
 
@@ -97,21 +97,24 @@ class PatientsController < ApplicationController
   end
 
 def update
-    @regi = Regi.find(params[:regi_id])
-    @patient = @regi.patients.find(params[:id])
+  puts "DEBUG: Checking date #{patient_params[:v_date]}"
+  @regi = Regi.find(params[:regi_id])
+  @patient = @regi.patients.find(params[:id])
 
-    # --- NEW GUARD: Prevent updating this record to a date that already has a different record ---
-    new_v_date = patient_params[:v_date]
-    duplicate = @regi.patients.where(v_date: new_v_date).where.not(id: @patient.id).first
+  # NEW LOGIC: Check if the v_date being submitted is ALREADY in the database
+  # for this patient, regardless of which record it is.
+  target_date = patient_params[:v_date].to_date
 
-    if duplicate
-      flash[:alert] = "A record for #{new_v_date} already exists. You cannot change this record to that date."
-      render :edit, status: :unprocessable_entity
-      return # Stop execution
-    end
-    # --- END GUARD ---
+  # Does a record with this date exist?
+  exists = @regi.patients.exists?(v_date: target_date)
 
-    # --- 1. Check if "No Consent" button was clicked ---
+  if exists && params[:overwrite] != "true"
+    @show_overwrite_warning = true
+    @patient.assign_attributes(patient_params)
+    render :edit, status: :unprocessable_entity and return
+  end
+
+    # Check if "No Consent" button was clicked ---
     if params[:no_consent_exit] == "true"
       @patient.assign_attributes(patient_params)
       @patient.patient_consent = false

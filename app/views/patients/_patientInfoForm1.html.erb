@@ -6,26 +6,7 @@
   
   <%= form_with(model: [@regi, @patient]) do |f| %>
     
-    <%# 1. THE WARNING BOX %>
-    <% if @show_overwrite_warning %>
-    
-      <div class="alert alert-danger p-4 mb-4 border-start border-5 border-danger shadow-sm">
-      <h5 class="fw-bold"><i class="bi bi-exclamation-triangle-fill"></i> Confirm Overwrite</h5>
-      <p>A record for <strong><%= @patient.v_date %></strong> already exists. Overwrite this record?</p>
-        <div class="d-flex gap-2">
-        <%# Continue button (The one that works!) %>
-          <%= button_to "Continue to Overwrite", 
-          regi_patient_path(@regi, @patient), 
-          method: :patch, 
-          params: { overwrite: "true", patient: params[:patient].to_unsafe_h }, 
-          class: "btn btn-danger px-4 fw-bold shadow-sm" %>
-        <%= link_to "Cancel", 
-          edit_regi_patient_path(@regi, @patient), 
-          class: "btn btn-outline-secondary px-4",
-          data: { turbo: false } %>
-        </div>
-        </div>
-      <% end %>
+
         
     <div class="card shadow-sm border-secondary mb-4">
       <div class="card-body p-4">
@@ -188,28 +169,25 @@
           </div>
         </div>
 
-        <%# --- Section 8: Unified Bottom Navigation --- %>
-        <div class="d-flex justify-content-between align-items-center mt-4 p-3 border-top bg-light rounded shadow-sm">
-          <%# --- Left Side: Navigation & Administrative --- %>
-          <div class="d-flex gap-2">
-            <%# 1. Cancel returns to Index %>
-            <%= link_to 'Cancel', regi_patients_path(@regi), class: "btn btn-secondary px-4 shadow-sm" %>
-            <%# 2. Delete converted to link_to to avoid Nested Form conflict %>
-            <% if @patient.persisted? %>
-              <%= link_to "Delete Record", regi_patient_path(@regi, @patient), 
-                          data: { turbo_method: :delete, turbo_confirm: "Permanently delete this record?" }, 
-                          class: "btn btn-outline-danger px-3" %>
-            <% end %>
-            <%# 3. Go Back %>
-            <%= link_to "← Go Back", "javascript:history.back()", class: "btn btn-outline-secondary px-3" %>
+        <%# --- Section 8: THE WARNING BOX --- %>
+        <% if @show_overwrite_warning %>
+          <div class="alert alert-danger p-4 mb-4 border-start border-5 border-danger shadow-sm">
+            <h5 class="fw-bold"><i class="bi bi-exclamation-triangle-fill"></i> Confirm Overwrite</h5>
+            <p>A record for <strong><%= @patient.v_date %></strong> already exists. Overwrite this record?</p>
+            <div class="d-flex gap-2">
+              <%# Continue button (The one that works!) %>
+              <%= button_to "Continue to Overwrite", 
+                regi_patient_path(@regi, @patient), 
+                method: :patch, 
+                params: { overwrite: "true", patient: params[:patient].to_unsafe_h }, 
+                class: "btn btn-danger px-4 fw-bold shadow-sm" %>
+              <%= link_to "Cancel", 
+                edit_regi_patient_path(@regi, @patient), 
+                class: "btn btn-outline-secondary px-4",
+                data: { turbo: false } %>
+            </div>
           </div>
-          <%# --- Right Side: Primary Actions --- %>
-          <div class="d-flex gap-2 align-items-center">
-            <%# 4. The Main Save Action %>
-            <%= f.submit "Save and Return to Index", 
-                        class: "btn btn-success px-4 fw-bold shadow-sm" %>
-          </div>
-        </div>
+        <% end %>       
       
       </div><%# End of card body %>
     </div><%# End of card %>

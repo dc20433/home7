@@ -31,37 +31,37 @@ end
   # POST regis/1/filings
   def create
     @filing = @regi.filings.build(filing_params)
-    
+
     # Check for existing filing on this date
     collision = @regi.filings.find_by(f_date: filing_params[:f_date])
-  
+
     if collision && params[:overwrite] != "true"
       @show_overwrite_warning = true
       # THIS STATUS CODE IS THE KEY
       render :new, status: :unprocessable_entity and return
     end
-  
+
     if @filing.save
       redirect_to regi_filings_path(@regi), status: :see_other, notice: "File saved."
     else
       render :new, status: :unprocessable_entity
     end
   end
-  
+
   # PUT regis/1/filings/1
   def update
     # Use the correct Filing column: f_date
     target_date = filing_params[:f_date]
-  
+
     # Find ANY record for this patient with this filing date
     collision = @regi.filings.find_by(f_date: target_date)
-  
+
     if collision && params[:overwrite] != "true"
       @show_overwrite_warning = true
       @filing.assign_attributes(filing_params)
       render :edit, status: :unprocessable_entity and return
     end
-  
+
     if @filing.update(filing_params)
       redirect_to regi_filings_path(@regi), status: :see_other, notice: "Filing updated."
     else

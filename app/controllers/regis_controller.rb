@@ -9,12 +9,12 @@ class RegisController < ApplicationController
     if Current.user
       Rails.logger.info "LOGGING IN AS: #{Current.user.id} | ROLE: #{Current.user.role.inspect}"
     end
-  
+
     # Use the explicit string 'patient' which we know is index 3
     if Current.user&.role.to_s == "patient"
       # We use the 'regi_id' column on the User table
       @regi = Regi.find_by(id: Current.user.regi_id)
-      
+
       if @regi
         # Force the redirect to the patient's specific record
         # Using the helper we put in the Authentication concern
@@ -64,17 +64,17 @@ class RegisController < ApplicationController
       redirect_to regis_path, alert: "User creation failed."
     end
   end
-  
+
   def destroy_patient_user
     @regi = Regi.find(params[:id])
-  
+
     # 1. Generate the expected email to find potential orphans
     prefix = "#{@regi.last_name}#{@regi.first_name}#{@regi.dob.strftime('%m')}".downcase.gsub(/\s+/, "")
     email_to_clean = "#{prefix}@clinic.local" # Matches your recycling requirement
-  
+
     # 2. Find the user via the association OR the email
     user = @regi.user || User.find_by(email: email_to_clean)
-  
+
     if user
       user.destroy
       # If the user was linked via ID, clear that column so a new one can be issued
@@ -113,12 +113,12 @@ class RegisController < ApplicationController
 
   def issue_access
     @regi = Regi.find(params[:id])
-    
+
     # Convention: lastname + firstname + month
-    dob_m = @regi.dob&.strftime('%m') || "00"
+    dob_m = @regi.dob&.strftime("%m") || "00"
     login_handle = "#{@regi.last_name}#{@regi.first_name}#{dob_m}".downcase.gsub(/\s+/, "")
     login_email = "#{login_handle}@clinic.local"
-  
+
     user = User.find_or_initialize_by(regi_id: @regi.id)
     user.assign_attributes(
       email: login_email,
@@ -126,19 +126,19 @@ class RegisController < ApplicationController
       password_confirmation: "temp123",
       role: "patient" # Use the lowercase string to match the Enum key
     )
-  
+
     if user.save && @regi.update(status: :issued)
       redirect_back fallback_location: regis_path, notice: "Access Issued: #{login_email}"
     else
       redirect_back fallback_location: regis_path, alert: "Error: #{user.errors.full_messages.to_sentence}"
     end
   end
-  
+
   def revoke_access
     @regi = Regi.find(params[:id])
     # Look specifically for the user linked by the ID
     user = User.find_by(regi_id: @regi.id)
-    
+
     if user&.destroy && @regi.update(status: :signup)
       redirect_back fallback_location: regis_path, notice: "Access revoked."
     else

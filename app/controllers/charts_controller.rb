@@ -41,16 +41,16 @@ class ChartsController < ApplicationController
   def update
     # 1. Look for ANY record (including this one) with the same date
     collision = @regi.charts.find_by(t_date: chart_params[:t_date])
-  
+
     # 2. TRIGGER: If a collision exists and 'overwrite' hasn't been confirmed
     if collision && params[:overwrite] != "true"
       @show_overwrite_warning = true
       @chart.assign_attributes(chart_params)
-      
+
       # Exit here so the "Final Save" logic below is not reached
       render :edit, status: :unprocessable_entity and return
     end
-  
+
     # 3. Final Save: Only reached if no collision OR overwrite == "true"
     if @chart.update(chart_params)
       redirect_to regi_charts_path(@regi), status: :see_other, notice: "Patient Chart updated..."

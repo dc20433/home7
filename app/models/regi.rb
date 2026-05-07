@@ -2,20 +2,20 @@ class Regi < ApplicationRecord
   has_many :filings, dependent: :destroy
   has_many :charts, dependent: :destroy
   has_many :patients, dependent: :destroy
-  
+
   # Use has_one to match the 'regi_id' foreign key on the User table
-  has_one :user, dependent: :destroy 
-  
+  has_one :user, dependent: :destroy
+
   validates :last_name, :first_name, :gender, presence: true
   before_validation :set_p_name
 
   attribute :status, :string, default: "signup"
 
   # 2. Use explicit string-to-string mapping
-  enum :status, { 
-    signup: "signup", 
-    issued: "issued", 
-    signed: "signed" 
+  enum :status, {
+    signup: "signup",
+    issued: "issued",
+    signed: "signed"
   }, suffix: true
 
   GENDER_OPTIONS = [
