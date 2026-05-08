@@ -10,7 +10,6 @@
     <%= render "patientConsentForm" %>
   <% else %>
     <%# --- MANAGER/ADMIN EDIT VIEW --- %>
-    <h2 class="text-center mb-4">Edit Patient Record</h2>
     <%# We ONLY render the consent form, which now handles the buttons internally %>
     <%= render "patientConsentForm", manager_edit: true %>
   <% end %>

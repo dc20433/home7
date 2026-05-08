@@ -3,215 +3,215 @@
 
 <div class="container mt-4">
   <div class="card shadow-sm border-0 p-4">
-  
-  <%= form_with(model: [@regi, @patient]) do |f| %>
-    
-    <%# 1. THE WARNING BOX %>
-    <% if @show_overwrite_warning %>
-    
-      <div class="alert alert-danger p-4 mb-4 border-start border-5 border-danger shadow-sm">
-      <h5 class="fw-bold"><i class="bi bi-exclamation-triangle-fill"></i> Confirm Overwrite</h5>
-      <p>A record for <strong><%= @patient.v_date %></strong> already exists. Overwrite this record?</p>
-        <div class="d-flex gap-2">
-        <%# Continue button (The one that works!) %>
-          <%= button_to "Continue to Overwrite", 
-          regi_patient_path(@regi, @patient), 
-          method: :patch, 
-          params: { overwrite: "true", patient: params[:patient].to_unsafe_h }, 
-          class: "btn btn-danger px-4 fw-bold shadow-sm" %>
-        <%= link_to "Cancel", 
-          edit_regi_patient_path(@regi, @patient), 
-          class: "btn btn-outline-secondary px-4",
-          data: { turbo: false } %>
-        </div>
+    <%= form_with(model: [@regi, @patient]) do |f| %>
+      
+      <%# --- 1. THE WARNING BOX (Conditional) --- %>
+      <% if @show_overwrite_warning %>
+        <div class="alert alert-danger p-4 mb-4 border-start border-5 border-danger shadow-sm">
+          <h5 class="fw-bold"><i class="bi bi-exclamation-triangle-fill"></i> Confirm Overwrite</h5>
+          <p>A record for <strong><%= @patient.v_date %></strong> already exists. Overwrite this record?</p>
+          <div class="d-flex gap-2">
+            <%= button_to "Continue to Overwrite", 
+                regi_patient_path(@regi, @patient), 
+                method: :patch, 
+                params: { overwrite: "true", patient: params[:patient].to_unsafe_h }, 
+                class: "btn btn-danger px-4 fw-bold shadow-sm" %>
+            <%= link_to "Cancel", edit_regi_patient_path(@regi, @patient), class: "btn btn-outline-secondary px-4", data: { turbo: false } %>
+          </div>
         </div>
       <% end %>
-        
-    <div class="card shadow-sm border-secondary mb-4">
-      <div class="card-body p-4">
-        
-        <%# --- Section 1: Demographics --- %>
-        <div class="row mb-1">
-          <div class="col-md-2">
-            <b>Updated on</b> 
-            <%= f.date_field :v_date, class: "form-control border-primary bg-light", style: "min-height: 38px;" %>
+          
+      <div class="card shadow-sm border-secondary mb-4">
+        <div class="card-body p-4">
+          
+          <%# --- Section 1: Demographics --- %>
+          <div class="row mb-1">
+            <div class="col-md-2">
+              <b>Updated on</b> 
+              <%= f.date_field :v_date, class: "form-control border-primary bg-light", style: "min-height: 38px;" %>
+            </div>
+            <div class="col-md-4">
+              <b>Street</b> 
+              <%= f.text_field :street, class: "form-control border-primary bg-light", style: "min-height: 38px;" %>
+            </div>
+            <div class="col-md-2">
+              <b>City</b> 
+              <%= f.text_field :city, class: "form-control border-primary bg-light", style: "min-height: 38px;" %>
+            </div>
+            <div class="col-md-2">
+              <b>State</b> 
+              <%= f.text_field :state, class: "form-control border-primary bg-light", style: "min-height: 38px;" %>
+            </div>
+            <div class="col-md-2">
+              <b>Zip Code</b> 
+              <%= f.text_field :zip, class: "form-control border-primary bg-light", style: "min-height: 38px;" %>
+            </div>
           </div>
-          <div class="col-md-4">
-            <b>Street</b> 
-            <%= f.text_field :street, class: "form-control border-primary bg-light", style: "min-height: 38px;" %>
-          </div>
-          <div class="col-md-2">
-            <b>City</b> 
-            <%= f.text_field :city, class: "form-control border-primary bg-light", style: "min-height: 38px;" %>
-          </div>
-          <div class="col-md-2">
-            <b>State</b> 
-            <%= f.text_field :state, class: "form-control border-primary bg-light", style: "min-height: 38px;" %>
-          </div>
-          <div class="col-md-2">
-            <b>Zip Code</b> 
-            <%= f.text_field :zip, class: "form-control border-primary bg-light", style: "min-height: 38px;" %>
-          </div>
-        </div>
 
-        <%# --- Section 2: Contact --- %>
-        <div class="row mb-1">
-          <div class="col-md-3">
-            <b>Cell Phone</b> 
-            <%= f.text_field :cell, class: "form-control border-primary bg-light", style: "min-height: 38px;" %>
+          <%# --- Section 2: Contact --- %>
+          <div class="row mb-1">
+            <div class="col-md-3">
+              <b>Cell Phone</b> 
+              <%= f.text_field :cell, class: "form-control border-primary bg-light", style: "min-height: 38px;" %>
+            </div>
+            <div class="col-md-3">
+              <b>Home Phone</b> 
+              <%= f.text_field :home, class: "form-control border-primary bg-light", style: "min-height: 38px;" %>
+            </div>
+            <div class="col-md-3">
+              <b>Work Phone</b> 
+              <%= f.text_field :work, class: "form-control border-primary bg-light", style: "min-height: 38px;" %>
+            </div>
+            <div class="col-md-3">
+              <b>Email</b> 
+              <%= f.email_field :email, class: "form-control border-primary bg-light", style: "min-height: 38px;" %>
+            </div>
           </div>
-          <div class="col-md-3">
-            <b>Home Phone</b> 
-            <%= f.text_field :home, class: "form-control border-primary bg-light", style: "min-height: 38px;" %>
-          </div>
-          <div class="col-md-3">
-            <b>Work Phone</b> 
-            <%= f.text_field :work, class: "form-control border-primary bg-light", style: "min-height: 38px;" %>
-          </div>
-          <div class="col-md-3">
-            <b>Email</b> 
-            <%= f.email_field :email, class: "form-control border-primary bg-light", style: "min-height: 38px;" %>
-          </div>
-        </div>
 
-        <%# --- Section 3: Vitals & History --- %>
-        <div class="row mb-1">
-          <div class="col-md-2">
-            <b>Height</b> 
-            <%= f.text_field :height, class: "form-control border-primary bg-light", style: "min-height: 38px;" %>
+          <%# --- Section 3: Vitals & History --- %>
+          <div class="row mb-1">
+            <div class="col-md-2">
+              <b>Height</b> 
+              <%= f.text_field :height, class: "form-control border-primary bg-light", style: "min-height: 38px;" %>
+            </div>
+            <div class="col-md-2">
+              <b>Weight</b> 
+              <%= f.text_field :weight, class: "form-control border-primary bg-light", style: "min-height: 38px;" %>
+            </div>
+            <div class="col-md-2">
+              <b>Marital Status</b> 
+              <%= f.select :m_stat, 
+                  [["Select", ""], ["Single", "Single"], ["Married", "Married"], ["Divorced", "Divorced"], ["Widowed", "Widowed"]], 
+                  {}, 
+                  { class: "form-control border-primary bg-light", style: "min-height: 38px;" } 
+              %>
+            </div>
+            <div class="col-md-2">
+              <b>Occupation</b> 
+              <%= f.text_field :occup, class: "form-control border-primary bg-light", style: "min-height: 38px;" %>
+            </div>
+            <div class="col-md-2">
+              <b>Company</b> 
+              <%= f.text_field :company, class: "form-control border-primary bg-light", style: "min-height: 38px;" %>
+            </div>
+            <div class="col-md-2">
+              <b>Referred by</b> 
+              <%= f.text_field :referred, class: "form-control border-primary bg-light", style: "min-height: 38px;" %>
+            </div>
           </div>
-          <div class="col-md-2">
-            <b>Weight</b> 
-            <%= f.text_field :weight, class: "form-control border-primary bg-light", style: "min-height: 38px;" %>
-          </div>
-          <div class="col-md-2">
-            <b>Marital Status</b> 
-            <%= f.select :m_stat, 
-                [["Select", ""], ["Single", "Single"], ["Married", "Married"], ["Divorced", "Divorced"], ["Widowed", "Widowed"]], 
-                {}, 
-                { class: "form-control border-primary bg-light", style: "min-height: 38px;" } 
-            %>
-          </div>
-          <div class="col-md-2">
-            <b>Occupation</b> 
-            <%= f.text_field :occup, class: "form-control border-primary bg-light", style: "min-height: 38px;" %>
-          </div>
-          <div class="col-md-2">
-            <b>Company</b> 
-            <%= f.text_field :company, class: "form-control border-primary bg-light", style: "min-height: 38px;" %>
-          </div>
-          <div class="col-md-2">
-            <b>Referred by</b> 
-            <%= f.text_field :referred, class: "form-control border-primary bg-light", style: "min-height: 38px;" %>
-          </div>
-        </div>
 
-        <%# --- Section 4: Complaints & Vitals --- %>
-        <div class="row mb-1">
-          <div class="col-md-4">
-            <b>Complaint 1</b> 
-            <%= f.text_field :com1, class: "form-control border-primary bg-light", style: "min-height: 38px;" %>
+          <%# --- Section 4: Complaints & Vitals --- %>
+          <div class="row mb-1">
+            <div class="col-md-4">
+              <b>Complaint 1</b> 
+              <%= f.text_field :com1, class: "form-control border-primary bg-light", style: "min-height: 38px;" %>
+            </div>
+            <div class="col-md-4">
+              <b>Complaint 2</b> 
+              <%= f.text_field :com2, class: "form-control border-primary bg-light", style: "min-height: 38px;" %>
+            </div>
+            <div class="col-md-4">
+              <b>Complaint 3</b> 
+              <%= f.text_field :com3, class: "form-control border-primary bg-light", style: "min-height: 38px;" %>
+            </div>
           </div>
-          <div class="col-md-4">
-            <b>Complaint 2</b> 
-            <%= f.text_field :com2, class: "form-control border-primary bg-light", style: "min-height: 38px;" %>
-          </div>
-          <div class="col-md-4">
-            <b>Complaint 3</b> 
-            <%= f.text_field :com3, class: "form-control border-primary bg-light", style: "min-height: 38px;" %>
-          </div>
-        </div>
 
-        <div class="row mb-1">
-          <div class="col-md-2">
-            <b>Date Onset</b> 
-            <%= f.date_field :d_onset, class: "form-control border-primary bg-light", style: "min-height: 38px;" %>
+          <div class="row mb-1">
+            <div class="col-md-2">
+              <b>Date Onset</b> 
+              <%= f.date_field :d_onset, class: "form-control border-primary bg-light", style: "min-height: 38px;" %>
+            </div>
+            <div class="col-md-3">
+              <b>Pain Scale 1-10</b> 
+              <%= f.number_field :pain_scale, class: "form-control border-primary bg-light", style: "min-height: 38px;", min: 1, max: 10 %>
+            </div>
+            <div class="col-md-4">
+              <b>Any diagnoses given?</b> 
+              <%= f.text_field :diag_given, class: "form-control border-primary bg-light", style: "min-height: 38px;" %>
+            </div>
+            <div class="col-md-3">
+              <b>Had acupuncture?</b> 
+              <%= f.select :aq_b4, [["Select", ""], ["Yes", "Yes"], ["No", "No"]], {}, { class: "form-control border-primary bg-light", style: "min-height: 38px;" } %>
+            </div>
           </div>
-          <div class="col-md-2">
-            <b>Pain Scale 1-10</b> 
-            <%= f.number_field :pain_scale, class: "form-control border-primary bg-light", style: "min-height: 38px;", min: 1, max: 10 %>
-          </div>
-          <div class="col-md-5">
-            <b>Any diagnoses given?</b> 
-            <%= f.text_field :diag_given, class: "form-control border-primary bg-light", style: "min-height: 38px;" %>
-          </div>
-          <div class="col-md-3">
-            <b>Had acupuncture?</b> 
-            <%= f.select :aq_b4, [["Select", ""], ["Yes", "Yes"], ["No", "No"]], {}, { class: "form-control border-primary bg-light", style: "min-height: 38px;" } %>
-          </div>
-        </div>
 
-        <% Patient::DI_LIST.each do |issue| %>
-          <div class="form-check form-check-inline">
-            <%# Using f.check_box makes it editable and connects it to the model %>
-            <%= f.check_box :di_list, 
-                { multiple: true, class: "form-check-input border-primary", checked: @patient.di_list&.include?(issue) }, 
-                issue, 
-                nil 
-            %>
-            <label class="form-check-label text-dark"><%= issue %></label>
+          <% Patient::DI_LIST.each do |issue| %>
+            <div class="form-check form-check-inline">
+              <%# Using f.check_box makes it editable and connects it to the model %>
+              <%= f.check_box :di_list, 
+                  { multiple: true, class: "form-check-input border-primary", checked: @patient.di_list&.include?(issue) }, 
+                  issue, 
+                  nil 
+              %>
+              <label class="form-check-label text-dark"><%= issue %></label>
+            </div>
+          <% end %>
+
+          <%# --- Section 6: Other & Female Only --- %>
+          <div class="row mb-1 mt-2">
+            <div class="col-md-5">
+              <b>Other Issues</b> 
+              <%= f.text_field :o_dis, class: "form-control border-primary bg-light", style: "min-height: 38px;" %>
+            </div>
+            <div class="col-md-3">
+              <b><small>Female:</small> Last Period</b> 
+              <%= f.date_field :last_prd, class: "form-control border-primary bg-light", style: "min-height: 38px;" %>
+            </div>
+            <div class="col-md-2">
+              <b>Pregnancy</b>
+              <%= f.select :preg, [["Select", ""], ["Yes", "Yes"], ["No", "No"]], {}, { class: "form-control border-primary bg-light", style: "min-height: 38px;" } %>
+            </div>
+            <div class="col-md-2">
+              <b>In weeks?</b> 
+              <%= f.number_field :preg_wks, class: "form-control border-primary bg-light", style: "min-height: 38px;", min: 0 %>
+            </div>
           </div>
+
+          <%# --- Section 7: Verification & Signature --- %>
+          <div class="card mt-4 mb-4 border-secondary bg-white shadow-sm">
+            <div class="card-body text-center">
+              <label class="small fw-bold text-center text-muted d-block">Digital Signature on File:</label>
+              <div class="p-2 border rounded bg-light mx-auto my-2" style="max-width: 500px; min-height: 120px;">
+                <% if @patient.signature.present? %>
+                  <img src="<%= @patient.signature %>" class="img-fluid" style="max-height: 100px;">
+                <% else %>
+                  <em class="text-muted">No signature captured.</em>
+                <% end %>
+              </div>
+              <%# The Metadata Line %>           
+              <div class="text-muted small">Recorded on: <%= @patient.updated_at.strftime("%B %d, %Y %I:%M %p") %></div>
+            </div>
+          </div>
+
+          <% if params[:print] == "true" %>
+          <% unless @patient.signature.present? %>
+            <div class="mt-5 pt-5 border-top border-dark no-screen" style="max-width: 400px;">
+              <p class="small fw-bold">Patient Signature (Physical Copy):</p>
+              <div style="border-bottom: 1px solid black; height: 40px; width: 100%;"></div>
+              <p class="text-muted small mt-1">Date: ____________________</p>
+            </div>
+          <% end %>
         <% end %>
 
-        <%# --- Section 6: Other & Female Only --- %>
-        <div class="row mb-1 mt-2">
-          <div class="col-md-6">
-            <b>Other Issues</b> 
-            <%= f.text_field :o_dis, class: "form-control border-primary bg-light", style: "min-height: 38px;" %>
-          </div>
-          <div class="col-md-2">
-            <b>Female: Last Period</b> 
-            <%= f.date_field :last_prd, class: "form-control border-primary bg-light", style: "min-height: 38px;" %>
-          </div>
-          <div class="col-md-2">
-            <b>Are you pregnant?</b>
-            <%= f.select :preg, [["Select", ""], ["Yes", "Yes"], ["No", "No"]], {}, { class: "form-control border-primary bg-light", style: "min-height: 38px;" } %>
-          </div>
-          <div class="col-md-2">
-            <b>In weeks?</b> 
-            <%= f.number_field :preg_wks, class: "form-control border-primary bg-light", style: "min-height: 38px;", min: 0 %>
-          </div>
-        </div>
-
-        <%# --- Section 7: Verification & Signature --- %>
-        <div class="card mt-4 mb-4 border-secondary bg-white shadow-sm">
-          <div class="card-body text-center">
-            <label class="small fw-bold text-center text-muted d-block">Digital Signature on File:</label>
-            <div class="p-2 border rounded bg-light mx-auto my-2" style="max-width: 500px; min-height: 120px;">
-              <% if @patient.signature.present? %>
-                <img src="<%= @patient.signature %>" class="img-fluid" style="max-height: 100px;">
-              <% else %>
-                <em class="text-muted">No signature captured.</em>
-              <% end %>
-            </div>
-            <div class="text-muted small">Recorded on: <%= @patient.updated_at.strftime("%B %d, %Y %I:%M %p") %></div>
-          </div>
-        </div>
-
-        <%# --- Section 8: Unified Bottom Navigation --- %>
-        <div class="d-flex justify-content-between align-items-center mt-4 p-3 border-top bg-light rounded shadow-sm">
-          <%# --- Left Side: Navigation & Administrative --- %>
-          <div class="d-flex gap-2">
-            <%# 1. Cancel returns to Index %>
-            <%= link_to 'Cancel', regi_patients_path(@regi), class: "btn btn-secondary px-4 shadow-sm" %>
-            <%# 2. Delete converted to link_to to avoid Nested Form conflict %>
-            <% if @patient.persisted? %>
+        <%# --- 3. UNIFIED BOTTOM NAVIGATION (Permanent) --- %>
+        <div class="d-flex gap-2">
+        <%= link_to 'Cancel', regi_patients_path(@regi), class: "btn btn-secondary px-4 shadow-sm" %>
+        <% if @patient.persisted? %>
               <%= link_to "Delete Record", regi_patient_path(@regi, @patient), 
                           data: { turbo_method: :delete, turbo_confirm: "Permanently delete this record?" }, 
                           class: "btn btn-outline-danger px-3" %>
             <% end %>
-            <%# 3. Go Back %>
             <%= link_to "← Go Back", "javascript:history.back()", class: "btn btn-outline-secondary px-3" %>
           </div>
-          <%# --- Right Side: Primary Actions --- %>
+
           <div class="d-flex gap-2 align-items-center">
-            <%# 4. The Main Save Action %>
-            <%= f.submit "Save and Return to Index", 
-                        class: "btn btn-success px-4 fw-bold shadow-sm" %>
+            <%# Only show the standard Save button if we aren't currently in a warning state %>
+            <% unless @show_overwrite_warning %>
+              <%= f.submit "Save and Return to Index", class: "btn btn-success px-4 fw-bold shadow-sm" %>
+            <% end %>
           </div>
         </div>
-      
-      </div><%# End of card body %>
-    </div><%# End of card %>
-  <% end %><%# THE FORM MUST END HERE %>
-</div><%# End of container %>
+
+    <% end %><%# END OF FORM %>
+  </div><%# END OF CARD %>
+</div><%# END OF CONTAINER %>

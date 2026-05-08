@@ -117,3 +117,75 @@ body {
   border-color: #0d6efd;
   /* Match the focus color of the input */
 }
+
+@media print {
+
+  /* 1. THE ABSOLUTE HIDE - Use this for the button row */
+  .no-print,
+  .no-print *,
+  nav,
+  .navbar,
+  .btn,
+  footer,
+  div[class*="justify-content-between"] {
+    display: none !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    visibility: hidden !important;
+  }
+
+  /* 2. FIX MARGINS & DISTORTION */
+  @page {
+    size: portrait;
+    margin: 0.5in !important;
+  }
+
+  /* Force the container to stop acting like a web element */
+  .container,
+  .card,
+  .card-body {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  /* 3. FIX THE GRID (The "Anti-Distortion" Rule) */
+  .row {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    /* Prevents text from pushing columns down */
+    width: 100% !important;
+    margin: 0 0 10px 0 !important;
+  }
+
+  /* Force Bootstrap columns to respect paper width */
+  .col-md-2 {
+    width: 16% !important;
+    flex: 0 0 16% !important;
+  }
+
+  .col-md-3 {
+    width: 25% !important;
+    flex: 0 0 25% !important;
+  }
+
+  .col-md-4 {
+    width: 33% !important;
+    flex: 0 0 33% !important;
+  }
+
+  .col-md-6 {
+    width: 50% !important;
+    flex: 0 0 50% !important;
+  }
+}
+
+#unified-footer-nav {
+  display: none !important;
+}

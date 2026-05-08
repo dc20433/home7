@@ -1,6 +1,6 @@
 <%# app/views/overviews/_search_bar.html.erb %>
 <div class="row justify-content-center">
-  <div class="col-8 border border-primary rounded-pill mt-2 py-1 bg-info shadow-sm">
+  <div class="col-8 border border-primary rounded-pill mt-2 py-1 bg-warning shadow-sm">
     <%= search_form_for q, url: url, method: :get, class: "d-flex gap-2 align-items-center justify-content-center flex-wrap" do |f| %>
   
       <%= f.search_field (local_assigns[:search_key_last] || :last_name_i_cont), 

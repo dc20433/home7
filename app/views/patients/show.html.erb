@@ -1,24 +1,25 @@
+<%# --- GLOBAL PRINT BAR FOR SHOW VIEW --- %>
+<% if Current.user&.manager? || Current.user&.admin? %>
+  <div class="container-fluid no-print">
+    <div class="d-flex justify-content-end p-3">
+      <button type="button" 
+              onclick="window.print();" 
+              class="btn btn-dark border border-light border-3 rounded-pill px-4 fw-bold shadow-sm d-print-none">
+        <i class="bi bi-printer me-2"></i> Print This Form
+      </button>
+    </div>
+  </div>
+<% end %>
+
 <div class="container-fluid mt-3">
   <% if Current.user&.patient? %>
-    <%# --- SECTION 1: PATIENT VIEW --- %>
-    <script type="text/javascript">
-      window.history.forward();
-      function noback() { window.history.forward(); }
-      window.onload = noback;
-      window.onpageshow = function(evt) { if (evt.persisted) noback(); };
-    </script>
-   
-    <%= render "patientConsentForm", selection_mode: true %>
-
+     <%= render "patientConsentForm", selection_mode: true %>
   <% else %>
-    <%# --- SECTION 2: MANAGER/ADMIN EDIT VIEW --- %>
-    <h2 class="text-center">Edit Patient Record</h2>
-    
+    <%# --- MANAGER/ADMIN VIEW --- %>
+    <%# Note: This is a 'Show' view, so we don't usually need a form_with here, 
+        but if you want the fields to be editable, you keep it. %>
     <%= form_with(model: [@regi, @patient], local: true) do |f| %>
       <%= render "patientConsentForm", f: f %>
-      
-      <%# --- Action Buttons Aligned Left --- %>
-      
     <% end %>
   <% end %>
 </div>

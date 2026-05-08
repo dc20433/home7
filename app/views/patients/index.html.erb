@@ -7,7 +7,7 @@
   <%= link_to 'Patient Charts', regi_charts_path(@regi), class:"btn btn-primary border border-light border-3 rounded-pill px-3 py-0 m-1 fw-bold" %>
   <%= link_to 'Patient Files', regi_filings_path(@regi), class:"btn btn-info border border-light border-3 rounded-pill px-3 py-0 m-1 fw-bold" %>
   <%= link_to 'Patient Registration', regis_path, class:"btn btn-warning border border-light border-3 rounded-pill px-2 py-0 m-1 fw-bold" %>
-  <%= link_to 'Go Back', :back, class:"btn btn-secondary border border-light border-3 rounded-pill px-3 py-0 mt-4 mb-4 fw-bold" %>
+  <%= link_to '← Go Back', :back, class:"btn btn-secondary border border-light border-3 rounded-pill px-3 py-0 mt-4 mb-4 fw-bold" %>
 </div>
 
 <table class="table table-sm table-striped table-hover custom-table mt-1 mb-4">
@@ -15,10 +15,9 @@
     <tr>
       <th style="width:145px">Updated On</th>
       <th>Contact Info</th>
-      <th>Weight</th>
-      <th>Complaints</th>
-      <th>Onset/Pain</th>
-      <th>Referred by</th>
+      <th class="text-center">Weight</th>
+      <th class="text-center">Complaints/Pain</th>
+      <th class="text-center">Referred by</th>
       <th class="text-center">Health History / Issues</th>
       <th class="text-center" style="width:120px">Signature</th>
     </tr>
@@ -45,12 +44,9 @@
         </td>
         <td>
           <%= "#{patient.com1.strip}" if patient.com1? %>
-          <%= " / #{patient.com2.strip}" if patient.com2? %>
-          <%= " / #{patient.com3.strip}" if patient.com3? %>
-        </td>
-        <td>
-          <%= patient.d_onset %><%= '/Pain: ' if patient.pain_scale? %>
-          <%= patient.pain_scale %>
+          <%= " , #{patient.com2.strip}" if patient.com2? %>
+          <%= " , #{patient.com3.strip}" if patient.com3? %>
+          <%= '/Pain: ' if patient.pain_scale? %><%= patient.pain_scale %>
         </td>
         <td><%= patient.referred %></td>
         <td>
@@ -58,11 +54,13 @@
           <%= patient.o_dis %><%= ', Pregnant' if patient.preg == 'Yes' %>
         </td>
         <td>
-          <% if patient.signature.present? %>
-            <span class="badge bg-success">Digital Sign</span>
-          <% else %>
-            <span class="badge bg-secondary">Paper Only</span>
-          <% end %>
+          <div class="d-flex align-items-center">
+            <% if patient.signature.present? %>
+              <span class="badge bg-success">Digital Sign</span>
+            <% else %>
+              <span class="badge bg-secondary">Paper Only</span>
+            <% end %>
+          </div>
         </td>
       </tr>
     <% end %>

@@ -96,45 +96,35 @@ class PatientsController < ApplicationController
     end
   end
 
-def update
-  puts "DEBUG: Checking date #{patient_params[:v_date]}"
-  @regi = Regi.find(params[:regi_id])
-  @patient = @regi.patients.find(params[:id])
-
-  # NEW LOGIC: Check if the v_date being submitted is ALREADY in the database
-  # for this patient, regardless of which record it is.
-  target_date = patient_params[:v_date].to_date
-
-  # Does a record with this date exist?
-  exists = @regi.patients.exists?(v_date: target_date)
-
-  if exists && params[:overwrite] != "true"
-    @show_overwrite_warning = true
-    @patient.assign_attributes(patient_params)
-    render :edit, status: :unprocessable_entity and return
-  end
-
-    # Check if "No Consent" button was clicked ---
-    if params[:no_consent_exit] == "true"
+  def update
+    @regi = Regi.find(params[:regi_id])
+    @patient = @regi.patients.find(params[:id])
+  
+    # 1. THE GUARD GATE
+    target_date = patient_params[:v_date].to_date
+    exists = @regi.patients.exists?(v_date: target_date)
+  
+    if exists && params[:overwrite] != "true"
+      @show_overwrite_warning = true
       @patient.assign_attributes(patient_params)
-      @patient.patient_consent = false
-      @patient.signature = nil
-      @patient.skip_patient_validation = true
-
-      if @patient.save(validate: false)
-        redirect_to no_consent_exit_page_path, notice: "Selection recorded: Consent declined."
-      else
-        render :edit, status: :unprocessable_entity
-      end
-
-    # --- 2. Standard Logic for "Submit Signed Consent" ---
-    elsif @patient.update(patient_params)
+      render :edit, status: :unprocessable_entity and return
+    end
+  
+    # 2. SUCCESS PATH
+    # We use assign_attributes first so we can set a bypass flag if needed
+    @patient.assign_attributes(patient_params)
+    
+    # If this is an overwrite, tell the model it's okay if the signature looks "new"
+    @patient.skip_patient_validation = true if params[:overwrite] == "true"
+  
+    if @patient.save # Use .save instead of .update since we already assigned attributes
       if Current.user.patient?
         redirect_to sites_thank_you_path, notice: "Thank you for your submission."
       else
         redirect_to regi_patients_path(@regi), notice: "Record updated successfully."
       end
     else
+      # If it fails here, it's likely the signature/consent validation
       render :edit, status: :unprocessable_entity
     end
   end

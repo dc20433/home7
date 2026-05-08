@@ -1,11 +1,11 @@
-<h2 class="text-center py-2">All Patient Charts by Name as of <%= Time.now.strftime("%Y-%m-%d %H:%M") %></h2>
+<h2 class="text-center py-2">All Patient Charts by Name as of <%= Time.now.strftime("%Y-%m-%d %I:%M %p") %></h2>
 <div class="d-flex align-items-center justify-content-center mx-2 gap-1">
 <%= link_to 'All Charts by Date', overviews_chart_date_path, class:"btn btn-primary border border-light border-3 rounded-pill px-2 py-0 m-1 fw-bold" %>
 <%= link_to 'All Patient Info', overviews_patient_info_path, class:"btn btn-info border border-light border-3 rounded-pill px-2 py-0 m-1 fw-bold" %>
 <%= link_to 'Patient Registration', regis_path, class:"btn btn-warning border border-light border-3 rounded-pill px-2 py-0 m-1 fw-bold" %>
 <%= link_to 'Print All', 
             url_for(params.to_unsafe_h.merge(print: true)), 
-            class: "btn btn-secondary border border-light border-3 rounded-pill px-3 py-0 fw-bold" %>
+            class: "btn btn-secondary border border-light border-3 rounded-pill px-3 py-0 fw-bold d-print-none" %>
 </div>
 <%= render 'shared/search_bar', 
     q: @q, 
@@ -18,10 +18,10 @@
   <% ('A'..'Z').each do |letter| %>
     <%= link_to letter, 
                 url_for(letter: letter), 
-                class: "btn btn-sm btn-info text-white border border-light border-3 fw-bolder #{params[:letter] == letter ? 'btn-info' : 'btn-outline-secondary'} rounded-circle shadow-sm",
+                class: "btn btn-sm btn-warning text-white border border-light border-3 fw-bolder #{params[:letter] == letter ? 'btn-info' : 'btn-outline-secondary'} rounded-circle shadow-sm",
                 style: "width: 35px;" %>
   <% end %>
-  <%= link_to "All", url_for(letter: "All"), class: "btn btn-sm btn-info text-white border border-light border-3 fw-bolder rounded-pill px-3 shadow-sm" %>
+  <%= link_to "All", url_for(letter: "All"), class: "btn btn-sm btn-warning text-white border border-light border-3 fw-bolder rounded-pill px-3 shadow-sm" %>
 </div>
 
 <table class="table table-sm table-striped custom-table border border-dark table-hover mt-4" style="table-layout: fixed; width: 100%; border-collapse: collapse;">
