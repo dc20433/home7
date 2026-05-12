@@ -12,7 +12,6 @@
 
   <% else %>
     <%# --- SECTION 2: MANAGER/ADMIN EDIT VIEW --- %>
-    <h2 class="text-center">Edit Patient Record</h2>
     <%= form_with(model: [@regi, @patient], local: true) do |f| %>
       <%= render "patientConsentForm", f: f %>
     <% end %>
