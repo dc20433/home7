@@ -16,8 +16,7 @@
       <th style="width:145px">Updated On</th>
       <th>Contact Info</th>
       <th>Weight</th>
-      <th>Complaints</th>
-      <th>Onset/Pain</th>
+      <th>Complaints, Onset & Pain Scale</th>
       <th>Referred by</th>
       <th class="text-center">Health History / Issues</th>
       <th class="text-center" style="width:120px">Signature</th>
@@ -47,10 +46,8 @@
           <%= "#{patient.com1.strip}" if patient.com1? %>
           <%= " / #{patient.com2.strip}" if patient.com2? %>
           <%= " / #{patient.com3.strip}" if patient.com3? %>
-        </td>
-        <td>
-          <%= patient.d_onset %><%= '/Pain: ' if patient.pain_scale? %>
-          <%= patient.pain_scale %>
+          <%= " / #{patient.d_onset}" if patient.d_onset? %>
+          <%= " / Pain: #{patient.pain_scale}" if patient.pain_scale? %>
         </td>
         <td><%= patient.referred %></td>
         <td>

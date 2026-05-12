@@ -37,7 +37,7 @@
         <th style="width: 8%;">Date</th>
         <th>Contact Info</th>
         <th>Weight</th>
-        <th>Complaints/Pain Scale</th>
+        <th>Complaints, Onset & Pain Scale</th>
         <th>Referral</th>
         <th class="text-center">Health History / Issues</th>
         <th class="text-center pe-4" style="width:120px">Signature</th>
@@ -66,8 +66,8 @@
             <%= "#{patient.com1.strip}" if patient.com1? %>
             <%= " / #{patient.com2.strip}" if patient.com2? %>
             <%= " / #{patient.com3.strip}" if patient.com3? %>
-            <%= patient.d_onset %><%= '/Pain: ' if patient.pain_scale? %>
-            <%= patient.pain_scale %>
+            <%= " / #{patient.d_onset}" if patient.d_onset? %>
+            <%= " / Pain: #{patient.pain_scale}" if patient.pain_scale? %>
           </td>
           <td class="small"><%= patient.referred %></td>
           <td>

@@ -70,6 +70,13 @@
   </div>
 
   <div class="row mb-1">
+    <div class="col-md-2"><b>Date Onset</b> <%= f.text_field :d_onset, class: "form-control border-primary", readonly: is_readonly %></div>
+    <div class="col-md-2"><b>Pain Scale 1-10</b> <%= f.text_field :pain_scale, class: "form-control border-primary", readonly: is_readonly %></div>
+    <div class="col-md-5"><b>Any Diagnoses Given?</b> <%= f.text_field :diag_given, class: "form-control border-primary", readonly: is_readonly %></div>
+    <div class="col-md-3"><b>Had Acupuncture?</b> <%= f.select :aq_b4, ["Not applicable", "Yes", "No"], {}, class: "form-select border-primary", disabled: is_readonly %></div>
+  </div>
+
+  <div class="row mb-1">
   <div class="col-12">
     <b class="d-block mb-2">Major Health Issues:</b>
     <div class="small border p-3 bg-light rounded shadow-sm">
