@@ -140,21 +140,20 @@
 
           <div class="d-flex justify-content-between align-items-center mb-4">
             <div class="d-flex gap-2">
-              <%= link_to "Cancel", regi_patients_path(@regi), class: "btn btn-secondary px-3" %>
+              <%= f.submit "Save", class: "btn btn-dark btn-lg px-4 shadow fw-bold" %>
+              <%= link_to "Cancel", regi_patients_path(@regi), class: "btn btn-outline-primary rounded-3 px-3 fw-bold" %>
+              <%= link_to 'javascript:history.back()', class: "btn btn-outline-secondary px-2 fw-bold" do %>
+                <i class="bi bi-arrow-left"></i> Go Back
+              <% end %>        
               <% if @patient.persisted? %>
                 <%= link_to regi_patient_path(@regi, @patient), 
-                            class: "btn btn-outline-danger", 
+                            class: "btn btn-outline-danger fw-bold px-3", 
                             data: { turbo_method: :delete, turbo_confirm: "Permanently delete this record?" } do %>
                   Delete
                 <% end %>
               <% end %>
-              <%= link_to 'javascript:history.back()', class: "btn btn-outline-secondary px-3" do %>
-                <i class="bi bi-arrow-left"></i> Go Back
-              <% end %>        
             </div>
-            <div>
-              <%= f.submit "Save and Return to Index", class: "btn btn-success btn-lg px-5 shadow fw-bold" %>
-            </div>
+
           </div>
 
         <% elsif defined?(selection_mode) && selection_mode %>

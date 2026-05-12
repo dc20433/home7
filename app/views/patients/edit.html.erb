@@ -1,6 +1,5 @@
 <div class="mt-3"> 
   <% if Current.user&.patient? %>
-    <%# Keep your existing navigation security script %>
     <script type="text/javascript">
       window.history.forward();
       function noback() { window.history.forward(); }

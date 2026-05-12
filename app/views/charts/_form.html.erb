@@ -46,13 +46,13 @@
             <b>Plan</b>
             <%= f.text_area :plan, class:"form-control form-control-sm border-primary fs-4", style:"height: 150px" %>
           </div>
-          <br>
-          <div class="btn-group m-2 pt-2" role="group">
+
+          <div class="btn-group mx-2 pt-2" role="group">
             <%= f.submit "Save", class: "btn btn-sm btn-dark border border-lg border-dark rounded-3 px-3 m-2 fw-bold" %>
         <% end %>
-            <%= button_to "Delete", [@regi,@chart], method: :delete, class:"btn btn-outline-danger rounded-3 px-3 m-2 fw-bold", form: { data: { turbo_confirm: "Are you sure?" } } %>
             <%= link_to 'Cancel', regi_charts_path, class:"btn btn-outline-primary rounded-3 px-2 m-2 fw-bold" %>
-            <%= link_to '← Go Back', :back, class:"btn btn-outline-success rounded-3 px-3 m-2 fw-bold" %>
+            <%= link_to '← Go Back', :back, class:"btn btn-outline-secondary rounded-3 px-3 m-2 fw-bold" %>
+            <%= button_to "Delete", [@regi,@chart], method: :delete, class:"btn btn-outline-danger rounded-3 px-3 m-2 fw-bold", form: { data: { turbo_confirm: "Are you sure?" } } %>
           </div>
       </div>
     </div>
