@@ -205,7 +205,7 @@
           <div class="<%= show_full_width ? 'col-12' : 'col-lg-11' %>">
             
             <% if is_data_page %>
-              <div class="white-data-card mt-4">
+              <div class="white-data-card pt-4">
                 <%# Remove 'table-responsive' to stop the horizontal slider  %>
                 <div class="data-container"> 
                   <%= yield %>
@@ -220,8 +220,8 @@
       </div>
     </div>
   </body>
+
   <script>
-    // In your Stimulus controller or Javascript block
   function handlePatientSave(event) {
     // Only trigger if the signature box is being filled
     const needsVerify = document.getElementById('signature_box').value !== "";

@@ -50,7 +50,7 @@ class RegisController < ApplicationController
     @regi = Regi.find(params[:id])
 
     @user = User.new(
-      email: "#{@regi.last_name}#{@regi.first_name}#{@regi.dob.strftime('%m')}".downcase.gsub(/\s+/, "") + "@clinic.local",
+      email: "#{@regi.last_name}#{@regi.first_name}#{@regi.dob.strftime('%m')}".downcase.gsub(/\s+/, ""),
       password: "temp123",
       password_confirmation: "temp123",
       role: "patient"
@@ -70,7 +70,7 @@ class RegisController < ApplicationController
   
     # 1. Generate the expected email to find potential orphans
     prefix = "#{@regi.last_name}#{@regi.first_name}#{@regi.dob.strftime('%m')}".downcase.gsub(/\s+/, "")
-    email_to_clean = "#{prefix}@clinic.local" # Matches your recycling requirement
+    email_to_clean = "#{prefix}" # Matches your recycling requirement
   
     # 2. Find the user via the association OR the email
     user = @regi.user || User.find_by(email: email_to_clean)
@@ -117,7 +117,7 @@ class RegisController < ApplicationController
     # Convention: lastname + firstname + month
     dob_m = @regi.dob&.strftime('%m') || "00"
     login_handle = "#{@regi.last_name}#{@regi.first_name}#{dob_m}".downcase.gsub(/\s+/, "")
-    login_email = "#{login_handle}@clinic.local"
+    login_email = "#{login_handle}"
   
     user = User.find_or_initialize_by(regi_id: @regi.id)
     user.assign_attributes(

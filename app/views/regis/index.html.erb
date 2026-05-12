@@ -88,10 +88,10 @@
   <% ('A'..'Z').each do |letter| %>
     <%= link_to letter, 
     url_for(letter: letter), 
-    class: "btn btn-sm btn-info text-white border border-light border-3 fw-bolder #{params[:letter] == letter ? 'btn-info' : 'btn-outline-secondary'} rounded-circle shadow-sm",
+    class: "btn btn-sm btn-warning text-white border border-light border-3 fw-bolder #{params[:letter] == letter ? 'btn-warning' : 'btn-outline-secondary'} rounded-circle shadow-sm",
       style: "width: 35px;" %>
   <% end %>
-  <%= link_to "All", url_for(letter: "All"), class: "btn btn-sm btn-info text-white border border-light border-3 fw-bolder rounded-pill px-3 shadow-sm" %>
+  <%= link_to "All", url_for(letter: "All"), class: "btn btn-sm btn-warning text-white border border-light border-3 fw-bolder rounded-pill px-3 shadow-sm" %>
 </div>
 
 <div class="card mt-0 mx-auto border-primary shadow" style="width: 68rem;">     
@@ -121,32 +121,31 @@
           <td class="text-center"><%= regi.dob %></td>
           <td class="text-center"><%= regi.created_at.strftime("%Y-%m-%d") %></td>
                        
-          <td class="col-actions align-middle">
-  <div class="d-flex align-items-center justify-content-center">
-    
-    <%= link_to 'Chart', regi_charts_path(regi.id), 
-        class: "btn btn-mini btn-outline-primary outline-double border border-lg border-primary rounded-pill fw-bold" %>
+          <td class="col-actions align-middle pe-4">
+          <div class="d-flex align-items-center justify-content-center gap-1">
+            <%= link_to 'Chart', regi_charts_path(regi.id), 
+                class: "btn btn-mini btn-outline-primary outline-double border border-lg border-primary rounded-pill fw-bold" %>
+            <%= link_to 'Info', regi_patients_path(regi.id), 
+                class: "btn btn-mini btn-outline-dark outline-double border border-lg border-dark rounded-pill fw-bold" %>
+            <%= link_to 'Files', regi_filings_path(regi.id), 
+                class: "btn btn-mini btn-outline-success outline-double border border-lg border-success rounded-pill fw-bold" %>
+            <% status = regi.onboarding_status %>
+            <% if status == "DigiSigned" %>
+              <span class="badge bg-primary fw-bold" style="font-size: 0.85rem; padding: 2px 8px;">
+                Signed
+              </span>
+            <% elsif status == "Issued" %>
+              <%= link_to "Issued", revoke_access_regi_path(regi), data: { turbo_method: :post }, 
+                  class: "badge bg-success text-decoration-none fw-bold", 
+                  style: "font-size: 0.85rem; padding: 2px 8px;" %>
+            <% else %>
+              <%= link_to "SignUp", issue_access_regi_path(regi), data: { turbo_method: :post }, 
+                  class: "badge bg-warning text-dark text-decoration-none fw-bold", 
+                  style: "font-size: 0.85rem; padding: 2px 8px;" %>
+            <% end %>
 
-    <%= link_to 'Info', regi_patients_path(regi.id), 
-        class: "btn btn-mini btn-outline-dark outline-double border border-lg border-dark rounded-pill fw-bold" %>
-    
-    <%= link_to 'Files', regi_filings_path(regi.id), 
-        class: "btn btn-mini btn-outline-success outline-double border border-lg border-success rounded-pill fw-bold" %>
-
-          <% status = regi.onboarding_status %>
-
-          <% if status == "DigiSigned" %>
-            <span class="badge rounded-pill bg-primary">Signed</span>
-          <% elsif status == "Issued" %>
-            <%= link_to "Issued", revoke_access_regi_path(regi), data: { turbo_method: :post }, 
-                class: "badge rounded-pill bg-success text-decoration-none" %>
-          <% else %>
-            <%= link_to "SignUp", issue_access_regi_path(regi), data: { turbo_method: :post }, 
-                class: "badge rounded-pill bg-warning text-dark text-decoration-none" %>
-          <% end %>
-
-  </div>
-</td>
+          </div>
+        </td>
         </tr>
         <% end %>
       </tbody>

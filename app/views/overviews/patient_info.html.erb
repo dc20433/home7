@@ -1,4 +1,4 @@
-<h2 class="text-center py-2">All Patient Information as of <%= Time.now.strftime("%Y-%m-%d %H:%M") %></h2>
+<h2 class="text-center py-2">All Patient Information as of <%= Time.now.strftime("%Y-%m-%d %I:%M %p") %></h2>
 
 <%# Navigation and Search remain unchanged %>
 <div class="d-flex align-items-center justify-content-center mx-2 gap-1 no-print">
@@ -21,10 +21,10 @@
   <% ('A'..'Z').each do |letter| %>
     <%= link_to letter, 
                 url_for(letter: letter), 
-                class: "btn btn-sm btn-info text-white border border-light border-3 fw-bolder #{params[:letter] == letter ? 'btn-info' : 'btn-outline-secondary'} rounded-circle shadow-sm",
+                class: "btn btn-sm btn-warning text-white border border-light border-3 fw-bolder #{params[:letter] == letter ? 'btn-warning' : 'btn-outline-secondary'} rounded-circle shadow-sm",
                 style: "width: 35px;" %>
   <% end %>
-  <%= link_to "All", url_for(letter: "All"), class: "btn btn-sm btn-info text-white border border-light border-3 fw-bolder rounded-pill px-3 shadow-sm" %>
+  <%= link_to "All", url_for(letter: "All"), class: "btn btn-sm btn-warning text-white border border-light border-3 fw-bolder rounded-pill px-3 shadow-sm" %>
 </div> 
 
 <%# THE FIX: Single wrapper, no card, no fixed height containers %>
@@ -34,7 +34,7 @@
     <thead class="table-success fs-6">
       <tr style="height:13px">
         <th class="ps-4">Name</th>
-        <th>Date</th>
+        <th style="width: 8%;">Date</th>
         <th>Contact Info</th>
         <th>Weight</th>
         <th>Complaints/Pain Scale</th>
@@ -47,7 +47,7 @@
       <% last_patient_id = nil %>
       <% @patients.each do |patient| %>
         <tr style="height:15px">
-          <td class="fw-bold ps-4">
+          <td class="ps-4">
             <% if patient.regi_id != last_patient_id %>
               <%= link_to "#{patient.regi.p_name} (#{patient.regi.p_age})", regi_patient_path(patient.regi_id, patient) %>
             <% end %>
@@ -62,16 +62,20 @@
             </span>
           </td>
           <td><%= patient.weight %></td>
-          <td class="small">
-            <%= [patient.com1, patient.com2, patient.com3, patient.pain_scale].select(&:present?).map(&:strip).join(' / ') %>
+          <td>
+            <%= "#{patient.com1.strip}" if patient.com1? %>
+            <%= " / #{patient.com2.strip}" if patient.com2? %>
+            <%= " / #{patient.com3.strip}" if patient.com3? %>
+            <%= patient.d_onset %><%= '/Pain: ' if patient.pain_scale? %>
+            <%= patient.pain_scale %>
           </td>
           <td class="small"><%= patient.referred %></td>
-          <td class="small">
-            <%= (patient.di_list.to_sentence).gsub(/_/, ' ').gsub(/;/, '') %><%= ', ' if patient.o_dis? %>
-            <%= patient.o_dis %><%= ', Pregnant' if patient.preg == 'Yes' %>
+          <td>
+            <%= (patient.di_list&.to_sentence || "").gsub(/_/, ' ').gsub(/;/, '') %>
+            <%= '/ ' if (patient.di_list.present? && patient.o_dis.present?) %>
+            <%= patient.o_dis %>
+            <%= '/ Pregnant' if patient.preg == 'Yes' %>
           </td>
-
-          <%# Restored Paper Only badge %>
           <td class="text-center pe-4">
             <% if patient.signature.present? %>
               <span class="badge bg-success">Digital Sign</span>

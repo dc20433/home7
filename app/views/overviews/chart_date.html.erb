@@ -1,16 +1,16 @@
-<h2 class="text-center py-2">All Patient Charts by Date as of <%= Time.now.strftime("%Y-%m-%d %H:%M") %></h2>
+<h2 class="text-center py-2">All Patient Charts by Date as of <%= Time.now.strftime("%Y-%m-%d %I:%M %p") %></h2>
 
 <div class="d-flex align-items-center justify-content-center mx-2 gap-1">
   <%= link_to 'All Charts by Name', overviews_chart_name_path, class:"btn btn-success border border-light border-3 rounded-pill px-2 py-0 m-1 fw-bold" %>
   <%= link_to 'All Patient Info', overviews_patient_info_path, class:"btn btn-info border border-light border-3 rounded-pill px-2 py-0 m-1 fw-bold" %>
   <%= link_to 'Patient Registration', regis_path, class:"btn btn-warning border border-light border-3 rounded-pill px-2 py-0 m-1 fw-bold" %>
-  <%= link_to 'Print All', 
+  <%# link_to 'Print All', 
               url_for(params.to_unsafe_h.merge(print: true)), 
               class: "btn btn-secondary border border-light border-3 rounded-pill px-3 py-0 fw-bold" %>
 </div>
 
 <div class="row justify-content-center my-3">
-  <div class="col-8 border border-primary rounded-pill py-1 bg-info shadow-sm">
+  <div class="col-8 border border-primary rounded-pill py-1 bg-warning shadow-sm">
     <%= search_form_for @q, url: overviews_chart_date_path, method: :get, class: "d-flex gap-3 align-items-center px-4" do |f| %>
       
       <div class="d-flex align-items-center gap-2 flex-grow-1">

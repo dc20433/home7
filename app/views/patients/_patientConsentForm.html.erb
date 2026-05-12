@@ -100,7 +100,7 @@
       <%= f.text_area :o_dis, rows: 1, class: "form-control border-primary", readonly: is_readonly %>
     </div>
     <div class="col-2 text-muted">
-    <i><small>Female only:</small></i><b>Last period</b>
+    <i><small>female: </small></i><b>Last period</b>
     <%= f.date_field :last_prd, class: "form-control border-primary", readonly: is_readonly %></div>
     <div class="col-md-2"><b>Are you pregnant?</b> <%= f.select :preg, ["Not applicable", "Yes", "No"], {}, class: "form-select border-primary", disabled: is_readonly %></div>
     <div class="col-md-2"><b>In weeks?</b> <%= f.text_field :preg_wks, class: "form-control border-primary", readonly: is_readonly %></div>
@@ -204,8 +204,8 @@
               </div>
           
               <div class="d-flex gap-3 justify-content-center mb-4">
-                <%= f.submit "Submit Signed Consent", class: "btn btn-primary btn-lg rounded-pill px-5 shadow" %>
-                <%= link_to "No Consent", no_consent_path(@regi), class: "btn btn-outline-danger btn-lg rounded-pill px-5" %>
+                <%= f.submit "Submit Signed Form", class: "btn btn-primary btn-lg px-5 shadow" %>
+                <%= link_to "No Consent", no_consent_path(@regi), class: "btn btn-outline-danger btn-lg px-5" %>
               </div>
               
               <%= f.hidden_field :signature, id: "signature-data-input" %>

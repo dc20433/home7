@@ -13,7 +13,7 @@
   <% end %>
 </div>
 
-
+<%= form_with(model: [@regi, @patient], local: true, class: "needs-validation") do |f| %>
   <div class="card shadow-sm border-secondary mb-4">
     <div class="card-body p-4">
 
@@ -59,24 +59,32 @@
     </div>
 
     <%# --- Section 5: Major Health Issues (Checkboxes) --- %>
-    <div class="row mb-1 mt-3">
-      <div class="col-12">
-        <b>Major Health Issues:</b>
-        <div class="p-3 border rounded bg-light mt-1">
-          <% Patient::DI_LIST.each do |issue| %>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input border-primary" type="checkbox" disabled <%= 'checked' if @patient.di_list&.include?(issue) %>>
-              <label class="form-check-label text-dark"><%= issue %>;</label>
+    <div class="bg-light p-3 rounded-3 border mb-4">
+      <h6 class="fw-bold small text-uppercase mb-3 text-primary border-bottom pb-2">Major Health Issues:</h6>
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-2">
+        <% [
+          'Diabetes', 'Hypertension', 'Cancer', 'Hepatitis', 'Heart disease', 
+          'Crack/cocaine', 'Enlarged lymph glands', 'Hiv/aids', 'Neck stiffness', 
+          'Seizure', 'Palpitation', 'Frequent colds', 'Night sweating', 
+          'Chest pain or tightness', 'Constipation', 'Excess sweating', 
+          'Back/lower back pain', 'Major depression', 'Anxiety disorder', 
+          'Post traumatic stress disorder', 'Bipolar disorder', 
+          'Borderline personality disorder'
+        ].each do |issue| %>
+          <div class="col">
+            <div class="form-check">
+              <%= f.check_box :di_list, { multiple: true, class: "form-check-input", checked: @patient.di_list&.include?(issue) }, issue, nil %>
+              <%= f.label "di_list_#{issue.parameterize.underscore}", issue, class: "form-check-label small px-2 fw-bold lh-sm" %>
             </div>
-          <% end %>
-        </div>
+          </div>
+        <% end %>
       </div>
     </div>
 
     <%# --- Section 6: Other & Female Only --- %>
     <div class="row mb-1 mt-2">
       <div class="col-md-6"><b>Other Issues</b> <div class="form-control border-primary bg-light" style="min-height: 38px;"><%= @patient.o_dis %></div></div>
-      <div class="col-md-2"><b>Female: Last Period</b> <div class="form-control border-primary bg-light" style="min-height: 38px;"><%= @patient.last_prd %></div></div>
+      <div class="col-md-2"><b>f: Last Period</b> <div class="form-control border-primary bg-light" style="min-height: 38px;"><%= @patient.last_prd %></div></div>
       <div class="col-md-2"><b>Are you pregnant?</b> <div class="form-control border-primary bg-light" style="min-height: 38px;"><%= @patient.preg %></div></div>
       <div class="col-md-2"><b>In weeks?</b> <div class="form-control border-primary bg-light" style="min-height: 38px;"><%= @patient.preg_wks.presence || "Select" %></div></div>
     </div>
@@ -92,7 +100,12 @@
             <em class="text-muted">No signature captured.</em>
           <% end %>
         </div>
-        <div class="text-muted small">Recorded on: <%= @patient.updated_at.strftime("%B %d, %Y %I:%M %p") %></div>
+        <div class="text-muted small">
+          <% if @patient.persisted? %>
+            Recorded on: <%= @patient.updated_at.strftime("%B %d, %Y %I:%M %p") %>
+          
+          <% end %>
+        </div>
       </div>
     </div>
 
@@ -100,14 +113,14 @@
     <div class="d-flex justify-content-between align-items-center mt-3 p-3 border-top bg-light rounded shadow-sm">
       <div class="d-flex gap-2">
         <%= link_to 'javascript:history.back()', class: "btn btn-outline-secondary" do %>Back<% end %>
-        <%= link_to regi_patients_path(@regi), class: "btn btn-outline-primary" do %>Patient Info<% end %>
+        <%= link_to regi_patients_path(@regi), class: "btn btn-outline-primary" do %>Cancel<% end %>
       </div>
       <div class="d-flex gap-2 align-items-center">
         <% if @patient.persisted? && (Current.user&.manager? || Current.user&.admin?) %>
           <%= button_to regi_patient_path(@regi, @patient), method: :delete, class: "btn btn-link text-danger text-decoration-none", form: { data: { turbo_confirm: "Permanently delete this record?" } } do %>Delete Record<% end %>
         <% end %>
-        <%= link_to "Cancel", regi_patients_path(@regi), class: "btn btn-secondary px-4 shadow-sm" %>
+        <%= f.submit "Save Record and Return", class: "btn btn-success px-4 shadow-sm" %>
       </div>
     </div>
   </div>
-</div>
+<% end %>

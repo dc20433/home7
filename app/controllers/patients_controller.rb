@@ -40,26 +40,46 @@ class PatientsController < ApplicationController
   end
 
   def new
-    @regi = Regi.find(params[:regi_id])
+    # Check if a record for today already exists
+    @patient = @regi.patients.find_by(v_date: Date.today)
 
-    if @regi.patients.any?
-      # 1. Duplicate the medical history from the last visit
-      @patient = @regi.patients.order(v_date: :asc).last.dup
-
-      # 2. CRITICAL: Wipe the signature so the View knows to show the Pad
-      @patient.signature = nil
-      @patient.v_date = Date.today
+    if @patient
+      # If it exists, go to edit mode
+      redirect_to edit_regi_patient_path(@regi, @patient) and return
     else
-      # First time visit
-      @patient = @regi.patients.build(v_date: Date.today)
-    end
-  end
-
-  def edit
-    # SECURITY: Replaced .patient? with .respond_to? to prevent NoMethodError
-    if Current.user.respond_to?(:patient_id) && Current.user.patient_id.present?
-      if Current.user.patient_id != @patient.id
-        redirect_to root_path, alert: "You do not have permission to edit this record."
+      # If not, create a shell record using the last known demographics
+      last_patient = @regi.patients.order(v_date: :desc).first
+      
+      @patient = @regi.patients.build(
+        v_date: Date.today,
+        street: last_patient&.street,
+        city: last_patient&.city,
+        state: last_patient&.state,
+        zip: last_patient&.zip,
+        cell: last_patient&.cell,
+        home: last_patient&.home,
+        work: last_patient&.work,
+        email: last_patient&.email,
+        height: last_patient&.height,
+        weight: last_patient&.weight,
+        m_stat: last_patient&.m_stat,
+        occup: last_patient&.occup,
+        company: last_patient&.company,
+        di_list: last_patient&.di_list,
+        o_dis: last_patient&.o_dis,
+        last_prd: last_patient&.last_prd,
+        preg: last_patient&.preg,
+        preg_wks: last_patient&.preg_wks
+      )
+      
+      # Managers bypass validations to establish the record
+      @patient.skip_patient_validation = true if Current.user&.manager? || Current.user&.admin?
+      
+      if @patient.save(validate: false)
+        redirect_to edit_regi_patient_path(@regi, @patient) and return
+      else
+        # Fallback to standard new form if shell creation fails
+        render :new
       end
     end
   end
@@ -168,6 +188,17 @@ def update
 
   def set_patient
     @patient = @regi.patients.find(params[:id])
+  end
+
+  def handle_account_activation
+    if @regi.user.nil? && @patient.email.present?
+      begin
+        @regi.create_user!(
+          email: @patient.email, password: "temp123", password_confirmation: "temp123", role: "patient"
+        )
+      rescue ActiveRecord::RecordInvalid
+      end
+    end
   end
 
   def ensure_password_is_changed
