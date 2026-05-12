@@ -8,22 +8,6 @@
 
     <div class="card-body">
       <%= form_with(model: [@regi, @filing]) do |f| %>
-        <% if @show_overwrite_warning %>
-          <div class="alert alert-danger p-4 mb-4 border-start border-5 border-danger shadow-sm">
-            <h5 class="fw-bold"><i class="bi bi-exclamation-triangle-fill"></i> Confirm Overwrite</h5>
-            <p class="mb-3">
-              A filing record with this date (<strong><%= @filing.f_date %></strong>) is already existing. 
-              Do you want to <strong>Continue to Overwrite</strong> (i.e., proceed to save), or <strong>Cancel</strong>?
-            </p>
-            
-            <div class="d-flex gap-2">
-              <%= hidden_field_tag :overwrite, "true" %>
-              <%= f.submit "Continue to Overwrite", class: "btn btn-danger px-4 fw-bold" %>
-              <%= link_to "Cancel", edit_regi_filing_path(@regi, @filing), class: "btn btn-outline-secondary px-4" %>
-            </div>
-          </div>
-        <% end %>
-        
         <% if @filing.errors.any? %>
           <div id="error_explanation">
             <h2><%= pluralize(@filing.errors.count, "error") %> prohibited this filing from being saved:</h2>
@@ -35,10 +19,13 @@
           </div>
         <% end %>
 
-        <div class="field mb-3">
-          <%# Replace the hardcoded text with a real label and date field %>
-          <%= f.label :f_date, "Filed on", class: "form-label fw-bold" %>
-          <%= f.date_field :f_date, class: "form-control" %>
+        <div class="field fs-6">
+          <b>Filed on</b>
+          <% if f.object.respond_to?(:f_date) %>
+            <%= f.date_field :f_date, class:"form-control form-control-sm border-primary fs-4" %>
+          <% else %>
+            <span class="text-muted small">(Date column missing in DB)</span>
+          <% end %>
         </div>
 
         <div class="field"><br>
@@ -51,10 +38,10 @@
         </div>
 
         <div class="btn-group m-2 pt-2" role="group"> 
-          <%= f.submit "Save", class: "btn btn-sm btn-outline-dark outline-double rounded-pill px-3 m-2 fw-bold" %>
-          <%= link_to "Back to Files", regi_filings_path, class: "btn btn-sm btn-outline-success outline-double rounded-pill px-2 m-2 fw-bold" %>   
-          <%= link_to '← Go Back', :back, class: "btn btn-sm btn-outline-info outline-double rounded-pill px-2 m-2 fw-bold" %>
-          </div>
+          <%= f.submit "Save", class: "btn btn-dark rounded-3 px-3 m-1 fw-bold" %>
+          <%= link_to "Cancel", regi_filings_path, class: "btn btn-outline-success rounded-3 px-3 m-1 fw-bold" %>   
+          <%= link_to '← Go Back', :back, class: "btn btn-outline-primary rounded-3 px-3 m-1 fw-bold" %>
+        </div>
       <% end %>
     </div>
   </div>

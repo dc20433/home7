@@ -15,9 +15,9 @@
     <tr>
       <th style="width:145px">Updated On</th>
       <th>Contact Info</th>
-      <th class="text-center">Weight</th>
-      <th class="text-center">Complaints/Pain</th>
-      <th class="text-center">Referred by</th>
+      <th>Weight</th>
+      <th>Complaints, Onset & Pain Scale</th>
+      <th>Referred by</th>
       <th class="text-center">Health History / Issues</th>
       <th class="text-center" style="width:120px">Signature</th>
     </tr>
@@ -44,24 +44,30 @@
         </td>
         <td>
           <%= "#{patient.com1.strip}" if patient.com1? %>
-          <%= " , #{patient.com2.strip}" if patient.com2? %>
-          <%= " , #{patient.com3.strip}" if patient.com3? %>
-          <%= '/Pain: ' if patient.pain_scale? %><%= patient.pain_scale %>
+          <%= " / #{patient.com2.strip}" if patient.com2? %>
+          <%= " / #{patient.com3.strip}" if patient.com3? %>
+          <%= " / #{patient.d_onset}" if patient.d_onset? %>
+          <%= " / Pain: #{patient.pain_scale}" if patient.pain_scale? %>
         </td>
         <td><%= patient.referred %></td>
         <td>
-          <%= (patient.di_list.to_sentence).gsub(/_/, ' ').gsub(/;/, '') %><%= ', ' if patient.o_dis? %>
-          <%= patient.o_dis %><%= ', Pregnant' if patient.preg == 'Yes' %>
+          <%= (patient.di_list&.to_sentence || "").gsub(/_/, ' ').gsub(/;/, '') %>
+          <%= ', ' if (patient.di_list.present? && patient.o_dis.present?) %>
+          <%= patient.o_dis %>
+          <%= ', Pregnant' if patient.preg == 'Yes' %>
         </td>
-        <td>
-          <div class="d-flex align-items-center">
-            <% if patient.signature.present? %>
-              <span class="badge bg-success">Digital Sign</span>
-            <% else %>
-              <span class="badge bg-secondary">Paper Only</span>
-            <% end %>
-          </div>
-        </td>
+        <td class="text-center">
+        <% if patient.signature.present? %>
+          <%# Reduced size to match btn-sm/mini scale %>
+          <span class="badge bg-success fw-normal" style="font-size: 1rem; padding: 2px 4px;">
+            DigiSigned
+          </span>
+        <% else %>
+          <button class="btn btn-sm btn-secondary opacity-75 rounded-0 py-0" style="font-size: 1rem;" disabled>
+            Paper Only
+          </button>
+        <% end %>
+      </td>
       </tr>
     <% end %>
   </tbody>

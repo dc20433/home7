@@ -66,9 +66,9 @@
     <%# Show the login if names are present, even for new records %>
     <% if @regi.first_name.present? || @regi.last_name.present? %>
       <p class="mb-0 small text-muted">
-        <strong>Patient Portal Access:</strong> Login: 
+        <strong>Patient Portal Access</strong> Login: 
         <span class="text-dark fw-bold">
-          <%= "#{@regi.last_name}#{@regi.first_name}#{@regi.dob&.strftime('%m')}".downcase.gsub(/\s+/, "") %>@zhangsclinic.com
+          <%= "#{@regi.last_name}#{@regi.first_name}#{@regi.dob&.strftime('%m')}".downcase.gsub(/\s+/, "") %>
         </span>
       </p>
       
@@ -83,17 +83,16 @@
   </div>
 
     <%# --- 2. THE BUTTONS --- %>
-    <div class="d-flex justify-content-center gap-2 mt-4">
-      <%# Changed 'f.submit' to 'form.submit' to match line 5 %>
-      <%= form.submit "Save Registration", class: "btn btn-sm btn-outline-dark outline-double rounded-pill px-2 m-2 fw-bold" %>
+    <div class="d-flex justify-content-left gap-2 mt-4">
+      <%= form.submit "Save Registration", class: "btn btn-dark border border-lg border-dark rounded-3 px-2 m-1 fw-bold" %>
     
       <% if @regi.persisted? %>
         <%= link_to "Delete", regi_path(@regi), 
-                    class: "btn btn-sm btn-outline-danger outline-double rounded-pill px-2 m-2 fw-bold", 
+                    class: "btn btn-outline-danger rounded-3 px-2 m-1 fw-bold", 
                     data: { turbo_method: :delete, turbo_confirm: "Permanently delete this registration?" } %>
       <% end %>
     
-      <%= link_to "← Go Back", regis_path, class: "btn btn-sm btn-outline-primary outline-double rounded-pill px-2 m-2 fw-bold" %>
+      <%= link_to "Cancel", regis_path, class: "btn btn-outline-primary rounded-3 px-2 m-1 fw-bold" %>
     </div>
 
   <% end %> <%# --- THIS IS THE MISSING END FOR THE MAIN FORM (Line 5) --- %>

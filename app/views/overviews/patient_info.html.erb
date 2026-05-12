@@ -7,7 +7,7 @@
   <%= link_to 'Patient Registration', regis_path, class:"btn btn-warning border border-light border-3 rounded-pill px-2 py-0 m-1 fw-bold" %>
   <%= link_to 'Print All', 
           url_for(params.to_unsafe_h.merge(print: true)), 
-          class: "btn btn-secondary border border-light border-3 rounded-pill px-3 py-0 fw-bold d-print-none" %>
+          class: "btn btn-secondary border border-light border-3 rounded-pill px-3 py-0 fw-bold" %>
 </div>
 
 <%= render 'shared/search_bar', 
@@ -21,31 +21,33 @@
   <% ('A'..'Z').each do |letter| %>
     <%= link_to letter, 
                 url_for(letter: letter), 
-                class: "btn btn-sm btn-warning text-white border border-light border-3 fw-bolder #{params[:letter] == letter ? 'btn-info' : 'btn-outline-secondary'} rounded-circle shadow-sm",
+                class: "btn btn-sm btn-warning text-white border border-light border-3 fw-bolder #{params[:letter] == letter ? 'btn-warning' : 'btn-outline-secondary'} rounded-circle shadow-sm",
                 style: "width: 35px;" %>
   <% end %>
   <%= link_to "All", url_for(letter: "All"), class: "btn btn-sm btn-warning text-white border border-light border-3 fw-bolder rounded-pill px-3 shadow-sm" %>
 </div> 
 
-<table class="table table-sm table-striped custom-table border border-dark table-hover mt-4" style="table-layout: fixed; width: 100%; border-collapse: collapse;">
-
+<%# THE FIX: Single wrapper, no card, no fixed height containers %>
+<div class="table-responsive" style="overflow-x: auto !important; overflow-y: visible !important; -webkit-overflow-scrolling: touch;">
+  <table class="table table-sm table-striped table-hover custom-table mb-4" 
+         style="table-layout: auto !important; width: auto !important; min-width: 1100px !important;">
     <thead class="table-success fs-6">
       <tr style="height:13px">
-        <th class="ps-3">Name</th>
-        <th>Date</th>
+        <th class="ps-4">Name</th>
+        <th style="width: 8%;">Date</th>
         <th>Contact Info</th>
-        <th class="text-center">Weight</th>
-        <th class="text-center">Complaints/Pain Scale</th>
-        <th class="text-center">Referral</th>
+        <th>Weight</th>
+        <th>Complaints, Onset & Pain Scale</th>
+        <th>Referral</th>
         <th class="text-center">Health History / Issues</th>
-        <th class="text-center pe-4" style="width:150px">Signature</th>
+        <th class="text-center pe-4" style="width:120px">Signature</th>
       </tr>
     </thead>
     <tbody>
       <% last_patient_id = nil %>
       <% @patients.each do |patient| %>
         <tr style="height:15px">
-          <td class="ps-3">
+          <td class="ps-4">
             <% if patient.regi_id != last_patient_id %>
               <%= link_to "#{patient.regi.p_name} (#{patient.regi.p_age})", regi_patient_path(patient.regi_id, patient) %>
             <% end %>
@@ -60,16 +62,20 @@
             </span>
           </td>
           <td><%= patient.weight %></td>
-          <td class="small">
-            <%= [patient.com1, patient.com2, patient.com3, patient.pain_scale].select(&:present?).map(&:strip).join(' / ') %>
+          <td>
+            <%= "#{patient.com1.strip}" if patient.com1? %>
+            <%= " / #{patient.com2.strip}" if patient.com2? %>
+            <%= " / #{patient.com3.strip}" if patient.com3? %>
+            <%= " / #{patient.d_onset}" if patient.d_onset? %>
+            <%= " / Pain: #{patient.pain_scale}" if patient.pain_scale? %>
           </td>
           <td class="small"><%= patient.referred %></td>
-          <td class="small">
-            <%= (patient.di_list.to_sentence).gsub(/_/, ' ').gsub(/;/, '') %><%= ', ' if patient.o_dis? %>
-            <%= patient.o_dis %><%= ', Pregnant' if patient.preg == 'Yes' %>
+          <td>
+            <%= (patient.di_list&.to_sentence || "").gsub(/_/, ' ').gsub(/;/, '') %>
+            <%= '/ ' if (patient.di_list.present? && patient.o_dis.present?) %>
+            <%= patient.o_dis %>
+            <%= '/ Pregnant' if patient.preg == 'Yes' %>
           </td>
-
-          <%# Restored Paper Only badge %>
           <td class="text-center pe-4">
             <% if patient.signature.present? %>
               <span class="badge bg-success">Digital Sign</span>
@@ -82,7 +88,7 @@
       <% end %>
     </tbody>
   </table>
-
+</div>
 
 <div class="d-flex justify-content-center my-4 no-print">
   <%== pagy_bootstrap_nav(@pagy) if @pagy&.pages.to_i > 1 %>

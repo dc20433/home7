@@ -5,7 +5,7 @@
 <%= link_to 'Patient Registration', regis_path, class:"btn btn-warning border border-light border-3 rounded-pill px-2 py-0 m-1 fw-bold" %>
 <%= link_to 'Print All', 
             url_for(params.to_unsafe_h.merge(print: true)), 
-            class: "btn btn-secondary border border-light border-3 rounded-pill px-3 py-0 fw-bold d-print-none" %>
+            class: "btn btn-secondary border border-light border-3 rounded-pill px-3 py-0 fw-bold" %>
 </div>
 <%= render 'shared/search_bar', 
     q: @q, 
@@ -18,7 +18,7 @@
   <% ('A'..'Z').each do |letter| %>
     <%= link_to letter, 
                 url_for(letter: letter), 
-                class: "btn btn-sm btn-warning text-white border border-light border-3 fw-bolder #{params[:letter] == letter ? 'btn-info' : 'btn-outline-secondary'} rounded-circle shadow-sm",
+                class: "btn btn-sm btn-warning text-white border border-light border-3 fw-bolder #{params[:letter] == letter ? 'btn-warning' : 'btn-outline-secondary'} rounded-circle shadow-sm",
                 style: "width: 35px;" %>
   <% end %>
   <%= link_to "All", url_for(letter: "All"), class: "btn btn-sm btn-warning text-white border border-light border-3 fw-bolder rounded-pill px-3 shadow-sm" %>
