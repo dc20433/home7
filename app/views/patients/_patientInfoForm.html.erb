@@ -1,11 +1,7 @@
-<h2 class="text-center">Patient Information</h2>
-<%= render 'layouts/identifier' %>
-
-<div class="container mt-4">
-
-<%= form_with(model: [@regi, @patient], local: true, class: "needs-validation") do |f| %>
-  <div class="card shadow-sm border-secondary mb-4">
-    <div class="card-body p-4">
+<div class="container-fluid mt-4">
+  <%= form_with(model: [@regi, @patient], local: true, class: "needs-validation") do |f| %>
+    <div class="card shadow-sm border-secondary mb-4">
+      <div class="card-body p-4">
 
     <%# --- Section 1: Demographics --- %>
     <div class="row g-2 mb-2">
@@ -144,7 +140,7 @@
         <%= f.text_field :o_dis, class: "form-control border-primary", placeholder: "Additional health issues..." %>
       </div>
       <div class="col-md-2">
-        <%= f.label :last_prd, "f: Last Period", class: "fw-bold small" %>
+        <%= f.label :last_prd, "female: Last Period", class: "fw-bold small" %>
         <%= f.date_field :last_prd, class: "form-control border-primary" %>
       </div>
       <div class="col-md-2">
@@ -157,7 +153,7 @@
       </div>
     </div>
 
-    <%# --- Section 7: Verification & Signature --- %>
+    <%# --- Section 8: Verification & Signature --- %>
     <div class="card mt-4 mb-4 border-secondary bg-white shadow-sm">
       <div class="card-body text-center">
         <label class="small fw-bold text-center text-muted d-block">Digital Signature on File:</label>
@@ -189,3 +185,4 @@
     </div>
   </div>
 <% end %>
+</div>

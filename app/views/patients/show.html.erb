@@ -1,19 +1,70 @@
 <div class="container-fluid mt-3">
   <% if Current.user&.patient? %>
-    <%# --- SECTION 1: PATIENT VIEW --- %>
+
+    <%# --- PATIENT WORKFLOW --- %>
     <script type="text/javascript">
       window.history.forward();
       function noback() { window.history.forward(); }
       window.onload = noback;
       window.onpageshow = function(evt) { if (evt.persisted) noback(); };
     </script>
-   
+    
+    <div class="text-center mb-2">
+      <h2 class="fw-bold">Intake & Consent</h2>
+      <%= render 'layouts/identifier' %>
+    </div>
     <%= render "patientConsentForm", selection_mode: true %>
-
   <% else %>
-    <%# --- SECTION 2: MANAGER/ADMIN EDIT VIEW --- %>
-    <%= form_with(model: [@regi, @patient], local: true) do |f| %>
-      <%= render "patientConsentForm", f: f %>
-    <% end %>
+
+    <%# --- MANAGER/ADMIN VIEW (Single Master Form with Header) --- %>
+    <div class="position-relative text-center">
+      <h2 class="fw-bold">Patient Information</h2>
+      <%= render 'layouts/identifier' %>
+      
+      <div class="position-absolute top-0 end-0 d-print-none">
+        <button type="button" 
+                class="btn btn-dark shadow-sm px-4 fw-bold" 
+                onclick="window.print();">
+          <i class="bi bi-printer"></i> Print Record
+        </button>
+      </div>
+    </div>
+  
+    <%# Render only the master form. It now handles Part I (Data) and Part II (Consent) itself. %>
+    <%= render "patientConsentForm" %>
   <% end %>
 </div>
+
+<style type="text/css" media="print">
+  /* Global print overrides */
+  @page { margin: 1.5cm; }
+  
+  .d-print-none, 
+  .card-footer, 
+  .btn,
+  button,
+  input[type="submit"],
+  .border-top {
+    display: none !important;
+  }
+
+  body {
+    background-color: white !important;
+    font-size: 11pt;
+  }
+
+  .card {
+    border: 1px solid #dee2e6 !important;
+    box-shadow: none !important;
+    margin-bottom: 20px !important;
+  }
+
+  .form-control, .form-select {
+    border: 1px solid #ced4da !important;
+    background-color: transparent !important;
+  }
+  
+  header, footer, nav {
+    display: none !important;
+  }
+</style>

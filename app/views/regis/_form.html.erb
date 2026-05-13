@@ -85,14 +85,12 @@
     <%# --- 2. THE BUTTONS --- %>
     <div class="d-flex justify-content-left gap-2 mt-4">
       <%= form.submit "Save Registration", class: "btn btn-dark border border-lg border-dark rounded-3 px-2 m-1 fw-bold" %>
-    
+      <%= link_to "Cancel", regis_path, class: "btn btn-outline-primary rounded-3 px-2 m-1 fw-bold" %>
       <% if @regi.persisted? %>
         <%= link_to "Delete", regi_path(@regi), 
                     class: "btn btn-outline-danger rounded-3 px-2 m-1 fw-bold", 
                     data: { turbo_method: :delete, turbo_confirm: "Permanently delete this registration?" } %>
       <% end %>
-    
-      <%= link_to "Cancel", regis_path, class: "btn btn-outline-primary rounded-3 px-2 m-1 fw-bold" %>
     </div>
 
   <% end %> <%# --- THIS IS THE MISSING END FOR THE MAIN FORM (Line 5) --- %>
