@@ -133,11 +133,48 @@
       </div>
     </div>
 
-    <%# --- Section 6: Other & Female Only --- %>
     <div class="row g-2 mb-2">
       <div class="col-md-6">
         <%= f.label :o_dis, "Other Issues", class: "fw-bold small" %>
         <%= f.text_field :o_dis, class: "form-control border-primary", placeholder: "Additional health issues..." %>
+      </div>
+      <div class="col-md-6">
+        <%= f.label :hosp, "Surgeries/Hospitalizations", class: "fw-bold small" %>
+        <%= f.text_field :hosp, class: "form-control border-primary" %>
+      </div>
+    </div>
+    
+    <div class="row g-2 mb-2">
+      <div class="col-md-3">
+          <%= f.label :stress, "How would you describe your stress level?", class: "fw-bold small" %>
+          <%= f.select :stress, ['Low', 'Moderate', 'High'], { include_blank: 'Select' }, { class: "form-select border-primary" } %>
+        </div>
+      </div>
+      <div class="col-md-3">
+          <%= f.label :exercise, "Exercise Frequency", class: "fw-bold small" %>
+          <%= f.select :exercise, ['None', '1-2x/week', '3-5x/week', 'Daily'], { include_blank: 'Select' }, { class: "form-select border-primary" } %>
+        </div>
+      </div>
+      <div class="col-md-2">
+          <%= f.label :sleep, "Sleep Quality", class: "fw-bold small" %>
+          <%= f.select :sleep, ['Good', 'Fair', 'Poor'], { include_blank: 'Select' }, { class: "form-select border-primary" } %>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <%= f.label :tobacco, "Do you smoke?", class: "fw-bold small" %>
+        <%= f.select :tobacco, ['Yes', 'No'], { include_blank: 'N/A' }, { class: "form-select border-primary" } %>
+      </div>
+      <div class="col-md-2">
+        <%= f.label :alcohol, "Do you drink alcohol?", class: "fw-bold small" %>
+        <%= f.select :alcohol, ['Yes', 'No'], { include_blank: 'N/A' }, { class: "form-select border-primary" } %>
+      </div>
+    </div>
+
+    <%# --- Section 6: Other & Female Only --- %>
+    <div class="row g-2 mb-2">
+      <div class="col-md-6">
+        <%= f.label :all_meds, "Please list all medications, vitamins, or supplements you take:", class: "fw-bold small" %>
+        <%= f.text_area :all_meds, class: "form-control border-primary", placeholder: "List all medications, vitamins, or supplements..." %>
       </div>
       <div class="col-md-2">
         <%= f.label :last_prd, "female: Last Period", class: "fw-bold small" %>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_10_131024) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_18_194140) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -67,9 +67,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_10_131024) do
 
   create_table "patients", force: :cascade do |t|
     t.string "alcohol"
+    t.string "all_meds"
     t.string "aq_b4"
-    t.string "aq_where"
-    t.string "aqrist"
     t.string "better"
     t.string "c_onset"
     t.string "cell"
@@ -86,6 +85,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_10_131024) do
     t.string "diag_given"
     t.string "diag_where"
     t.string "email"
+    t.string "exercise", default: [], array: true
     t.json "f_list"
     t.date "h_when"
     t.decimal "height", precision: 2, scale: 1
@@ -98,7 +98,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_10_131024) do
     t.string "name"
     t.string "o_dis"
     t.string "o_drs"
-    t.date "o_drs_when"
     t.string "occup"
     t.text "other_issues"
     t.string "pain_scale"
@@ -111,9 +110,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_10_131024) do
     t.text "signature"
     t.string "signed_as"
     t.datetime "signed_at"
+    t.date "sleep"
     t.string "state"
     t.string "street"
-    t.string "string", default: [], array: true
+    t.string "stress"
     t.string "tobacco"
     t.datetime "updated_at", precision: 0, null: false
     t.date "v_date"

@@ -52,12 +52,12 @@
         <% if defined?(selection_mode) && selection_mode %>
         <div class="text-center mb-4 mt-2 p-3 rounded border border-primary shadow-sm" style="background-color: #EEE8AA;">
         <h4 class="text-primary fw-bold">Review Your Current Record</h4>
-        <p class="text-muted mb-0">Below is the information we have on file. If everything is correct, select <b>"No Update"</b> at the bottom. To make changes, select <b>"Yes, Update My Information"</b>.</p>
+        <p class="text-muted pt-3 mb-0">Below is the information we have on file. If everything is correct, select <b>"No Update"</b> at the bottom. To make changes, select <b>"Yes, Update My Information"</b>.</p>
         </div>
         <% end %>
       
           <div class="card-header bg-light border">
-            <h5 class="mb-0 text-center text-uppercase fw-bold">Part I: Clinical Information</h5>
+            <h5 class="py-3 mb-0 text-uppercase fw-bold">Part I: Personal Health Information</h5>
           </div>
 
           <%# --- Section 1: Demographics --- %>
@@ -123,11 +123,42 @@
             </div>
           </div>
 
-          <div class="row mb-4 mt-2">
+          <div class="row my-2">
             <div class="col-6">
               <b>Other Issues</b>
               <%= f.text_area :o_dis, rows: 1, class: "form-control border-primary", readonly: is_readonly %>
             </div>
+            <div class="col-6">
+              <b>Surgeries/Hospitalizations</b>
+              <%= f.text_area :hosp, rows: 1, class: "form-control border-primary", readonly: is_readonly %>
+            </div>
+          </div>
+
+
+          <div class="row g-2 mb-2">
+            <div class="col-md-3">
+              <%= f.label :stress, "Describe your stress level?", class: "fw-bold small" %>
+              <%= f.select :stress, ['Low', 'Moderate', 'High'], { include_blank: 'Select' }, { class: "form-select border-primary", disabled: is_readonly } %>
+            </div>
+            <div class="col-md-3">
+              <%= f.label :exercise, "Exercise Frequency", class: "fw-bold small" %>
+              <%= f.select :exercise, ['None', '1-2x/week', '3-5x/week', 'Daily'], { include_blank: 'Select' }, { class: "form-select border-primary", disabled: is_readonly } %>
+            </div>
+            <div class="col-md-2">
+              <%= f.label :sleep, "Sleep Quality", class: "fw-bold small" %>
+              <%= f.select :sleep, ['Good', 'Fair', 'Poor'], { include_blank: 'Select' }, { class: "form-select border-primary", disabled: is_readonly } %>
+            </div>
+            <div class="col-md-2">
+              <%= f.label :tobacco, "Do you smoke?", class: "fw-bold small" %>
+              <%= f.select :tobacco, ['Yes', 'No'], { include_blank: 'N/A' }, { class: "form-select border-primary", disabled: is_readonly } %>
+            </div>
+            <div class="col-md-2">
+              <%= f.label :alcohol, "Do you drink alcohol?", class: "fw-bold small" %>
+              <%= f.select :alcohol, ['Yes', 'No'], { include_blank: 'N/A' }, { class: "form-select border-primary", disabled: is_readonly } %>
+            </div>
+          </div>
+            
+          <div class="row g-2 mb-2">
             <div class="col-2 text-muted">
               <i><small>female: </small></i><b>Last period</b>
               <%= f.date_field :last_prd, class: "form-control border-primary", readonly: is_readonly %></div>
@@ -138,18 +169,46 @@
     <% end %>
 
     <%# --- PART II: LEGAL CONSENT & SIGNATURE --- %>
-    <div class="section-header bg-light border p-2 mb-3 mt-4">
-      <h5 class="mb-0 text-center text-uppercase fw-bold">Part II: LEGAL CONSENT & SIGNATURE</h5>
+    <div class="section-header bg-light border pt-4 p-2 mb-3 mt-4">
+      <h5 class="mb-0 text-uppercase fw-bold">Part II (A)</h5>
+      </br>
+      <h5 class="mb-0 text-center text-decoration-underline text-uppercase fw-bold">Zhang's Acupuncture, Inc,</h5>
+      </br>
+      <h5 class="mb-3 text-center text-uppercase fw-bold">Consent to Treatment</h5>
+
     </div>
 
     <div class="fs-4 text-muted text-justify mb-4 p-2" style="text-align: justify; line-height: 1.5; border-left: 5px solid #dee2e6;">
-      I consent to acupuncture treatments and other procedures associated with Chinese Medicine by the practitioner at Zhang's Acupuncture, Inc. 
-      I understand that the methods of treatment may include, but not limited to acupuncture and Chinese herbs. 
-      By voluntarily signing below I show that I have read, or have had read to me, this consent to treatment.
-      I understand that, under The Health Insurance Portability Accountability of 1996, I have certain rights to privacy in regards to my protected health information (PHI). 
-      I have received, read and understood The Notice of Privacy Practice.
+      
+    Please read this entire document prior to signing it. It is important that you understand the information contained in this document. If anything is unclear, please ask questions before you sign. 
+    <br><br>
+    I, <b><i><u><%= "#{@patient.regi.p_name}" %></u></i></b>, consent to the performance of acupuncture and Chinese herbal medicine by Dr. Bin Zhang or his associate(s). 
+    <br><br>    
+    I have been informed and understand that acupuncture is a generally safe method of treatment, but that it may have side effects and risks, including but not limited to fainting, dizziness, nausea, spontaneous sweating, bleeding and bruising. Unusual risks include nerve damage, organ puncture and infection. I further acknowledge and understand that during the course of treatment Dr. Zhang or his associate may suggest additional acupuncture treatments and/or additional or different procedures based on my medical condition or symptoms. 
+    <br><br>
+    I have been informed and understand that the herbs that may be recommended are generally considered safe, although some may be toxic in large doses. I understand that the herbs need to be prepared and consumed according to the instructions provided. I also understand that the herbs may have an unpleasant smell or taste. I will immediately notify Dr. Zhang or his associate of any unanticipated or unpleasant effects associated with the consumption of the herbs. I have been informed and understand that the side effects of taking herbs include but are not limited to dizziness, headaches, coughing, nausea, stomach pain, diarrhea, itchy skin and unpleasant sweat and/or urine odor due to detoxification. Further, I have been informed and I understand that some herbs may be inappropriate during pregnancy or if I am breastfeeding. 
+    <br><br>
+    I agree to inform Dr. Zhang or his associate of my general medical health and if I have ever experienced a seizure, dizziness or fainting episode, if I have a pacemaker or any other electrical implants, if I have a bleeding disorder, damaged heart valves, allergies or a particular risk of infection. I will inform Dr. Zhang or his associate if I am taking anti-coagulant medications and of all medications and supplements that I take. I will notify the acupuncturist if I am breastfeeding, I become pregnant or I am in the process of trying to become pregnant. If I am pregnant or trying to become pregnant, I will obtain clearance from my obstetrician before treatment. I will also disclose to and discuss with Dr. Zhang or his associate any changes in my health, medications or supplements. 
+    <br><br>
+    I understand that Dr. Zhang and his associate(s) or administrative staff may review my medical records and laboratory reports, but my medical records and laboratory reports will be kept confidential in accordance with applicable law. 
+    <br><br>
+    I am at least 18 years old and fully competent. I acknowledge that I have read this Consent to Treatment or have had it read to me, in its entirety and I fully understand it. I have had sufficient opportunity to discuss my condition(s) and procedure(s) with Dr. Zhang or his associate and all of my questions have been answered to my satisfaction. I further acknowledge that I have been informed of the risks and benefits of, and alternatives to, acupuncture and the ingestion of herbs and that other risks and side effects may occur. I do not expect the acupuncturist to be able to anticipate and explain all possible risks and complications of treatment. I acknowledge that the results of acupuncture and the ingestion of herbs are not guaranteed. 
+    <br><br>
+    I understand that this Consent to Treatment shall be construed under the laws of the State of Connecticut and that the consents provided herein are severable such that if any one of them is found unenforceable or invalid, such unenforceability or invalidity shall not affect the other terms and provisions, which will remain binding and enforceable. 
+    <br><br>
+    I intend this Consent to Treatment to cover the entire course of treatment for my present condition(s) and for any future conditions for which I seek treatment, but if I have gone for a prolonged period of time without treatment, I understand that I may be required to sign an additional consent form. I understand that there are treatment options available for my condition other than acupuncture procedures. These options may include, but are not limited to, self-administered care, over-the-counter pain relievers, medical care with prescription drugs, physical therapy, injections and surgery. I understand that I have the right to a second opinion and to secure other options about my circumstances and health care as I see fit. I also understand that any evaluation given to me does not replace western (allopathic) medical evaluation, diagnosis and treatment. I have also been advised as to the importance of consulting with a licensed physician regarding my condition prior to and during my acupuncture treatment.
+    <br><br>
     </div>
-
+    <div class="section-header bg-light border p-2 mb-3 mt-4">
+      <h5 class="mb-0 text-uppercase fw-bold">Part II (B)</h5>
+      </br>
+      <h5 class="mb-0 text-center text-uppercase fw-bold">Notice of Privacy Practices</h5>
+      </br>
+    </div>
+    <div class="fs-4 text-muted text-justify mb-4 p-2" style="text-align: justify; line-height: 1.5; border-left: 5px solid #dee2e6;">
+      
+    I acknowledge that I have received or been offered a copy of the clinic’s Notice of Privacy Practices. I understand that my personal health information will be used and protected in accordance with applicable privacy laws.
+</div>
     <% if (Current.user&.manager? || Current.user&.admin?) %>
       <%# --- MANAGER VIEW: Fixed Signature & Metadata --- %>
       <div class="text-center mt-4 bg-light p-4 rounded border">
@@ -225,6 +284,8 @@
 </div>
 <% end %> 
 </div>
+
+
 
 
 <script>
