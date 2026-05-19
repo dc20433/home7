@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_18_194140) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_19_035358) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -69,7 +69,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_18_194140) do
     t.string "alcohol"
     t.string "all_meds"
     t.string "aq_b4"
-    t.string "better"
     t.string "c_onset"
     t.string "cell"
     t.string "city"
@@ -85,7 +84,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_18_194140) do
     t.string "diag_given"
     t.string "diag_where"
     t.string "email"
-    t.string "exercise", default: [], array: true
+    t.string "exercise"
+    t.string "exercise_old", default: [], array: true
     t.json "f_list"
     t.date "h_when"
     t.decimal "height", precision: 2, scale: 1
@@ -94,7 +94,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_18_194140) do
     t.string "inj_surg"
     t.date "last_prd"
     t.string "m_stat"
-    t.string "med_taken"
     t.string "name"
     t.string "o_dis"
     t.string "o_drs"
@@ -107,19 +106,21 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_18_194140) do
     t.integer "preg_wks"
     t.string "referred"
     t.bigint "regi_id", null: false
+    t.string "rep_name"
     t.text "signature"
+    t.string "signature1"
     t.string "signed_as"
     t.datetime "signed_at"
-    t.date "sleep"
+    t.string "sleep"
     t.string "state"
     t.string "street"
     t.string "stress"
     t.string "tobacco"
     t.datetime "updated_at", precision: 0, null: false
     t.date "v_date"
+    t.string "vs_date"
     t.decimal "weight", precision: 4, scale: 1
     t.string "work"
-    t.string "worse"
     t.string "zip"
     t.index ["regi_id"], name: "index_patients_on_regi_id"
   end

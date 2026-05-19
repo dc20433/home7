@@ -235,8 +235,10 @@ def update
       :weight, :m_stat, :occup, :company,
       :referred, :com1, :com2, :com3,
       :d_onset, :pain_scale, :diag_given,
-      :aq_b4, :o_dis, :last_prd, :preg,
-      :preg_wks, :signed_at, :signature,
+      :aq_b4, :o_dis,:hosp, :stress, :exercise,
+      :sleep, :tobacco, :alcohol, :last_prd, :preg,
+      :preg_wks, :all_meds, :signed_at, :signature,
+      :signature1, :rep_name, :vs_date, 
       :signature_verified_by_patient,
       :patient_consent, di_list: []
     )

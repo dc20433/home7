@@ -1,31 +1,70 @@
 <style>
+  /* Base Signature Styles */
   .signature-wrapper {
-    border: 2px solid #343a40; /* Darker "closed" border */
+    border: 2px solid #343a40;
     background-color: #ffffff;
-    height: 200px;
+    height: 140px;
     width: 100%;
     position: relative;
     touch-action: none;
     border-radius: 8px;
+    overflow: hidden; /* Safety net to prevent any overflow elements from blocking buttons */
   }
-  /* Optional watermark style */
   .signature-watermark {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     color: #e9ecef;
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: bold;
     pointer-events: none;
     user-select: none;
     text-transform: uppercase;
     letter-spacing: 0.5rem;
   }
+
+  /* --- PRINT OPTIMIZATION --- */
+  @media print {
+    /* Force background colors for grey bars */
+    .section-header {
+      background-color: #f8f9fa !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      border: 1px solid #dee2e6 !important;
+      margin-top: 20px;
+      padding: 10px;
+      display: block !important;
+    }
+
+    /* Force borders on cards */
+    .card {
+      border: 1px solid #dee2e6 !important;
+      box-shadow: none !important;
+    }
+
+    /* Ensure Part II starts on Page 2 */
+    .print-page-break {
+      page-break-before: always !important;
+      break-before: page !important;
+      display: block !important;
+      height: 0;
+      margin: 0;
+    }
+
+    /* Hide UI buttons during print */
+    .d-print-none {
+      display: none !important;
+    }
+    
+    /* Adjust fs-4 for print readability */
+    .fs-4 {
+      font-size: 14pt !important;
+    }
+  }
 </style>
 
 <div class="container-fluid mt-4">
-  <%# --- 1. ERROR DISPLAY BLOCK --- %>
   <% if @patient.errors.any? %>
     <div class="alert alert-danger shadow-sm mb-4 border-start border-4 border-danger">
       <div class="d-flex align-items-center mb-2">
@@ -44,23 +83,27 @@
 
   <%= form_with(model: [@regi, @patient], id: "consent-form", local: true) do |f| %>
     
-    <%# --- PART I: CLINICAL DATA --- %>
-    <% unless defined?(hide_demographics) && hide_demographics %>
-      <div class="card shadow-sm border-secondary pt-2">
-      <div class="card-body px-3 pt-2">
+    <div class="card shadow-sm border-secondary mb-4">
+      <div class="card-header bg-dark text-white text-center py-3">
+        <h4 class="mb-0 text-uppercase fw-bold">Official Patient Record & Consent Form</h4>
+      </div>
       
-        <% if defined?(selection_mode) && selection_mode %>
-        <div class="text-center mb-4 mt-2 p-3 rounded border border-primary shadow-sm" style="background-color: #EEE8AA;">
-        <h4 class="text-primary fw-bold">Review Your Current Record</h4>
-        <p class="text-muted pt-3 mb-0">Below is the information we have on file. If everything is correct, select <b>"No Update"</b> at the bottom. To make changes, select <b>"Yes, Update My Information"</b>.</p>
-        </div>
-        <% end %>
-      
-          <div class="card-header bg-light border">
-            <h5 class="py-3 mb-0 text-uppercase fw-bold">Part I: Personal Health Information</h5>
+      <div class="card-body p-4">
+        
+        <% # --- PART I: CLINICAL DATA --- %>
+        <% unless defined?(hide_demographics) && hide_demographics %>
+          <div class="section-header bg-light border p-2 mb-3">
+            <h5 class="mb-0 text-center text-uppercase fw-bold">Part I: Personal Health Information</h5>
           </div>
+      
+          <% if defined?(selection_mode) && selection_mode %>
+            <div class="text-center mb-4 mt-2 p-3 rounded border border-primary shadow-sm" style="background-color: #EEE8AA;">
+              <h4 class="text-primary fw-bold">Review Your Current Record</h4>
+              <p class="text-muted pt-3 mb-0">Below is the information we have on file. If everything is correct, select <b>"No Update"</b> at the bottom. To make changes, select <b>"Yes, Update My Information"</b>.</p>
+            </div>
+          <% end %>
 
-          <%# --- Section 1: Demographics --- %>
+          <% # --- Section 1: Demographics --- %>
           <div class="row mt-3 mb-1">
             <div class="col-md-2"><b>Updated on</b> <%= f.date_field :v_date, class: "form-control border-primary", readonly: is_readonly %></div>
             <div class="col-md-4"><b>Street</b> <%= f.text_field :street, class: "form-control border-primary", readonly: is_readonly %></div>
@@ -91,19 +134,19 @@
           </div>
 
           <div class="row mb-1">
-            <div class="col-md-2"><b>Date Onset</b> <%= f.text_field :d_onset, class: "form-control border-primary", readonly: is_readonly %></div>
+            <div class="col-md-2"><b>Date Onset</b> <%= f.date_field :d_onset, class: "form-control border-primary", readonly: is_readonly %></div>
             <div class="col-md-2"><b>Pain (1-10)</b> <%= f.text_field :pain_scale, class: "form-control border-primary", readonly: is_readonly %></div>
             <div class="col-md-5"><b>Diagnoses Given?</b> <%= f.text_field :diag_given, class: "form-control border-primary", readonly: is_readonly %></div>
             <div class="col-md-3"><b>Had Acupuncture?</b> <%= f.select :aq_b4, ["Yes", "No"], {}, class: "form-select border-primary", disabled: is_readonly %></div>
           </div>
 
-          <%# --- NEW SECTION: MAJOR HEALTH ISSUES --- %>
+          <% # --- NEW SECTION: MAJOR HEALTH ISSUES --- %>
           <div class="row mb-1 mt-2 mb-0">
             <div class="col-12">
               <b class="d-block mb-0">Major Health Issues:</b>
               <div class="small border p-2 bg-light rounded shadow-sm">
                 <div class="row g-2">
-                  <%# Use Patient::DI_LIST to generate checkboxes %>
+                  <% # Use Patient::DI_LIST to generate checkboxes %>
                   <% Patient::DI_LIST.each do |h| %>
                     <div class="col-6 col-md-4 col-lg-3">
                       <div class="form-check d-flex align-items-center mb-0">
@@ -142,7 +185,7 @@
             </div>
             <div class="col-md-3">
               <%= f.label :exercise, "Exercise Frequency", class: "fw-bold small" %>
-              <%= f.select :exercise, ['None', '1-2x/week', '3-5x/week', 'Daily'], { include_blank: 'Select' }, { class: "form-select border-primary", disabled: is_readonly } %>
+              <%= f.select :exercise, ['None', '1-2 times/week', '3-5 times/week', 'Daily'], { include_blank: 'Select' }, { class: "form-select border-primary", disabled: is_readonly } %>
             </div>
             <div class="col-md-2">
               <%= f.label :sleep, "Sleep Quality", class: "fw-bold small" %>
@@ -159,165 +202,267 @@
           </div>
             
           <div class="row g-2 mb-2">
+            <div class="col-md-6"><b>List all medications/vitamins/supplements you currently take:</b> <%= f.text_field :all_meds, class: "form-control border-primary", readonly: is_readonly %></div>
             <div class="col-2 text-muted">
               <i><small>female: </small></i><b>Last period</b>
               <%= f.date_field :last_prd, class: "form-control border-primary", readonly: is_readonly %></div>
             <div class="col-md-2"><b>Pregnant?</b> <%= f.select :preg, ["Not applicable", "Yes", "No"], {}, class: "form-select border-primary", disabled: is_readonly %></div>
             <div class="col-md-2"><b>In Weeks?</b> <%= f.text_field :preg_wks, class: "form-control border-primary", readonly: is_readonly %></div>
           </div>
+        <% end %>
+
+        <div class="print-page-break"></div>
+
+        <% # --- PART II: LEGAL CONSENT & SIGNATURE --- %>
+        <div class="section-header bg-light border pt-4 p-2 mb-3 mt-4">
+          <h5 class="mb-0 text-center text-uppercase fw-bold">Part II(A): Consent to Treatment By Zhang's Acupuncture, Inc.</h5>
+        </div>
+
+        <div class="fs-4 text-muted text-justify mb-4 p-2" style="text-align: justify; line-height: 1.5; border-left: 5px solid #dee2e6;">
+          Please read this entire document prior to signing it. It is important that you understand the information contained in this document. If anything is unclear, please ask questions before you sign. 
+          <br><br>
+          I, <b><i><u><%= "#{@patient.regi.p_name}" %></u></i></b>, consent to the performance of acupuncture and Chinese herbal medicine by Dr. Bin Zhang or his associate(s). 
+          <br><br>    
+          I have been informed and understand that acupuncture is a generally safe method of treatment, but that it may have side effects and risks, including but not limited to fainting, dizziness, nausea, spontaneous sweating, bleeding and bruising. Unusual risks include nerve damage, organ puncture and infection. I further acknowledge and understand that during the course of treatment Dr. Zhang or his associate may suggest additional acupuncture treatments and/or additional or different procedures based on my medical condition or symptoms. 
+          <br><br>
+          I have been informed and understand that the herbs that may be recommended are generally considered safe, although some may be toxic in large doses. I understand that the herbs need to be prepared and consumed according to the instructions provided. I also understand that the herbs may have an unpleasant smell or taste. I will immediately notify Dr. Zhang or his associate of any unanticipated or unpleasant effects associated with the consumption of the herbs. I have been informed and understand that the side effects of taking herbs include but are not limited to dizziness, headaches, coughing, nausea, stomach pain, diarrhea, itchy skin and unpleasant sweat and/or urine odor due to detoxification. Further, I have been informed and I understand that some herbs may be inappropriate during pregnancy or if I am breastfeeding. 
+          <br><br>
+          I agree to inform Dr. Zhang or his associate of my general medical health and if I have ever experienced a seizure, dizziness or fainting episode, if I have a pacemaker or any other electrical implants, if I have a bleeding disorder, damaged heart valves, allergies or a particular risk of infection. I will inform Dr. Zhang or his associate if I am taking anti-coagulant medications and of all medications and supplements that I take. I will notify the acupuncturist if I am breastfeeding, I become pregnant or I am in the process of trying to become pregnant. If I am pregnant or trying to become pregnant, I will obtain clearance from my obstetrician before treatment. I will also disclose to and discuss with Dr. Zhang or his associate any changes in my health, medications or supplements. 
+          <br><br>
+          I understand that Dr. Zhang and his associate(s) or administrative staff may review my medical records and laboratory reports, but my medical records and laboratory reports will be kept confidential in accordance with applicable law. 
+          <br><br>
+          I am at least 18 years old and fully competent. I acknowledge that I have read this Consent to Treatment or have had it read to me, in its entirety and I fully understand it. I have had sufficient opportunity to discuss my condition(s) and procedure(s) with Dr. Zhang or his associate and all of my questions have been answered to my satisfaction. I further acknowledge that I have been informed of the risks and benefits of, and alternatives to, acupuncture and the ingestion of herbs and that other risks and side effects may occur. I do not expect the acupuncturist to be able to anticipate and explain all possible risks and complications of treatment. I acknowledge that the results of acupuncture and the ingestion of herbs are not guaranteed. 
+          <br><br>
+          I understand that this Consent to Treatment shall be construed under the laws of the State of Connecticut and that the consents provided herein are severable such that if any one of them is found unenforceable or invalid, such unenforceability or invalidity shall not affect the other terms and provisions, which will remain binding and enforceable. 
+          <br><br>
+
+          <div class="print-page-break"></div>
+
+          I intend this Consent to Treatment to cover the entire course of treatment for my present condition(s) and for any future conditions for which I seek treatment, but if I have gone for a prolonged period of time without treatment, I understand that I may be required to sign an additional consent form. I understand that there are treatment options available for my condition other than acupuncture procedures. These options may include, but are not limited to, self-administered care, over-the-counter pain relievers, medical care with prescription drugs, physical therapy, injections and surgery. I understand that I have the right to a second opinion and to secure other options about my circumstances and health care as I see fit. I also understand that any evaluation given to me does not replace western (allopathic) medical evaluation, diagnosis and treatment. I have also been advised as to the importance of consulting with a licensed physician regarding my condition prior to and during my acupuncture treatment.
+          <br><br>
+        </div>
+
+        <% # --- THE 3 REQUISITE PATIENT INTERACTIONS FOR CONSENT (Part II A) --- %>
+        <div class="row g-3 align-items-end mb-4 bg-light p-3 rounded border border-dark">
+          
+          <% # 1. Signature Pad / Image View %>
+          <div class="col-md-5">
+            <b class="d-block mb-1 text-dark small">Signature of Patient or Personal Representative:</b>
+            <% if (Current.user&.manager? || Current.user&.admin?) || (defined?(selection_mode) && selection_mode) %>
+              <div class="p-2 border rounded bg-white text-center shadow-sm" style="min-height: 110px; display: flex; align-items: center; justify-content: center;">
+                <% if @patient.signature1.present? %>
+                  <img src="<%= @patient.signature1 %>" class="img-fluid" style="max-height: 90px;" alt="Consent Signature">
+                <% else %>
+                  <em class="text-muted small">No signature captured.</em>
+                <% end %>
+              </div>
+            <% else %>
+              <div class="signature-wrapper mb-2 shadow-sm" style="height: 110px;">
+                <div class="signature-watermark" style="font-size: 1.1rem; letter-spacing: 0.3rem;">Sign Here</div>
+                <canvas id="signature1-canvas" style="width: 100%; height: 100%; display: block; cursor: crosshair; position: relative; z-index: 10;"></canvas>
+              </div>
+              <div class="text-end mb-1">
+                <button type="button" id="clear-signature1" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-0 fw-bold" style="font-size: 0.75rem;">Clear</button>
+              </div>
+              <%= f.hidden_field :signature1, id: "signature1-data-input" %>
+            <% end %>
+          </div>
+
+          <% # 2. Printed Name Input %>
+          <div class="col-md-4">
+            <b class="d-block mb-1 text-dark small">Printed Name/Relation to Patient:</b>
+            <%= f.text_field :rep_name, class: "form-control border-primary", placeholder: "e.g. Jane Doe (Daughter) or Self", readonly: (Current.user&.manager? || Current.user&.admin? || is_readonly) %>
+          </div>
+
+          <% # 3. Date Input (using migrated vs_date attribute) %>
+          <div class="col-md-3">
+            <b class="d-block mb-1 text-dark small">Date:</b>
+            <%= f.date_field :vs_date, class: "form-control border-primary", value: (f.object.vs_date || Date.today), readonly: (Current.user&.manager? || Current.user&.admin? || is_readonly) %>
+          </div>
+        </div>
         
-    <% end %>
+        <div class="print-page-break"></div>
 
-    <%# --- PART II: LEGAL CONSENT & SIGNATURE --- %>
-    <div class="section-header bg-light border pt-4 p-2 mb-3 mt-4">
-      <h5 class="mb-0 text-uppercase fw-bold">Part II (A)</h5>
-      </br>
-      <h5 class="mb-0 text-center text-decoration-underline text-uppercase fw-bold">Zhang's Acupuncture, Inc,</h5>
-      </br>
-      <h5 class="mb-3 text-center text-uppercase fw-bold">Consent to Treatment</h5>
-
-    </div>
-
-    <div class="fs-4 text-muted text-justify mb-4 p-2" style="text-align: justify; line-height: 1.5; border-left: 5px solid #dee2e6;">
-      
-    Please read this entire document prior to signing it. It is important that you understand the information contained in this document. If anything is unclear, please ask questions before you sign. 
-    <br><br>
-    I, <b><i><u><%= "#{@patient.regi.p_name}" %></u></i></b>, consent to the performance of acupuncture and Chinese herbal medicine by Dr. Bin Zhang or his associate(s). 
-    <br><br>    
-    I have been informed and understand that acupuncture is a generally safe method of treatment, but that it may have side effects and risks, including but not limited to fainting, dizziness, nausea, spontaneous sweating, bleeding and bruising. Unusual risks include nerve damage, organ puncture and infection. I further acknowledge and understand that during the course of treatment Dr. Zhang or his associate may suggest additional acupuncture treatments and/or additional or different procedures based on my medical condition or symptoms. 
-    <br><br>
-    I have been informed and understand that the herbs that may be recommended are generally considered safe, although some may be toxic in large doses. I understand that the herbs need to be prepared and consumed according to the instructions provided. I also understand that the herbs may have an unpleasant smell or taste. I will immediately notify Dr. Zhang or his associate of any unanticipated or unpleasant effects associated with the consumption of the herbs. I have been informed and understand that the side effects of taking herbs include but are not limited to dizziness, headaches, coughing, nausea, stomach pain, diarrhea, itchy skin and unpleasant sweat and/or urine odor due to detoxification. Further, I have been informed and I understand that some herbs may be inappropriate during pregnancy or if I am breastfeeding. 
-    <br><br>
-    I agree to inform Dr. Zhang or his associate of my general medical health and if I have ever experienced a seizure, dizziness or fainting episode, if I have a pacemaker or any other electrical implants, if I have a bleeding disorder, damaged heart valves, allergies or a particular risk of infection. I will inform Dr. Zhang or his associate if I am taking anti-coagulant medications and of all medications and supplements that I take. I will notify the acupuncturist if I am breastfeeding, I become pregnant or I am in the process of trying to become pregnant. If I am pregnant or trying to become pregnant, I will obtain clearance from my obstetrician before treatment. I will also disclose to and discuss with Dr. Zhang or his associate any changes in my health, medications or supplements. 
-    <br><br>
-    I understand that Dr. Zhang and his associate(s) or administrative staff may review my medical records and laboratory reports, but my medical records and laboratory reports will be kept confidential in accordance with applicable law. 
-    <br><br>
-    I am at least 18 years old and fully competent. I acknowledge that I have read this Consent to Treatment or have had it read to me, in its entirety and I fully understand it. I have had sufficient opportunity to discuss my condition(s) and procedure(s) with Dr. Zhang or his associate and all of my questions have been answered to my satisfaction. I further acknowledge that I have been informed of the risks and benefits of, and alternatives to, acupuncture and the ingestion of herbs and that other risks and side effects may occur. I do not expect the acupuncturist to be able to anticipate and explain all possible risks and complications of treatment. I acknowledge that the results of acupuncture and the ingestion of herbs are not guaranteed. 
-    <br><br>
-    I understand that this Consent to Treatment shall be construed under the laws of the State of Connecticut and that the consents provided herein are severable such that if any one of them is found unenforceable or invalid, such unenforceability or invalidity shall not affect the other terms and provisions, which will remain binding and enforceable. 
-    <br><br>
-    I intend this Consent to Treatment to cover the entire course of treatment for my present condition(s) and for any future conditions for which I seek treatment, but if I have gone for a prolonged period of time without treatment, I understand that I may be required to sign an additional consent form. I understand that there are treatment options available for my condition other than acupuncture procedures. These options may include, but are not limited to, self-administered care, over-the-counter pain relievers, medical care with prescription drugs, physical therapy, injections and surgery. I understand that I have the right to a second opinion and to secure other options about my circumstances and health care as I see fit. I also understand that any evaluation given to me does not replace western (allopathic) medical evaluation, diagnosis and treatment. I have also been advised as to the importance of consulting with a licensed physician regarding my condition prior to and during my acupuncture treatment.
-    <br><br>
-    </div>
-    <div class="section-header bg-light border p-2 mb-3 mt-4">
-      <h5 class="mb-0 text-uppercase fw-bold">Part II (B)</h5>
-      </br>
-      <h5 class="mb-0 text-center text-uppercase fw-bold">Notice of Privacy Practices</h5>
-      </br>
-    </div>
-    <div class="fs-4 text-muted text-justify mb-4 p-2" style="text-align: justify; line-height: 1.5; border-left: 5px solid #dee2e6;">
-      
-    I acknowledge that I have received or been offered a copy of the clinic’s Notice of Privacy Practices. I understand that my personal health information will be used and protected in accordance with applicable privacy laws.
-</div>
-    <% if (Current.user&.manager? || Current.user&.admin?) %>
-      <%# --- MANAGER VIEW: Fixed Signature & Metadata --- %>
-      <div class="text-center mt-4 bg-light p-4 rounded border">
-        <label class="small fw-bold text-muted d-block mb-2">Digital Signature on File:</label>
-        <div class="p-2 border rounded bg-white mx-auto mb-3 shadow-sm" style="max-width: 500px; min-height: 120px;">
-          <% if @patient.signature.present? %>
-            <img src="<%= @patient.signature %>" class="img-fluid" style="max-height: 100px;">
-          <% else %>
-            <em class="text-muted">No signature captured.</em>
-          <% end %>
+        <% # --- PART II (B): NOTICE OF PRIVACY PRACTICES --- %>
+        <div class="section-header bg-light border p-2 mb-3 mt-4">
+          <h5 class="mb-0 text-center text-uppercase fw-bold">Part II(B): NOTICE OF PRIVACY PRACTICES</h5>
         </div>
-        <div class="text-primary small fw-bold mb-4">Recorded on: <%= @patient.updated_at.strftime("%B %d, %Y %I:%M %p") %></div>
-        <div class="d-flex justify-content-left gap-2 d-print-none">
-          <%= f.submit "Save Changes", class: "btn btn-dark px-4 fw-bold shadow" %>
-          <%= link_to "Cancel", regi_patients_path(@regi), class: "btn btn-outline-secondary px-4 fw-bold" %>
-          <% if @regi.persisted? %>
-            <%= link_to "Delete", regi_patient_path(@regi), 
-                        class: "btn btn-outline-danger rounded-3 px-4 fw-bold", 
-                        data: { turbo_method: :delete, turbo_confirm: "Permanently delete this registration?" } %>
-          <% end %>
+
+        <div class="fs-4 text-muted text-justify mb-4 p-2" style="text-align: justify; line-height: 1.5; border-left: 5px solid #dee2e6;">
+          I acknowledge that I have received or been offered a copy of the clinic's Notice of Privacy Practices. 
+          I understand that my personal health information will be used and protected in accordance with applicable privacy laws.
         </div>
+
+        <% if (Current.user&.manager? || Current.user&.admin?) %>
+          <% # --- MANAGER VIEW: Fixed Signature & Metadata --- %>
+          <div class="text-center mt-4 bg-light p-4 rounded border">
+            <label class="small fw-bold text-muted d-block mb-2">Digital privacy-notice Signature on File:</label>
+            <div class="p-2 border rounded bg-white mx-auto mb-3 shadow-sm" style="max-width: 500px; min-height: 120px; display: flex; align-items: center; justify-content: center;">
+              <% if @patient.signature.present? %>
+                <img src="<%= @patient.signature %>" class="img-fluid" style="max-height: 100px;">
+              <% else %>
+                <em class="text-muted">No signature captured.</em>
+              <% end %>
+            </div>
+            <div class="text-primary small fw-bold mb-4">Recorded on: <%= @patient.updated_at.strftime("%B %d, %Y %I:%M %p") %></div>
+            <div class="d-flex justify-content-left gap-4 d-print-none">
+              <%= f.submit "Save", class: "btn btn-dark px-3 fw-bold shadow" %>
+              <%= link_to "Cancel", regi_patients_path(@regi), class: "btn btn-outline-primary px-3 fw-bold" %>
+              <% if @patient.persisted? %>
+                <%= link_to "Delete", regi_patient_path(@regi, @patient), 
+                            data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to permanently delete this patient record?" }, 
+                            class: "btn btn-outline-danger px-3 fw-bold shadow" %>
+              <% end %>
+            </div>
+          </div>
+          <%= f.hidden_field :patient_consent, value: (@patient.patient_consent ? "true" : "false") %>
+
+        <% elsif defined?(selection_mode) && selection_mode %>
+          <% # --- PATIENT SELECTION --- %>
+          <div class="text-center mt-4 bg-light p-4 rounded border">
+            <label class="fw-bold d-block mb-2 text-muted">Your Privacy Signature on File:</label>
+            <div class="p-3 border rounded bg-white shadow-sm mx-auto mb-3" style="max-width: 400px; min-height: 120px; display: flex; align-items: center; justify-content: center;">
+              <% if @patient.signature.present? %>
+                <img src="<%= @patient.signature %>" alt="Patient Signature" class="img-fluid" style="max-height: 100px;">
+              <% else %>
+                <em class="text-muted">No signature on file.</em>
+              <% end %>
+            </div>
+            <div class="text-muted small mb-4">Recorded on: <%= @patient.updated_at.strftime("%B %d, %Y %I:%M %p") %></div>             
+            
+            <div class="py-4 bg-white border rounded shadow-sm d-print-none">
+              <h5 class="mb-4 fw-bold">Has any of your information changed?</h5>
+              <div class="d-flex justify-content-center gap-3 px-3">
+                <%= link_to edit_regi_patient_path(@regi, @patient), class: "btn btn-primary btn-lg rounded-pill px-4 shadow fw-bold" do %>Yes, Update<% end %>
+                <%= link_to sites_thank_you_path, class: "btn btn-outline-secondary btn-lg rounded-pill px-4 fw-bold" do %>No Update<% end %>
+              </div>
+            </div>
+          </div>
+          <%= f.hidden_field :patient_consent, value: (@patient.patient_consent ? "true" : "false") %>
+
+        <% else %>
+          <% # --- PATIENT SIGNING MODE --- %>
+          <div class="mt-4 border-top pt-4">
+            <div class="mx-auto" style="max-width: 800px;">
+              <b class="d-block mb-2 text-dark">Please Sign Inside the Box:</b>
+              <div class="signature-wrapper mb-3 shadow-sm" style="height: 200px;">
+                <div class="signature-watermark">Sign Here</div>
+                <canvas id="signature-canvas" style="width: 100%; height: 100%; display: block; cursor: crosshair; position: relative; z-index: 10;"></canvas>
+              </div>
+              <div class="mb-3 text-end">
+                <button type="button" id="clear-signature" class="btn btn-sm btn-outline-danger rounded-pill px-3 fw-bold">Clear</button>
+              </div>
+              <div class="form-check mb-4 p-3 bg-light rounded border shadow-sm">
+                <%= f.check_box :patient_consent, { id: "consent-checkbox", class: "form-check-input ms-0 me-2", required: true }, "true", "false" %>
+                <label class="form-check-label fw-bold">I acknowledge the Notice of Privacy Practices.</label>
+              </div>
+              <div class="d-flex gap-3 justify-content-center mb-4">
+                <%= f.submit "Submit Signed Form", class: "btn btn-primary btn-lg px-5 shadow rounded-pill fw-bold", id: "submit-btn" %>
+                <%= f.button "No Consent", name: "no_consent_exit", value: "true", id: "no-consent-btn", class: "btn btn-outline-danger btn-lg px-5 rounded-pill fw-bold" %>
+              </div>
+              <%= f.hidden_field :signature, id: "signature-data-input" %>
+            </div>
+          </div>
+        <% end %>
       </div>
-      <%= f.hidden_field :patient_consent, value: (@patient.patient_consent ? "true" : "false") %>
-
-    <% elsif defined?(selection_mode) && selection_mode %>
-      <%# --- PATIENT SELECTION --- %>
-      <div class="text-center mt-4 bg-light p-4 rounded border">
-        <label class="fw-bold d-block mb-2 text-muted">Patient Signature:</label>
-        <div class="p-3 border rounded bg-white shadow-sm mx-auto mb-3" style="max-width: 400px;">
-          <% if @patient.signature.present? %>
-            <img src="<%= @patient.signature %>" alt="Patient Signature" class="img-fluid" style="max-height: 100px;">
-          <% else %>
-            <em class="text-muted">No signature on file.</em>
-          <% end %>
-        </div>
-        <div class="text-muted small mb-4">Recorded on: <%= @patient.updated_at.strftime("%B %d, %Y %I:%M %p") %></div>             
-        
-        <div class="pb-4 bg-white border rounded shadow-sm d-print-none">
-          <h5 class="mb-4 p-4 fw-bold" style="background-color: #EEE8AA;">Has any of your information changed?</h5>
-          <div class="d-flex justify-content-center gap-3 p-3">
-            <%= link_to edit_regi_patient_path(@regi, @patient), class: "btn btn-primary btn-lg px-4 shadow fw-bold" do %>Yes, Update My Information<% end %>
-            <%= link_to sites_thank_you_path, class: "btn btn-outline-secondary btn-lg px-4 fw-bold" do %>No Update<% end %>
-          </div>
-        </div>
-      </div>
-      <%= f.hidden_field :patient_consent, value: (@patient.patient_consent ? "true" : "false") %>
-
-    <% else %>
-      <%# --- PATIENT SIGNING MODE --- %>
-      <div class="mt-4 border-top pt-4">
-        <div class="mx-auto" style="max-width: 800px;">
-          <b class="d-block mb-2 text-dark">Please Sign Inside the Box:</b>
-          <div class="signature-wrapper mb-3 shadow-sm">
-            <div class="signature-watermark">Sign Here</div>
-            <canvas id="signature-canvas" style="width: 100%; height: 200px; display: block; cursor: crosshair; position: relative; z-index: 10;"></canvas>
-          </div>
-          <div class="mb-3 text-end">
-            <button type="button" id="clear-signature" class="btn btn-sm btn-outline-danger rounded-pill px-3 fw-bold">Clear</button>
-          </div>
-          <div class="form-check mb-4 p-3 bg-light rounded border shadow-sm">
-            <%= f.check_box :patient_consent, { id: "consent-checkbox", class: "form-check-input ms-0 me-2", required: true }, "true", "false" %>
-            <label class="form-check-label fw-bold">I acknowledge the Notice of Privacy Practices.</label>
-          </div>
-          <div class="d-flex gap-3 justify-content-center mb-4">
-            <%= f.submit "Submit Signed Form", class: "btn btn-dark btn-lg px-5 shadow fw-bold", id: "submit-btn" %>
-            <%= f.button "No Consent", name: "no_consent_exit", value: "true", id: "no-consent-btn", class: "btn btn-outline-danger btn-lg px-5 fw-bold" %>
-          </div>
-          <%= f.hidden_field :signature, id: "signature-data-input" %>
-        </div>
-      </div>
-    <% end %>
-  </div>
+    </div>
+  <% end %> 
 </div>
-<% end %> 
-</div>
-
-
-
 
 <script>
 (function() {
   function init() {
+    const canvas1 = document.getElementById("signature1-canvas");
     const canvas = document.getElementById("signature-canvas");
     const form = document.getElementById("consent-form");
+    const input1 = document.getElementById("signature1-data-input");
     const input = document.getElementById("signature-data-input");
     const consentCheckbox = document.getElementById("consent-checkbox");
     const noConsentBtn = document.getElementById("no-consent-btn");
 
-    if (!canvas || !form) return;
+    if (!form) return;
 
-    const pad = new SignaturePad(canvas, {
-      backgroundColor: 'rgba(255, 255, 255, 0)',
-      penColor: 'rgb(0, 0, 0)'
-    });
+    let pad1 = null;
+    let pad = null;
 
-    function resize() {
-      const ratio = Math.max(window.devicePixelRatio || 1, 1);
-      canvas.width = canvas.offsetWidth * ratio;
-      canvas.height = canvas.offsetHeight * ratio;
-      canvas.getContext("2d").scale(ratio, ratio);
-      pad.clear();
+    if (canvas1) {
+      pad1 = new SignaturePad(canvas1, {
+        backgroundColor: 'rgba(255, 255, 255, 0)',
+        penColor: 'rgb(0, 0, 0)'
+      });
     }
-    window.onresize = resize;
-    resize();
 
-    // CLEAR LOGIC
-    document.getElementById("clear-signature").onclick = (e) => { e.preventDefault(); pad.clear(); };
+    if (canvas) {
+      pad = new SignaturePad(canvas, {
+        backgroundColor: 'rgba(255, 255, 255, 0)',
+        penColor: 'rgb(0, 0, 0)'
+      });
+    }
 
-    // NO CONSENT LOGIC: Disable "required" when clicking this button
+    // High fidelity resize logic that saves signatures on iPad rotation or window resizing
+    function resizeCanvas(canvasElement, padInstance, hiddenInput) {
+      const ratio = Math.max(window.devicePixelRatio || 1, 1);
+      const width = canvasElement.offsetWidth;
+      const height = canvasElement.offsetHeight;
+
+      if (canvasElement.width !== width * ratio || canvasElement.height !== height * ratio) {
+        let signatureData = null;
+
+        if (padInstance && !padInstance.isEmpty()) {
+          signatureData = padInstance.toData();
+        } else if (hiddenInput && hiddenInput.value) {
+          signatureData = hiddenInput.value;
+        }
+
+        canvasElement.width = width * ratio;
+        canvasElement.height = height * ratio;
+        canvasElement.getContext("2d").scale(ratio, ratio);
+
+        if (padInstance) {
+          padInstance.clear();
+          if (signatureData) {
+            if (typeof signatureData === "string" && signatureData.startsWith("data:image")) {
+              padInstance.fromDataURL(signatureData);
+            } else {
+              padInstance.fromData(signatureData);
+            }
+          }
+        }
+      }
+    }
+
+    function handleResize() {
+      if (canvas1 && pad1) {
+        resizeCanvas(canvas1, pad1, input1);
+      }
+      if (canvas && pad) {
+        resizeCanvas(canvas, pad, input);
+      }
+    }
+
+    window.addEventListener("resize", handleResize);
+    // Execute dynamic resize check on a slight delay to allow layout to settle
+    setTimeout(handleResize, 100);
+
+    // --- BUTTON TRIGGER LOGIC ---
+    const clearBtn1 = document.getElementById("clear-signature1");
+    if (clearBtn1) {
+      clearBtn1.addEventListener("click", (e) => {
+        e.preventDefault();
+        if (pad1) pad1.clear();
+        if (input1) input1.value = "";
+      });
+    }
+
+    const clearBtn = document.getElementById("clear-signature");
+    if (clearBtn) {
+      clearBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        if (pad) pad.clear();
+        if (input) input.value = "";
+      });
+    }
+
     if (noConsentBtn && consentCheckbox) {
       noConsentBtn.onclick = function() {
         consentCheckbox.removeAttribute('required');
@@ -326,21 +471,69 @@
 
     form.onsubmit = (e) => {
       const exitBtn = document.activeElement;
-      
-      // If exiting via No Consent, bypass all checks
       if (exitBtn && (exitBtn.id === "no-consent-btn" || exitBtn.name === "no_consent_exit")) {
         return true; 
       }
 
-      // Standard Submit Validation
-      if (pad.isEmpty()) {
-        alert("Please provide a signature before submitting.");
-        e.preventDefault();
-      } else {
+      let hasErrors = false;
+      let errorMsgs = [];
+
+      // Verify and capture signature1 (Part II A)
+      const existingSig1 = input1 ? input1.value : "";
+      const isPad1Empty = pad1 ? pad1.isEmpty() : true;
+      if (pad1 && isPad1Empty && !existingSig1) {
+        errorMsgs.push("Please provide a signature for the Consent to Treatment (Part II A).");
+        hasErrors = true;
+      } else if (pad1 && !isPad1Empty && input1) {
+        input1.value = pad1.toDataURL();
+      }
+
+      // Verify and capture signature (Part II B)
+      const existingSig = input ? input.value : "";
+      const isPadEmpty = pad ? pad.isEmpty() : true;
+      if (pad && isPadEmpty && !existingSig) {
+        errorMsgs.push("Please provide a signature for the Notice of Privacy Practices (Part II B).");
+        hasErrors = true;
+      } else if (pad && !isPadEmpty && input) {
         input.value = pad.toDataURL();
+      }
+
+      if (hasErrors) {
+        showErrorNotification(errorMsgs.join("\n"));
+        e.preventDefault();
+        return false;
       }
     };
   }
+
+  function showErrorNotification(message) {
+    let banner = document.getElementById("custom-sig-error-banner");
+    if (banner) banner.remove();
+
+    banner = document.createElement("div");
+    banner.id = "custom-sig-error-banner";
+    banner.className = "alert alert-danger shadow-lg fixed-top m-3 border-start border-4 border-danger";
+    banner.style.zIndex = "9999";
+    banner.innerHTML = `
+      <div class="d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center">
+          <i class="bi bi-exclamation-octagon-fill me-3 fs-3 text-danger"></i>
+          <div>
+            <h6 class="mb-1 fw-bold text-danger">Signature Required</h6>
+            <p class="mb-0 small text-dark">${message.replace(/\n/g, '<br>')}</p>
+          </div>
+        </div>
+        <button type="button" class="btn-close" onclick="this.parentElement.parentElement.remove()"></button>
+      </div>
+    `;
+    document.body.appendChild(banner);
+    
+    // Smooth scroll down to the legal signature boxes
+    const sigSection = document.querySelector(".signature-wrapper");
+    if (sigSection) sigSection.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  // Support classic DOM elements initialization alongside Turbo stream updates
   document.addEventListener("turbo:load", init);
   if (document.readyState !== 'loading') { init(); }
 })();
