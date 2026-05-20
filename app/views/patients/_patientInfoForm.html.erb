@@ -185,6 +185,10 @@
         </div>
 
         <div class="row g-2 mb-3">
+          <div class="col-md-5 text-muted">
+            <b>List all medications/vitamins/supplements you currently take:</b>
+            <%= f.text_area :all_meds, rows: 1, class: "form-control border-primary" %>
+          </div>
           <div class="col-md-3 text-muted">
             <i><small>female only:</small></i> <b>Last period</b>
             <%= f.date_field :last_prd, class: "form-control border-primary" %>

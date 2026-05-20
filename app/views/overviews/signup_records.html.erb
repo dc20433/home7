@@ -1,20 +1,109 @@
-<h2 class="text-center m-4">System Usage Statistics as of <%= Time.now.strftime("%Y-%m-%d %H:%M") %></h2>
+<h2 class="text-center m-4 fw-bold text-dark">Patient Sign-Up & Portal Access Records</h2>
+<p class="text-center text-muted small mt-1 mb-4">Chronological log of patient portal invitations, status flows, and cancellations as of <%= Time.now.strftime("%Y-%m-%d %I:%M %p") %></p>
 
-<div class="card mt-4 mx-auto border-info shadow" style="width: 65rem;">
-  <div class="card-header bg-info text-white fw-bold fs-5">Patient Sign-Up Records</div>
-  <div class="card-body pt-2">
-    <table class="table table-sm table-striped custom-table mb-0">
-      <thead class="table-info">
-        <tr class="text-center">
-          <th>Patient Name</th>
-          <th>Username</th>
-          <th>Created by</th>
-          <th>Sign-up Date</th>
-        </tr>
-      </thead>
-      <tbody>
-       
-      </tbody>
-    </table>
+<div class="card mt-2 mx-auto border-info shadow-sm" style="width: 80rem; border-radius: 12px; overflow: hidden;">
+  <div class="card-header bg-info text-white py-3">
+    <div class="d-flex align-items-center justify-content-between">
+      <h5 class="mb-0 fw-bold text-uppercase"><i class="bi bi-shield-lock-fill me-2"></i>Portal Sign-up Audit Logs</h5>
+      <span class="badge bg-light text-dark fw-bold rounded-pill px-3 py-1">Total Logs: <%= @signups.count %></span>
+    </div>
+  </div>
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-striped table-hover align-middle mb-0" style="font-size: 0.9rem;">
+        <thead class="table-light text-secondary small text-uppercase">
+          <tr>
+            <th class="ps-4 py-3" style="width: 22%;">Patient Name</th>
+            <th style="width: 18%;">Assigned Username</th>
+            <th style="width: 18%;">Created By</th>
+            <th class="text-center" style="width: 15%;">Sign-up Date</th>
+            <th class="text-center" style="width: 13%;">Onboarding Status</th>
+            <th class="text-center pe-4" style="width: 14%;">Cancel Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if @signups.any? %>
+            <% @signups.each do |regi| %>
+              <% 
+                # Check onboarding state
+                onboarding_status = regi.onboarding_status
+                has_active_account = regi.user.present?
+                
+                # Check if it was once issued but subsequently revoked
+                # Revoked state is reached when status goes back to 'signup' but updated_at is greater than created_at
+                was_revoked = !has_active_account && regi.status == "signup" && (regi.updated_at > regi.created_at + 10.seconds)
+              %>
+              <tr>
+                <td class="ps-4 fw-bold">
+                  <%= link_to regi.p_name, regi_path(regi.id), class: "text-decoration-none text-primary" %>
+                  <span class="text-muted d-block small fw-normal"><%= regi.p_age %>y / <%= regi.gender %></span>
+                </td>
+                
+                <td>
+                  <% if has_active_account %>
+                    <span class="fw-bold text-dark"><%= regi.user.email %></span>
+                  <% elsif was_revoked %>
+                    <%# Reconstruct the deleted handle formula for historical auditing %>
+                    <% dob_m = regi.dob&.strftime('%m') || "00" %>
+                    <% reconstructed_handle = "#{regi.last_name}#{regi.first_name}#{dob_m}".downcase.gsub(/\s+/, "") %>
+                    <span class="text-muted text-decoration-line-through small"><%= reconstructed_handle %></span>
+                    <span class="text-danger small d-block" style="font-size: 0.75rem;"><i>(Revoked)</i></span>
+                  <% else %>
+                    <span class="text-muted small">—</span>
+                  <% end %>
+                </td>
+                
+                <td>
+                  <% if has_active_account || was_revoked %>
+                    <%# Resolves the clinic staff manager username dynamically from database roles %>
+                    <span class="badge bg-light text-dark border"><%= User.where(role: ['manager', 'admin']).order(:id).first&.email || "Clinic Staff" %></span>
+                  <% else %>
+                    <span class="text-muted small">—</span>
+                  <% end %>
+                </td>
+                
+                <td class="text-center">
+                  <% if has_active_account %>
+                    <span class="fw-bold text-dark"><%= regi.user.created_at.strftime("%Y-%m-%d") %></span>
+                    <span class="text-muted d-block small" style="font-size: 0.75rem;"><%= regi.user.created_at.strftime("%I:%M %p") %></span>
+                  <% elsif was_revoked %>
+                    <span class="text-muted"><%= regi.created_at.strftime("%Y-%m-%d") %></span>
+                    <span class="text-muted d-block small" style="font-size: 0.75rem;"><%= regi.created_at.strftime("%I:%M %p") %></span>
+                  <% else %>
+                    <span class="text-muted small">—</span>
+                  <% end %>
+                </td>
+                
+                <td class="text-center">
+                  <% if onboarding_status == "DigiSigned" %>
+                    <span class="badge bg-primary rounded-pill px-3 py-1 fw-bold">Signed</span>
+                  <% elsif onboarding_status == "Issued" %>
+                    <span class="badge bg-success rounded-pill px-3 py-1 fw-bold">Issued</span>
+                  <% else %>
+                    <span class="badge bg-warning text-dark rounded-pill px-3 py-1 fw-bold">SignUp Pending</span>
+                  <% end %>
+                </td>
+                
+                <td class="text-center pe-4">
+                  <% if was_revoked %>
+                    <span class="text-danger fw-bold"><%= regi.updated_at.strftime("%Y-%m-%d") %></span>
+                    <span class="text-danger d-block small" style="font-size: 0.75rem;"><%= regi.updated_at.strftime("%I:%M %p") %></span>
+                  <% else %>
+                    <span class="text-muted small">—</span>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          <% else %>
+            <tr>
+              <td colspan="6" class="text-center py-5 text-muted">
+                <i class="bi bi-shield-slash fs-2 d-block mb-2"></i>
+                No sign-up logs found in the database.
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
