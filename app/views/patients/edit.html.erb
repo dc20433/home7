@@ -1,5 +1,13 @@
-<div class="mt-3"> 
+<div class="container-fluid mt-3">
+  <%# --- COMMON HEADER --- %>
+  <div class="text-center mb-4">
+    <h2 class="fw-bold">Update Intake Information</h2>
+    <%= render 'layouts/identifier' %>
+  </div>
+
+  <%# --- ROLE-BASED WORKFLOW --- %>
   <% if Current.user&.patient? %>
+    <%# --- 1. PATIENT WORKFLOW (With Back-Button Prevention) --- %>
     <script type="text/javascript">
       window.history.forward();
       function noback() { window.history.forward(); }
@@ -7,10 +15,14 @@
       window.onpageshow = function(evt) { if (evt.persisted) noback(); };
     </script>
     <%= render "patientConsentForm" %>
-    <% elsif Current.user&.manager? || Current.user&.admin? %>
-    <%# --- MANAGER/ADMIN WORKFLOW --- %>
+
+  <% elsif Current.user&.manager? || Current.user&.admin? %>
+    <%# --- 2. MANAGER/ADMIN WORKFLOW (Direct Data Edit) --- %>
     <%= render 'patientInfoForm' %>
+
   <% else %>
-    <div class="alert alert-warning">Unauthorized Access</div>
+    <div class="alert alert-warning text-center">
+      <i class="bi bi-exclamation-triangle"></i> Unauthorized Access
+    </div>
   <% end %>
 </div>

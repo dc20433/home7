@@ -37,6 +37,17 @@ class PatientsController < ApplicationController
       # This is what you see now because current_user.regi_id is currently NULL
       render "no_record_found" 
     end
+
+    respond_to do |format|
+      format.html # renders show.html.erb
+      format.pdf do
+        pdf = PatientRecordPdf.new(@patient)
+        send_data pdf.render,
+          filename: "Patient_Record_#{@patient.regi.p_name.parameterize}_#{@patient.v_date}.pdf",
+          type: 'application/pdf',
+          disposition: 'inline' # Opens in browser for immediate printing
+      end
+    end
   end
 
   def new
@@ -146,7 +157,7 @@ def update
       @patient.skip_patient_validation = true
 
       if @patient.save(validate: false)
-        redirect_to no_consent_exit_page_path, notice: "Selection recorded: Consent declined."
+        redirect_to no_consent_path, notice: "Selection recorded: Consent declined."
       else
         render :edit, status: :unprocessable_entity
       end
@@ -224,8 +235,10 @@ def update
       :weight, :m_stat, :occup, :company,
       :referred, :com1, :com2, :com3,
       :d_onset, :pain_scale, :diag_given,
-      :aq_b4, :o_dis, :last_prd, :preg,
-      :preg_wks, :signed_at, :signature,
+      :aq_b4, :o_dis,:hosp, :stress, :exercise,
+      :sleep, :tobacco, :alcohol, :last_prd, :preg,
+      :preg_wks, :all_meds, :signed_at, :signature,
+      :signature1, :rep_name, :vs_date, 
       :signature_verified_by_patient,
       :patient_consent, di_list: []
     )

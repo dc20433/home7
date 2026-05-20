@@ -68,7 +68,13 @@
   <%= link_to 'All Charts by Date', overviews_chart_date_path, class: "btn btn-primary border border-light border-3 rounded-pill mx-1 px-2 py-0 fw-bold" %>
   <%= link_to 'All Charts by Name', overviews_chart_name_path, class: "btn btn-success border border-light border-3 rounded-pill mx-1 px-2 py-0 fw-bold" %>
   <%= link_to 'All Patient Info', overviews_patient_info_path, class: "btn btn-info border border-light border-3 rounded-pill mx-1 px-2 py-0 fw-bold" %>
-  <%= link_to 'Print All', 
+
+  <%# Server-Side PDF Link (Preserves search & alphabetical filters securely via to_unsafe_h) %>
+  <%= link_to regis_path(q: params[:q]&.to_unsafe_h, letter: params[:letter], format: :pdf), class: "btn btn-danger border border-light border-3 rounded-pill px-3 py-0 fw-bold me-1" do %>
+    <i class="bi bi-file-pdf"></i> Export PDF
+  <% end %>
+
+  <%= link_to 'Print Selected', 
   url_for(params.to_unsafe_h.merge(print: true)), 
   class: "btn btn-sm btn-secondary border border-light border-3 rounded-pill px-3 py-0 fw-bold" %>
 </div>
@@ -88,10 +94,10 @@
   <% ('A'..'Z').each do |letter| %>
     <%= link_to letter, 
     url_for(letter: letter), 
-    class: "btn btn-sm btn-warning text-white border border-light border-3 fw-bolder #{params[:letter] == letter ? 'btn-warning' : 'btn-outline-secondary'} rounded-circle shadow-sm",
+    class: "btn btn-sm btn-warning text-dark border border-light border-3 fw-bold #{params[:letter] == letter ? 'btn-warning' : 'btn-outline-secondary'} rounded-circle shadow-sm",
       style: "width: 35px;" %>
   <% end %>
-  <%= link_to "All", url_for(letter: "All"), class: "btn btn-sm btn-warning text-white border border-light border-3 fw-bolder rounded-pill px-3 shadow-sm" %>
+  <%= link_to "All", url_for(letter: "All"), class: "btn btn-sm btn-warning text-dark border border-light border-3 fw-bold rounded-pill px-3 shadow-sm" %>
 </div>
 
 <div class="card mt-0 mx-auto border-primary shadow" style="width: 68rem;">     

@@ -1,191 +1,220 @@
-<h2 class="text-center">Patient Information</h2>
-<%= render 'layouts/identifier' %>
-
+<%# --- Sections 1-7: Medical Data Only (Admin/Manager Form) --- %>
 <div class="container mt-4">
-
-<%= form_with(model: [@regi, @patient], local: true, class: "needs-validation") do |f| %>
-  <div class="card shadow-sm border-secondary mb-4">
-    <div class="card-body p-4">
-
-    <%# --- Section 1: Demographics --- %>
-    <div class="row g-2 mb-2">
-      <div class="col-md-2">
-        <%= f.label :v_date, "Updated On", class: "fw-bold small" %>
-        <%= f.date_field :v_date, class: "form-control border-primary" %>
-      </div>
-      <div class="col-md-4">
-        <%= f.label :street, class: "fw-bold small" %>
-        <%= f.text_field :street, class: "form-control border-primary" %>
-      </div>
-      <div class="col-md-2">
-        <%= f.label :city, class: "fw-bold small" %>
-        <%= f.text_field :city, class: "form-control border-primary" %>
-      </div>
-      <div class="col-md-2">
-        <%= f.label :state, class: "fw-bold small" %>
-        <%= f.text_field :state, class: "form-control border-primary" %>
-      </div>
-      <div class="col-md-2">
-        <%= f.label :zip, "Zip Code", class: "fw-bold small" %>
-        <%= f.text_field :zip, class: "form-control border-primary" %>
-      </div>
-    </div>
-
-    <%# --- Section 2: Contact --- %>
-    <div class="row g-2 mb-2">
-      <div class="col-md-3">
-        <%= f.label :cell, "Cell Phone", class: "fw-bold small" %>
-        <%= f.text_field :cell, class: "form-control border-primary" %>
-      </div>
-      <div class="col-md-3">
-        <%= f.label :home, "Home Phone", class: "fw-bold small" %>
-        <%= f.text_field :home, class: "form-control border-primary" %>
-      </div>
-      <div class="col-md-3">
-        <%= f.label :work, "Work Phone", class: "fw-bold small" %>
-        <%= f.text_field :work, class: "form-control border-primary" %>
-      </div>
-      <div class="col-md-3">
-        <%= f.label :email, class: "fw-bold small" %>
-        <%= f.email_field :email, class: "form-control border-primary" %>
-      </div>
-    </div>
-
-    <%# --- Section 3: Vitals & History --- %>
-    <div class="row g-2 mb-2">
-      <div class="col-md-2">
-        <%= f.label :height, class: "fw-bold small" %>
-        <%= f.text_field :height, class: "form-control border-primary" %>
-      </div>
-      <div class="col-md-2">
-        <%= f.label :weight, class: "fw-bold small" %>
-        <%= f.text_field :weight, class: "form-control border-primary" %>
-      </div>
-      <div class="col-md-2">
-        <%= f.label :m_stat, "Marital Status", class: "fw-bold small" %>
-        <%= f.select :m_stat, ['Single', 'Married', 'Divorced', 'Widowed'], { include_blank: 'Select' }, { class: "form-select border-primary" } %>
-      </div>
-      <div class="col-md-2">
-        <%= f.label :occup, "Occupation", class: "fw-bold small" %>
-        <%= f.text_field :occup, class: "form-control border-primary" %>
-      </div>
-      <div class="col-md-2">
-        <%= f.label :company, "Company", class: "fw-bold small" %>
-        <%= f.text_field :company, class: "form-control border-primary" %>
-      </div>
-      <div class="col-md-2">
-        <%= f.label :referred, "Referred by", class: "fw-bold small" %>
-        <%= f.text_field :referred_by, class: "form-control border-primary" %>
-      </div>
-    </div>
-
-    <%# --- Section 4: Complaints & Vitals --- %>
-    <div class="row g-2 mb-2">
-      <div class="col-md-4">
-        <%= f.label :com1, "Complaint 1", class: "fw-bold small" %>
-        <%= f.text_field :com1, rows: 4, class: "form-control border-primary" %>
-      </div>
-      <div class="col-md-4">
-        <%= f.label :com2, "Complaint 2", class: "fw-bold small" %>
-        <%= f.text_field :com2, rows: 4, class: "form-control border-primary" %>
-      </div>
-      <div class="col-md-4">
-        <%= f.label :com3, "Complaint 3", class: "fw-bold small" %>
-        <%= f.text_field :com3, rows: 4, class: "form-control border-primary" %>
-      </div>
-    </div>
+  <%= form_with(model: [@regi, @patient], local: true, class: "needs-validation") do |f| %>
     
-    <div class="row g-2 mb-2">
-      <div class="col-md-2">
-        <%= f.label :d_onset, "Date Onset", class: "fw-bold small" %>
-        <%= f.date_field :d_onset, rows: 4, class: "form-control border-primary" %>
+    <% if @patient.errors.any? %>
+      <div class="alert alert-danger shadow-sm mb-4 border-start border-4 border-danger">
+        <div class="d-flex align-items-center mb-2">
+          <i class="bi bi-exclamation-octagon-fill me-2 fs-5"></i>
+          <h6 class="mb-0 fw-bold"><%= pluralize(@patient.errors.count, "error") %> prevented this record from saving:</h6>
+        </div>
+        <ul class="mb-0 small">
+          <% @patient.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
       </div>
-      <div class="col-md-2">
-        <%= f.label :pain, "Pain Scale 1-10", class: "fw-bold small" %>
-        <%= f.text_field :pain, rows: 4, class: "form-control border-primary" %>
-      </div>
-      <div class="col-md-5">
-        <%= f.label :diag_given, "Any Diagnoses Given?", class: "fw-bold small" %>
-        <%= f.text_field :diag_given, rows: 4, class: "form-control border-primary" %>
-      </div>
-      <div class="col-md-3">
-        <%= f.label :aq_b4, "Had Acupuncture?", class: "fw-bold small" %>
-        <%= f.select :aq_b4, ['Yes', 'No'], { include_blank: 'Select' }, { class: "form-select border-primary" } %>
-      </div>
-    </div>
+    <% end %>
 
-    <%# --- Section 5: Major Health Issues (Checkboxes) --- %>
-    <div class="bg-light p-3 rounded-3 border mb-1">
-      <h6 class="fw-bold small text-uppercase mb-1 text-primary border-bottom pb-1">Major Health Issues:</h6>
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-2">
-        <% [
-          'Diabetes', 'Hypertension', 'Cancer', 'Hepatitis', 'Heart disease', 
-          'Crack/cocaine', 'Enlarged lymph glands', 'Hiv/aids', 'Neck stiffness', 
-          'Seizure', 'Palpitation', 'Frequent colds', 'Night sweating', 
-          'Chest pain or tightness', 'Constipation', 'Excess sweating', 
-          'Back/lower back pain', 'Major depression', 'Anxiety disorder', 
-          'Post traumatic stress disorder', 'Bipolar disorder', 
-          'Borderline personality disorder'
-        ].each do |issue| %>
-          <div class="col">
-            <div class="form-check">
-              <%= f.check_box :di_list, { multiple: true, class: "form-check-input", checked: @patient.di_list&.include?(issue) }, issue, nil %>
-              <%= f.label "di_list_#{issue.parameterize.underscore}", issue, class: "form-check-label small px-2 fw-bold lh-sm" %>
+    <div class="card shadow-sm border-secondary mb-4">
+      <div class="card-header bg-light border-bottom border-secondary py-3">
+        <h5 class="mb-0 text-center text-uppercase fw-bold text-dark">Part I: Patient Information (Clinical Data Entry)</h5>
+      </div>
+      <div class="card-body p-4">
+        
+        <% # --- Section 1: Demographics --- %>
+        <div class="row g-2 mb-3">
+          <div class="col-md-2">
+            <%= f.label :v_date, "Updated On", class: "fw-bold small" %>
+            <%= f.date_field :v_date, class: "form-control border-primary" %>
+          </div>
+          <div class="col-md-4">
+            <%= f.label :street, "Street", class: "fw-bold small" %>
+            <%= f.text_field :street, class: "form-control border-primary" %>
+          </div>
+          <div class="col-md-3">
+            <%= f.label :city, "City", class: "fw-bold small" %>
+            <%= f.text_field :city, class: "form-control border-primary" %>
+          </div>
+          <div class="col-md-1">
+            <%= f.label :state, "State", class: "fw-bold small" %>
+            <%= f.text_field :state, class: "form-control border-primary" %>
+          </div>
+          <div class="col-md-2">
+            <%= f.label :zip, "Zip Code", class: "fw-bold small" %>
+            <%= f.text_field :zip, class: "form-control border-primary" %>
+          </div>
+        </div>
+
+        <% # --- Section 2: Contact Information --- %>
+        <div class="row g-2 mb-3">
+          <div class="col-md-3">
+            <%= f.label :cell, "Cell Phone", class: "fw-bold small" %>
+            <%= f.text_field :cell, class: "form-control border-primary" %>
+          </div>
+          <div class="col-md-3">
+            <%= f.label :home, "Home Phone", class: "fw-bold small" %>
+            <%= f.text_field :home, class: "form-control border-primary" %>
+          </div>
+          <div class="col-md-3">
+            <%= f.label :work, "Work Phone", class: "fw-bold small" %>
+            <%= f.text_field :work, class: "form-control border-primary" %>
+          </div>
+          <div class="col-md-3">
+            <%= f.label :email, "Email Address", class: "fw-bold small" %>
+            <%= f.text_field :email, class: "form-control border-primary" %>
+          </div>
+        </div>
+
+        <% # --- Section 3: Physicals & Occupation --- %>
+        <div class="row g-2 mb-3">
+          <div class="col-md-2">
+            <%= f.label :height, "Height", class: "fw-bold small" %>
+            <%= f.text_field :height, class: "form-control border-primary" %>
+          </div>
+          <div class="col-md-2">
+            <%= f.label :weight, "Weight", class: "fw-bold small" %>
+            <%= f.text_field :weight, class: "form-control border-primary" %>
+          </div>
+          <div class="col-md-2">
+            <%= f.label :m_stat, "Marital Status", class: "fw-bold small" %>
+            <%= f.select :m_stat, ['Single', 'Married', 'Divorced', 'Widowed'], { include_blank: "Select" }, class: "form-select border-primary" %>
+          </div>
+          <div class="col-md-3">
+            <%= f.label :occup, "Occupation", class: "fw-bold small" %>
+            <%= f.text_field :occup, class: "form-control border-primary" %>
+          </div>
+          <div class="col-md-3">
+            <%= f.label :company, "Company", class: "fw-bold small" %>
+            <%= f.text_field :company, class: "form-control border-primary" %>
+          </div>
+        </div>
+
+        <% # --- Section 4: Patient Concerns (SOAP Mappings) --- %>
+        <div class="row g-2 mb-3">
+          <div class="col-md-4">
+            <%= f.label :com1, "Complaint 1 (Subjective)", class: "fw-bold small" %>
+            <%= f.text_field :com1, class: "form-control border-primary" %>
+          </div>
+          <div class="col-md-4">
+            <%= f.label :com2, "Complaint 2 (Objective)", class: "fw-bold small" %>
+            <%= f.text_field :com2, class: "form-control border-primary" %>
+          </div>
+          <div class="col-md-4">
+            <%= f.label :com3, "Complaint 3 (Plan)", class: "fw-bold small" %>
+            <%= f.text_field :com3, class: "form-control border-primary" %>
+          </div>
+        </div>
+
+        <% # --- Section 5: Major Health Issues (Checkboxes) --- %>
+        <div class="row mb-3">
+          <div class="col-12">
+            <div class="small border p-3 bg-light rounded shadow-sm">
+              <div class="row g-2">
+                <% Patient::DI_LIST.each do |h| %>
+                  <div class="col-6 col-md-4 col-lg-3">
+                    <div class="form-check d-flex align-items-center mb-0">
+                      <%= f.check_box :di_list, 
+                          { 
+                            multiple: true, 
+                            checked: f.object.di_list&.include?(h), 
+                            class: "form-check-input mt-0 me-2 border-primary"
+                          }, h, nil %>
+                      <%= f.label "di_list_#{h.parameterize.underscore}", h, class: "form-check-label mb-0 lh-1" %>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
             </div>
           </div>
-        <% end %>
-      </div>
-    </div>
-
-    <%# --- Section 6: Other & Female Only --- %>
-    <div class="row g-2 mb-2">
-      <div class="col-md-6">
-        <%= f.label :o_dis, "Other Issues", class: "fw-bold small" %>
-        <%= f.text_field :o_dis, class: "form-control border-primary", placeholder: "Additional health issues..." %>
-      </div>
-      <div class="col-md-2">
-        <%= f.label :last_prd, "f: Last Period", class: "fw-bold small" %>
-        <%= f.date_field :last_prd, class: "form-control border-primary" %>
-      </div>
-      <div class="col-md-2">
-        <%= f.label :preg, "Pregnant?", class: "fw-bold small" %>
-        <%= f.select :preg, ['Yes', 'No'], { include_blank: 'N/A' }, { class: "form-select border-primary" } %>
-      </div>
-      <div class="col-md-2">
-        <%= f.label :preg_wks, "In Weeks", class: "fw-bold small" %>
-        <%= f.number_field :preg_wks, class: "form-control border-primary" %>
-      </div>
-    </div>
-
-    <%# --- Section 7: Verification & Signature --- %>
-    <div class="card mt-4 mb-4 border-secondary bg-white shadow-sm">
-      <div class="card-body text-center">
-        <label class="small fw-bold text-center text-muted d-block">Digital Signature on File:</label>
-        <div class="p-2 border rounded bg-light mx-auto my-2" style="max-width: 500px; min-height: 120px;">
-          <% if @patient.signature.present? %>
-            <img src="<%= @patient.signature %>" class="img-fluid" style="max-height: 100px;">
-          <% else %>
-            <em class="text-muted">No signature captured.</em>
-          <% end %>
         </div>
-        <div class="text-muted small">
+
+        <% # --- Section 6: Case Details --- %>
+        <div class="row g-2 mb-3">
+          <div class="col-md-2">
+            <%= f.label :d_onset, "Date Onset", class: "fw-bold small" %>
+            <%= f.date_field :d_onset, class: "form-control border-primary" %>
+          </div>
+          <div class="col-md-2">
+            <%= f.label :pain_scale, "Pain (1-10)", class: "fw-bold small" %>
+            <%= f.text_field :pain_scale, class: "form-control border-primary" %>
+          </div>
+          <div class="col-md-5">
+            <%= f.label :diag_given, "Diagnoses Given?", class: "fw-bold small" %>
+            <%= f.text_field :diag_given, class: "form-control border-primary" %>
+          </div>
+          <div class="col-md-3">
+            <%= f.label :aq_b4, "Had Acupuncture?", class: "fw-bold small" %>
+            <%= f.select :aq_b4, ["Yes", "No"], {}, class: "form-select border-primary" %>
+          </div>
+        </div>
+
+        <% # --- Section 7: Additional Health & Lifestyle Data (INCLUDING RENAME FIXES) --- %>
+        <div class="row g-2 mb-3">
+          <div class="col-md-6">
+            <%= f.label :o_dis, "Other Issues", class: "fw-bold small" %>
+            <%= f.text_area :o_dis, rows: 1, class: "form-control border-primary" %>
+          </div>
+          <div class="col-md-6">
+            <%= f.label :hosp, "Surgeries/Hospitalizations", class: "fw-bold small" %>
+            <%= f.text_area :hosp, rows: 1, class: "form-control border-primary" %>
+          </div>
+        </div>
+
+        <div class="row g-2 mb-3">
+          <div class="col-md-3">
+            <%= f.label :stress, "Stress Level", class: "fw-bold small" %>
+            <%= f.select :stress, ['Low', 'Moderate', 'High'], { include_blank: 'Select' }, class: "form-select border-primary" %>
+          </div>
+          <div class="col-md-3">
+            <%= f.label :exercise, "Exercise Frequency", class: "fw-bold small" %>
+            <%= f.select :exercise, ['None', '1-2x/week', '3-5x/week', 'Daily'], { include_blank: 'Select' }, class: "form-select border-primary" %>
+          </div>
+          <div class="col-md-2">
+            <%= f.label :sleep, "Sleep Quality", class: "fw-bold small" %>
+            <%= f.select :sleep, ['Good', 'Fair', 'Poor'], { include_blank: 'Select' }, class: "form-select border-primary" %>
+          </div>
+          <div class="col-md-2">
+            <%= f.label :tobacco, "Do you smoke?", class: "fw-bold small" %>
+            <%= f.select :tobacco, ['Yes', 'No'], { include_blank: 'N/A' }, class: "form-select border-primary" %>
+          </div>
+          <div class="col-md-2">
+            <%= f.label :alcohol, "Do you drink alcohol?", class: "fw-bold small" %>
+            <%= f.select :alcohol, ['Yes', 'No'], { include_blank: 'N/A' }, class: "form-select border-primary" %>
+          </div>
+        </div>
+
+        <div class="row g-2 mb-3">
+          <div class="col-md-5 text-muted">
+            <b>List all medications/vitamins/supplements you currently take:</b>
+            <%= f.text_area :all_meds, rows: 1, class: "form-control border-primary" %>
+          </div>
+          <div class="col-md-3 text-muted">
+            <i><small>female only:</small></i> <b>Last period</b>
+            <%= f.date_field :last_prd, class: "form-control border-primary" %>
+          </div>
+          <div class="col-md-2">
+            <b>Pregnant?</b> 
+            <%= f.select :preg, ["Not applicable", "Yes", "No"], {}, class: "form-select border-primary" %>
+          </div>
+          <div class="col-md-2">
+            <b>In Weeks?</b> 
+            <%= f.text_field :preg_wks, class: "form-control border-primary" %>
+          </div>
+        </div>
+
+        <%# --- Navigation (Hidden on Print) --- %>
+        <div class="d-flex justify-content-left gap-4 mt-4 pt-3 border-top d-print-none">
+          <%= f.submit "Save", class: "btn btn-dark px-3 fw-bold shadow-sm" %>
+          <%= link_to "Cancel", regi_patients_path(@regi), class: "btn btn-outline-primary px-3 fw-bold" %>
           <% if @patient.persisted? %>
-            Recorded on: <%= @patient.updated_at.strftime("%B %d, %Y %I:%M %p") %>
+            <%= link_to "Delete", regi_patient_path(@regi, @patient), 
+                        data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to permanently delete this patient record?" }, 
+                        class: "btn btn-outline-danger px-3 fw-bold" %>
           <% end %>
         </div>
-      </div>
-    </div>
 
-    <%# --- Section 8: Bottom Navigation --- %>
-    <div class="d-flex justify-content-between align-items-center mt-3 p-1 border-top bg-light rounded shadow-sm">
-      <div class="d-flex gap-2">
-        <%= f.submit "Save", class: "btn btn-dark rounded-3 px-3 shadow-sm" %>
-        <%= link_to "Cancel", regi_patients_path(@regi), class:"btn btn-outline-primary rounded-3 px-2 me-1 fw-bold" %>
-        <%= link_to '← Go Back', :back, class:"btn btn-outline-secondary rounded-3 px-2 me-1 fw-bold" %>
-        <% if @patient.persisted? && (Current.user&.manager? || Current.user&.admin?) %>
-          <%= button_to "Delete", [@regi,@patient], method: :delete, class:"btn btn-outline-danger rounded-3 px-3 me-1 fw-bold", form: { data: { turbo_confirm: "Are you sure?" } } %>
-        <% end %>
       </div>
     </div>
-  </div>
-<% end %>
+  <% end %>
+</div>

@@ -1,12 +1,37 @@
 <h2 class="text-center py-2">All Patient Charts by Name as of <%= Time.now.strftime("%Y-%m-%d %I:%M %p") %></h2>
-<div class="d-flex align-items-center justify-content-center mx-2 gap-1">
-<%= link_to 'All Charts by Date', overviews_chart_date_path, class:"btn btn-primary border border-light border-3 rounded-pill px-2 py-0 m-1 fw-bold" %>
-<%= link_to 'All Patient Info', overviews_patient_info_path, class:"btn btn-info border border-light border-3 rounded-pill px-2 py-0 m-1 fw-bold" %>
-<%= link_to 'Patient Registration', regis_path, class:"btn btn-warning border border-light border-3 rounded-pill px-2 py-0 m-1 fw-bold" %>
-<%= link_to 'Print All', 
-            url_for(params.to_unsafe_h.merge(print: true)), 
-            class: "btn btn-secondary border border-light border-3 rounded-pill px-3 py-0 fw-bold" %>
+
+<%# --- SAFETY SYSTEM: Warn the manager if trying to print too many records --- %>
+<% if params[:print] == "true" && @charts.to_a.size > 1500 %>
+  <div class="alert alert-danger shadow-sm mx-4 my-2 border-start border-4 border-danger d-print-none">
+    <div class="d-flex align-items-center mb-1">
+      <i class="bi bi-exclamation-triangle-fill me-2 fs-4"></i>
+      <h6 class="mb-0 fw-bold">Dataset Too Large for Browser Printing</h6>
+    </div>
+    <p class="mb-0 small text-dark">
+      You are attempting to print <b><%= @charts.to_a.size %></b> charts simultaneously. Web browsers run out of memory calculating print layouts of this size, which causes the preview to print blank pages.
+    </p>
+    <div class="mt-2">
+      <button onclick="window.print();" class="btn btn-sm btn-danger rounded-pill px-3 fw-bold me-1">Force Print Anyway</button>
+      <%= link_to 'Cancel & Filter', overviews_chart_name_path, class: "btn btn-sm btn-outline-secondary rounded-pill px-3 fw-bold" %>
+    </div>
+  </div>
+<% end %>
+
+<div class="d-flex align-items-center justify-content-center mx-2 gap-1 d-print-none">
+  <%= link_to 'All Charts by Date', overviews_chart_date_path, class:"btn btn-primary border border-light border-3 rounded-pill px-2 py-0 m-1 fw-bold" %>
+  <%= link_to 'All Patient Info', overviews_patient_info_path, class:"btn btn-info border border-light border-3 rounded-pill px-2 py-0 m-1 fw-bold" %>
+  <%= link_to 'Patient Registration', regis_path, class:"btn btn-warning border border-light border-3 rounded-pill px-2 py-0 m-1 fw-bold" %>
+  
+  <%# Server-Side Landscape PDF Link (Forwarding safe hash params & selected alphabet letter) %>
+  <%= link_to overviews_chart_name_path(q: params[:q]&.to_unsafe_h, letter: params[:letter], format: :pdf), class: "btn btn-danger border border-light border-3 rounded-pill px-3 py-0 fw-bold me-1" do %>
+    <i class="bi bi-file-pdf"></i> Export PDF
+  <% end %>
+
+  <%= link_to 'Print Selected', 
+              url_for(params.to_unsafe_h.merge(print: true)), 
+              class: "btn btn-secondary border border-light border-3 rounded-pill px-3 py-0 fw-bold" %>
 </div>
+
 <%= render 'shared/search_bar', 
     q: @q, 
     url: request.path, 
@@ -14,34 +39,34 @@
     search_key_first: :regi_first_name_cont,
     placeholder: "Search Charts..." %>
 
-    <div class="d-flex flex-wrap justify-content-center gap-1 my-3">
+<div class="d-flex flex-wrap justify-content-center gap-1 my-3 d-print-none">
   <% ('A'..'Z').each do |letter| %>
-    <%= link_to letter, 
-                url_for(letter: letter), 
-                class: "btn btn-sm btn-warning text-white border border-light border-3 fw-bolder #{params[:letter] == letter ? 'btn-warning' : 'btn-outline-secondary'} rounded-circle shadow-sm",
-                style: "width: 35px;" %>
+    <%= link_to letter, overviews_chart_name_path(letter: letter), class: "btn btn-sm btn-warning border border-light border-3 fw-bolder rounded-pill px-2 py-0 #{'active bg-warning text-white' if params[:letter] == letter}" %>
   <% end %>
-  <%= link_to "All", url_for(letter: "All"), class: "btn btn-sm btn-warning text-white border border-light border-3 fw-bolder rounded-pill px-3 shadow-sm" %>
+  <%= link_to "All", overviews_chart_name_path(letter: "All"), class: "btn btn-sm btn-warning text-dark rounded-pill px-2 py-0 #{'active bg-warning border border-light border-3 fw-bolder text-dark' if params[:letter] == 'All' || params[:letter].blank?}" %>
 </div>
 
-<table class="table table-sm table-striped custom-table border border-dark table-hover mt-4" style="table-layout: fixed; width: 100%; border-collapse: collapse;">
-  <thead class="table-info fs-6">
-    <tr>
-      <th class="ps-3" style="width: 17%;">Name</th> 
-      <th style="width: 8%;">Date</th>
-      <th style="width: 20%;">Subjective</th>
-      <th style="width: 15%;">Objective</th>
+<table class="table table-bordered align-middle bg-white shadow-sm" style="table-layout: fixed; width: 100%;">
+  <thead class="table-light">
+    <tr class="text-center">
+      <th class="ps-3" style="width: 160px;">Name</th>
+      <th style="width: 100px;">Date</th>
+      <th style="width: 15%;">Subjective</th>
+      <th style="width: 10%;">Objective</th>
       <th style="width: 10%;">Assessment</th>
-      <th class="text-center" style="width: 30%;">Plan</th>
+      <th class="pe-3" style="width: 40%;">Plan</th>
     </tr>
   </thead>
   <tbody>
     <% last_patient_id = nil %>
     <% @charts.each do |chart| %>
       <tr>
-        <td class="ps-3" style="word-break: break-all; white-space: normal; overflow: hidden;">
-          <% if chart.regi_id != last_patient_id %>
-            <%= link_to "#{chart.regi.p_name} (#{chart.regi.p_age})", regi_charts_path(chart.regi_id) %>
+        <td class="ps-3 fw-bold">
+          <% if chart.regi_id == last_patient_id %>
+            <span class="text-muted" style="font-weight: normal; font-size: 0.85em;"><%= chart.regi.p_name %></span>
+          <% else %>
+            <%= link_to chart.regi.p_name, regi_charts_path(chart.regi_id) %>
+            (<%= chart.regi.p_age %>)
           <% end %>
         </td>
         <td><%= chart.t_date %></td>
@@ -54,36 +79,83 @@
     <% end %>
   </tbody>
 </table>
-<div class="d-flex justify-content-center my-4">
+
+<div class="d-flex justify-content-center my-4 d-print-none">
   <%== pagy_bootstrap_nav(@pagy) if @pagy&.pages.to_i > 1 %>
 </div>
 
+<%# --- CONSOLIDATED & PRINT-SAFE TRIGGER BLOCK --- %>
 <% if params[:print] == "true" %>
   <script>
     (function() {
-      const checkTable = setInterval(() => {
-        const rows = document.querySelectorAll('table tbody tr');
-        if (rows.length > 0) {
-          clearInterval(checkTable);
-          setTimeout(() => {
-            window.print();
-            // Automatically clean the URL after printing
-            window.location.href = window.location.href.replace(/[&?]print=true/, '');
-          }, 1000);
-        }
-      }, 100);
+      const recordCount = <%= @charts.to_a.size %>;
+      
+      // Stop print process if records exceed 1,500 (prevents browser engine freeze)
+      if (recordCount > 1500) {
+        console.warn("Print trigger skipped: Dataset too large for browser standard printing.");
+        return;
+      }
+
+      function triggerPrint() {
+        setTimeout(() => {
+          window.print();
+        }, 1200); 
+      }
+
+      if (document.readyState === 'complete') {
+        triggerPrint();
+      } else {
+        window.addEventListener('load', triggerPrint);
+      }
+
+      window.onafterprint = function() {
+        window.location.href = window.location.href.replace(/[&?]print=true/, '');
+      };
     })();
   </script>
 
   <style>
     @media print {
-      .btn, .nav, .search-bar, .d-flex, footer, .card-header, .pagination { 
+      /* Hide navigation headers, search forms, and navigation buttons without breaking outer layout wrappers */
+      .btn, 
+      .nav, 
+      .navbar,
+      .sidebar,
+      .search-bar, 
+      footer, 
+      header,
+      .card-header, 
+      .d-print-none,
+      form { 
         display: none !important; 
       }
-      body { background: white !important; margin: 0; }
-      .table { width: 100% !important; border: 1px solid #000 !important; }
-      .fs-4 { color: #000 !important; font-size: 11pt !important; }
+      
+      body { 
+        background-color: white !important; 
+        font-size: 9pt !important; 
+        margin: 0.5cm !important;
+      }
+      
+      .table { 
+        border-collapse: collapse !important;
+        border: 1px solid #000000 !important; 
+        width: 100% !important; 
+        table-layout: fixed !important;
+      }
+
+      .table th, .table td {
+        border: 1px solid #dee2e6 !important;
+        padding: 6px !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+        white-space: normal !important;
+      }
+
+      /* Avoid breaking rows awkwardly mid-text across page borders */
+      tr {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+      }
     }
   </style>
 <% end %>
-

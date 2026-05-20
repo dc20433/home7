@@ -8,6 +8,11 @@
       window.onpageshow = function(evt) { if (evt.persisted) noback(); };
     </script>
 
+    <div class="text-center mb-4">
+      <h2 class="fw-bold">Intake & Consent</h2>
+      <%= render 'layouts/identifier' %>
+    </div>
+    
     <%# --- PATIENT LANDS HERE --- %>
     <%= render "patientConsentForm" %>
 

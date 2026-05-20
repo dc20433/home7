@@ -1,6 +1,83 @@
-<h2 class="text-center m-4">System Usage Statistics as of <%= Time.now.strftime("%Y-%m-%d %H:%M") %></h2>
+<h2 class="text-center m-4">System Usage Statistics as of <%= Time.now.strftime("%Y-%m-%d %I:%M %p") %></h2>
 
 <div class="card mt-4 mx-auto border-primary shadow" style="width: 65rem;">
+  <div class="card-header bg-primary text-white fw-bold fs-5">Data Upload Monitoring</div>
+  <div class="card-body pt-3 pb-4">
+    
+    <%# --- TODAY'S METRIC COUNTERS --- %>
+    <div class="row g-3 mb-4">
+      <div class="col-md-4 text-center">
+        <span class="form-label fw-bold mb-2 d-block text-muted small text-uppercase">Today's Chart Uploads</span>
+        <div class="p-3 bg-light rounded border border-light shadow-sm">
+          <span class="display-6 fw-bold text-primary d-block"><%= @today_charts %></span>
+          <span class="small text-muted fw-bold">Charts Added</span>
+        </div>
+      </div>
+      <div class="col-md-4 text-center">
+        <span class="form-label fw-bold mb-2 d-block text-muted small text-uppercase">Today's Patient Info Uploads</span>
+        <div class="p-3 bg-light rounded border border-light shadow-sm">
+          <span class="display-6 fw-bold text-info d-block"><%= @today_patients_info %></span>
+          <span class="small text-muted fw-bold">Intakes Completed</span>
+        </div>
+      </div>
+      <div class="col-md-4 text-center">
+        <span class="form-label fw-bold mb-2 d-block text-muted small text-uppercase">Today's Filing Uploads</span>
+        <div class="p-3 bg-light rounded border border-light shadow-sm">
+          <span class="display-6 fw-bold text-secondary d-block"><%= @today_filings %></span>
+          <span class="small text-muted fw-bold">Files Uploaded</span>
+        </div>
+      </div>
+    </div>
+
+    <%# --- LAST 5 DAYS BREAKDOWN --- %>
+    <div class="row g-4 border-top pt-4">
+      <div class="col-md-4">
+        <div class="form-label fw-bold text-primary mb-2 border-bottom pb-1 small text-uppercase">
+          <i class="bi bi-calendar-event"></i> Last 5 Days' Charts
+        </div>
+        <ul class="list-group list-group-flush bg-transparent">
+          <% @dates.each do |date| %>
+            <li class="list-group-item d-flex justify-content-between align-items-center py-1 bg-transparent px-0 border-0 small">
+              <span class="text-muted"><%= date.strftime('%a, %b %d') %></span>
+              <span class="badge bg-primary rounded-pill"><%= @charts_by_day[date] %></span>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+
+      <div class="col-md-4">
+        <div class="form-label fw-bold text-info mb-2 border-bottom pb-1 small text-uppercase">
+          <i class="bi bi-person-badge"></i> Last 5 Days' Patient Info
+        </div>
+        <ul class="list-group list-group-flush bg-transparent">
+          <% @dates.each do |date| %>
+            <li class="list-group-item d-flex justify-content-between align-items-center py-1 bg-transparent px-0 border-0 small">
+              <span class="text-muted"><%= date.strftime('%a, %b %d') %></span>
+              <span class="badge bg-info text-dark rounded-pill"><%= @patients_by_day[date] %></span>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+
+      <div class="col-md-4">
+        <div class="form-label fw-bold text-secondary mb-2 border-bottom pb-1 small text-uppercase">
+          <i class="bi bi-file-earmark-arrow-up"></i> Last 5 Days' Filings
+        </div>
+        <ul class="list-group list-group-flush bg-transparent">
+          <% @dates.each do |date| %>
+            <li class="list-group-item d-flex justify-content-between align-items-center py-1 bg-transparent px-0 border-0 small">
+              <span class="text-muted"><%= date.strftime('%a, %b %d') %></span>
+              <span class="badge bg-secondary rounded-pill"><%= @filings_by_day[date] %></span>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="card mt-4 mx-auto border-primary shadow mb-5" style="width: 65rem;">
   <div class="card-header bg-primary text-white fw-bold fs-5">Clinical Data Summary</div>
   <div class="card-body pt-2">
     <table class="table table-sm table-striped custom-table mb-0">
@@ -11,8 +88,8 @@
           <th>Records</th>
           <th>Charts</th>
           <th>Files</th>
-          <th>Avg Charts/Pt</th>
-          <th>Avg Age</th>
+          <th>Avg Charts/Patient</th>
+          <th>Patient Avg Age</th>
         </tr>
       </thead>
       <tbody>

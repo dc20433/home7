@@ -12,7 +12,13 @@ class OverviewsController < ApplicationController
   end
 
   def signup_records
-    @signups = Regi.all.order(created_at: :desc)
+    # Includes :user relationship to prevent N+1 queries when fetching usernames and timestamps
+    # Filters to show only those where access has been issued/active, digitally signed, or previously issued and revoked.
+    @signups = Regi.includes(:user).order(updated_at: :desc).select do |regi|
+      regi.onboarding_status == "DigiSigned" || 
+        regi.onboarding_status == "Issued" || 
+        (!regi.user.present? && regi.status.to_s == "signup" && regi.updated_at > regi.created_at + 10.seconds)
+    end
   end
 
   def patient_stats
@@ -27,18 +33,47 @@ class OverviewsController < ApplicationController
     @average_charts_per_patient = @total_patients > 0 ? (@total_charts.to_f / @total_patients).round(1) : 0
     @average_charts_per_day = @total_charts > 0 ? (@total_charts.to_f / (Chart.distinct.count(:t_date))).round(1) : 0
     @average_age = Regi.where("dob IS NOT NULL").average("EXTRACT(YEAR FROM AGE(NOW(), dob))").to_f.round(1)
+
+    # Gender-Specific Records Breakdown
+    @male_records = Patient.joins(:regi).where(regis: { gender: "Male" }).count
+    @female_records = Patient.joins(:regi).where(regis: { gender: "Female" }).count
+
+    # Gender-Specific Charts Breakdown
+    @male_charts = Chart.joins(:regi).where(regis: { gender: "Male" }).count
+    @female_charts = Chart.joins(:regi).where(regis: { gender: "Female" }).count
+
+    # Gender-Specific Filings Breakdown
+    @male_filing = Filing.joins(:regi).where(regis: { gender: "Male" }).count
+    @female_filing = Filing.joins(:regi).where(regis: { gender: "Female" }).count
+
+    # Gender-Specific Averages
+    @male_charts_per_patient = @total_male_patients > 0 ? (@male_charts.to_f / @total_male_patients).round(1) : 0
+    @female_charts_per_patient = @total_female_patients > 0 ? (@female_charts.to_f / @total_female_patients).round(1) : 0
+
     @average_male_age = Regi.where(gender: "Male").where("dob IS NOT NULL").average("EXTRACT(YEAR FROM AGE(NOW(), dob))").to_f.round(1)
     @average_female_age = Regi.where(gender: "Female").where("dob IS NOT NULL").average("EXTRACT(YEAR FROM AGE(NOW(), dob))").to_f.round(1)
 
-    # Gender Breakdown
-    @male_records = Patient.joins(:regi).where(regis: { gender: "Male" }).count
-    @female_records = Patient.joins(:regi).where(regis: { gender: "Female" }).count
-    @male_charts = Chart.joins(:regi).where(regis: { gender: "Male" }).count
-    @female_charts = Chart.joins(:regi).where(regis: { gender: "Female" }).count
-    @male_filing = Filing.joins(:regi).where(regis: { gender: "Male" }).count
-    @female_filing = Filing.joins(:regi).where(regis: { gender: "Female" }).count
-    @male_charts_per_patient = @total_male_patients > 0 ? (@male_charts.to_f / @total_male_patients).round(1) : 0
-    @female_charts_per_patient = @total_female_patients > 0 ? (@female_charts.to_f / @total_female_patients).round(1) : 0
+    # ---------------------------------------------------------
+    # DATA UPLOAD MONITORING (LIVE FEED)
+    # ---------------------------------------------------------
+    today_range = Time.zone.now.beginning_of_day..Time.zone.now.end_of_day
+    @today_charts = Chart.where(created_at: today_range).count
+    @today_patients_info = Patient.where(created_at: today_range).count
+    @today_filings = Filing.where(created_at: today_range).count
+
+    # Daily breakdown for the last 5 days (including today)
+    @dates = (0..4).map { |i| i.days.ago.to_date }
+
+    @charts_by_day = {}
+    @patients_by_day = {}
+    @filings_by_day = {}
+
+    @dates.each do |date|
+      day_range = date.beginning_of_day..date.end_of_day
+      @charts_by_day[date]   = Chart.where(created_at: day_range).count
+      @patients_by_day[date] = Patient.where(created_at: day_range).count
+      @filings_by_day[date]  = Filing.where(created_at: day_range).count
+    end
   end
 
   # ---------------------------------------------------------
@@ -84,9 +119,15 @@ class OverviewsController < ApplicationController
 
   private
 
-  def ensure_admin
-    unless Current.admin?
-      redirect_to root_path, alert: "Access denied. Admins only."
+  def paginate_or_print(relation)
+    if params[:print] == "true"
+      [nil, relation]
+    else
+      pagy(relation, items: 15)
     end
+  end
+
+  def ensure_admin
+    redirect_to root_path, alert: "Access Denied." unless Current.user&.admin?
   end
 end
