@@ -56,7 +56,19 @@ class OverviewsController < ApplicationController
       results = results.reorder("charts.t_date DESC, regis.last_name ASC")
     end
 
-    @pagy, @charts = paginate_or_print(results)
+    respond_to do |format|
+      format.html do
+        @pagy, @charts = paginate_or_print(results)
+      end
+      format.pdf do
+        # Export all matching records from the filter (skipping pagination)
+        pdf = OverviewsPdf.new(results, "Charts Sorted by Date")
+        send_data pdf.render,
+          filename: "Patient_Charts_by_Date_#{Date.today}.pdf",
+          type: 'application/pdf',
+          disposition: 'inline'
+      end
+    end
   end
 
   def chart_name
@@ -68,7 +80,18 @@ class OverviewsController < ApplicationController
       results = results.where("regis.last_name ILIKE ?", "#{params[:letter]}%")
     end
 
-    @pagy, @charts = paginate_or_print(results)
+    respond_to do |format|
+      format.html do
+        @pagy, @charts = paginate_or_print(results)
+      end
+      format.pdf do
+        pdf = OverviewsPdf.new(results, "Charts Sorted by Patient Name")
+        send_data pdf.render,
+          filename: "Patient_Charts_by_Name_#{Date.today}.pdf",
+          type: 'application/pdf',
+          disposition: 'inline'
+      end
+    end
   end
 
   def patient_info
@@ -84,9 +107,15 @@ class OverviewsController < ApplicationController
 
   private
 
-  def ensure_admin
-    unless Current.admin?
-      redirect_to root_path, alert: "Access denied. Admins only."
+  def paginate_or_print(relation)
+    if params[:print] == "true"
+      [nil, relation]
+    else
+      pagy(relation, items: 15)
     end
+  end
+
+  def ensure_admin
+    redirect_to root_path, alert: "Access Denied." unless Current.user&.admin?
   end
 end

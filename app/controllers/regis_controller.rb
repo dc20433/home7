@@ -1,23 +1,25 @@
+require_relative '../pdfs/patient_directory_pdf'
+
 class RegisController < ApplicationController
   before_action :resume_session
   before_action :require_management_access, only: %i[ show edit update destroy signup_patient ]
   before_action :set_regi, only: %i[ show edit update destroy signup_patient ]
   skip_before_action :ensure_staff_only, only: [ :index ]
 
+  # GET /regis
+  # GET /regis.pdf
   def index
     # DEBUG: This will show in your terminal exactly what the app sees
     if Current.user
       Rails.logger.info "LOGGING IN AS: #{Current.user.id} | ROLE: #{Current.user.role.inspect}"
     end
   
-    # Use the explicit string 'patient' which we know is index 3
+    # 1. Patient Redirect Loop Protection
     if Current.user&.role.to_s == "patient"
-      # We use the 'regi_id' column on the User table
       @regi = Regi.find_by(id: Current.user.regi_id)
       
       if @regi
         # Force the redirect to the patient's specific record
-        # Using the helper we put in the Authentication concern
         redirect_to route_for_user(Current.user) and return
       else
         # If no link exists, don't show the index!
@@ -26,95 +28,75 @@ class RegisController < ApplicationController
       end
     end
 
-    # 2. Manager View (Ransack + Pagy)
+    # 2. Manager View (Ransack Query Construction)
     @q = Regi.ransack(params[:q])
     results = @q.result.order(last_name: :asc).includes(:user, :patients)
 
-    if params[:q].blank? && params[:letter].present? && params[:letter] != "All"
-      results = results.where("last_name ILIKE ?", "#{params[:letter]}%")
+    # Alphabetical letter filtering
+    if params[:letter].present? && params[:letter] != "All"
+      results = results.where("regis.last_name ILIKE ?", "#{params[:letter]}%")
     end
 
-    if params[:print] == "true"
-      @regis = results
-      @pagy = nil
-    else
-      @pagy, @regis = pagy(results)
+    respond_to do |format|
+      format.html do
+        # Paginate normally unless in print preview mode
+        if params[:print] == "true"
+          @regis = results
+        else
+          @pagy, @regis = pagy(results, items: 15)
+        end
+      end
+      format.pdf do
+        # Export the full matching dataset, bypassing pagination completely
+        pdf = PatientDirectoryPdf.new(results, "Full Patient List")
+        send_data pdf.render,
+          filename: "Patient_Directory_#{Date.today}.pdf",
+          type: 'application/pdf',
+          disposition: 'inline'
+      end
     end
   end
 
+  # GET /regis/1
+  def show
+  end
+
+  # GET /regis/new
   def new
     @regi = Regi.new
   end
 
-  def signup_patient
-    @regi = Regi.find(params[:id])
-
-    @user = User.new(
-      email: "#{@regi.last_name}#{@regi.first_name}#{@regi.dob.strftime('%m')}".downcase.gsub(/\s+/, ""),
-      password: "temp123",
-      password_confirmation: "temp123",
-      role: "patient"
-    )
-
-    if @user.save
-      # This is the "Glue" that was missing before
-      @regi.update_column(:user_id, @user.id)
-      redirect_to regis_path, notice: "Access issued! Login ID: #{@regi.id}"
-    else
-      redirect_to regis_path, alert: "User creation failed."
-    end
-  end
-  
-  def destroy_patient_user
-    @regi = Regi.find(params[:id])
-  
-    # 1. Generate the expected email to find potential orphans
-    prefix = "#{@regi.last_name}#{@regi.first_name}#{@regi.dob.strftime('%m')}".downcase.gsub(/\s+/, "")
-    email_to_clean = "#{prefix}" # Matches your recycling requirement
-  
-    # 2. Find the user via the association OR the email
-    user = @regi.user || User.find_by(email: email_to_clean)
-  
-    if user
-      user.destroy
-      # If the user was linked via ID, clear that column so a new one can be issued
-      @regi.update(user_id: nil) if @regi.respond_to?(:user_id)
-      redirect_to regis_path, notice: "Login ID #{email_to_clean} deleted. You can now recycle this ID."
-    else
-      redirect_to regis_path, alert: "No login found for #{email_to_clean}."
-    end
-  end
-
+  # POST /regis
   def create
     @regi = Regi.new(regi_params)
     if @regi.save
-      redirect_to regis_path, notice: "New Patient Registered..."
+      redirect_to regis_path, notice: "Registration successfully created."
     else
       render :new, status: :unprocessable_entity
     end
   end
 
+  # GET /regis/1/edit
+  def edit
+  end
+
+  # PATCH/PUT /regis/1
   def update
     if @regi.update(regi_params)
-      redirect_to regis_path, notice: "Patient Registration updated..."
+      redirect_to regis_path, notice: "Registration successfully updated."
     else
       render :edit, status: :unprocessable_entity
     end
   end
 
+  # DELETE /regis/1
   def destroy
-    @regi = Regi.find(params[:id])
-
-    # This ensures the associated patient signature and user are cleaned up
     @regi.destroy
-
-    redirect_to regis_path, status: :see_other, notice: "Patient record and access removed."
+    redirect_to regis_path, notice: "Registration successfully deleted.", status: :see_other
   end
 
-  def issue_access
-    @regi = Regi.find(params[:id])
-    
-    # Convention: lastname + firstname + month
+  # POST /regis/1/signup_patient
+  def signup_patient
     dob_m = @regi.dob&.strftime('%m') || "00"
     login_handle = "#{@regi.last_name}#{@regi.first_name}#{dob_m}".downcase.gsub(/\s+/, "")
     login_email = "#{login_handle}"
@@ -134,9 +116,9 @@ class RegisController < ApplicationController
     end
   end
   
+  # POST /regis/1/revoke_access
   def revoke_access
     @regi = Regi.find(params[:id])
-    # Look specifically for the user linked by the ID
     user = User.find_by(regi_id: @regi.id)
     
     if user&.destroy && @regi.update(status: :signup)
@@ -148,18 +130,18 @@ class RegisController < ApplicationController
 
   private
 
-  def require_management_access
-    # Prevent patients (role 0) from accessing staff tools
-    unless Current.user&.admin? || Current.user&.manager?
-      redirect_to root_path, alert: "Access Denied."
-    end
-  end
-
   def set_regi
     @regi = Regi.find(params[:id])
   end
 
+  def require_management_access
+    # Prevent patients (role "patient") from accessing management views
+    if Current.user&.role.to_s == "patient"
+      redirect_to root_path, alert: "Unauthorized access."
+    end
+  end
+
   def regi_params
-    params.require(:regi).permit(:last_name, :first_name, :init, :gender, :dob, :p_name)
+    params.require(:regi).permit(:first_name, :last_name, :mi, :dob, :gender, :p_phone)
   end
 end

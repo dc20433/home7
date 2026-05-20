@@ -6,7 +6,10 @@
   <%= link_to 'Patient Info', regi_patients_path, class:"btn btn-success border border-light border-3 rounded-pill px-3 py-0 m-1 fw-bold" %>
   <%= link_to 'Patient Files', regi_filings_path, class:"btn btn-info border border-light border-3 rounded-pill px-3 py-0 m-1 fw-bold" %>
   <%= link_to 'Patient Registration', regis_path, class:"btn btn-warning border border-light border-3 rounded-pill px-2 py-0 m-1 fw-bold" %>
-  <%= link_to '← Go Back', :back, class:"btn btn-secondary border border-light border-3 rounded-pill px-3 py-0 mt-4 mb-4 fw-bold" %>
+  <%= link_to '← Go Back', :back, class:"btn btn-primary border border-light border-3 rounded-pill px-3 py-0 mt-4 mb-4 fw-bold" %>
+  <%= link_to 'Print Selected', 
+  url_for(params.to_unsafe_h.merge(print: true)), 
+  class: "btn btn-secondary border border-light border-3 rounded-pill px-3 py-0 fw-bold" %>
 </div>
 
 <table class="table table-sm table-striped table-hover custom-table border border-dark mt-1">
