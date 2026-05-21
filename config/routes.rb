@@ -4,7 +4,6 @@ Rails.application.routes.draw do
     member do
       patch :signup_patient
       delete :destroy_patient_user
-      post :issue_access
       post :revoke_access
     end
 

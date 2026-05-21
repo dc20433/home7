@@ -145,7 +145,7 @@
                   class: "badge bg-success text-decoration-none fw-bold", 
                   style: "font-size: 0.85rem; padding: 2px 8px;" %>
             <% else %>
-              <%= link_to "SignUp", issue_access_regi_path(regi), data: { turbo_method: :post }, 
+              <%= link_to "SignUp", signup_patient_regi_path(regi), data: { turbo_method: :patch }, 
                   class: "badge bg-warning text-dark text-decoration-none fw-bold", 
                   style: "font-size: 0.85rem; padding: 2px 8px;" %>
             <% end %>

@@ -1,6 +1,6 @@
 require 'pagy'
-
-# require "pagy/extras/bootstrap"
+require 'pagy/frontend'
+require 'pagy/extras/bootstrap'
 
 # Safe-guard against third-party gems (like pagy-cursor) that freeze Pagy defaults
 if Pagy::DEFAULT.frozen?

@@ -28,26 +28,24 @@ class RegisController < ApplicationController
       end
     end
 
-    # 2. Manager View (Ransack Query Construction)
+    # 2. Manager View (Ransack + Pagy)
     @q = Regi.ransack(params[:q])
     results = @q.result.order(last_name: :asc).includes(:user, :patients)
 
-    # Alphabetical letter filtering
-    if params[:letter].present? && params[:letter] != "All"
-      results = results.where("regis.last_name ILIKE ?", "#{params[:letter]}%")
+    if params[:q].blank? && params[:letter].present? && params[:letter] != "All"
+      results = results.where("last_name ILIKE ?", "#{params[:letter]}%")
     end
 
     respond_to do |format|
       format.html do
-        # Paginate normally unless in print preview mode
         if params[:print] == "true"
           @regis = results
+          @pagy = nil
         else
-          @pagy, @regis = pagy(results, items: 15)
+          @pagy, @regis = pagy(results)
         end
       end
       format.pdf do
-        # Export the full matching dataset, bypassing pagination completely
         pdf = PatientDirectoryPdf.new(results, "Full Patient List")
         send_data pdf.render,
           filename: "Patient_Directory_#{Date.today}.pdf",
@@ -57,46 +55,87 @@ class RegisController < ApplicationController
     end
   end
 
-  # GET /regis/1
-  def show
-  end
-
-  # GET /regis/new
   def new
     @regi = Regi.new
   end
 
-  # POST /regis
+  # PATCH /regis/:id/signup_patient
+  def signup_patient
+    @regi = Regi.find(params[:id])
+
+    # Resolve the email of the active logging administrator
+    creator_email = active_manager_email
+    
+    # Trace log to print exactly who Rails sees as logged in during creation
+    Rails.logger.info "SIGNUP CREATOR AUDIT - Captured active administrator: #{creator_email}"
+
+    # Instantiate the new patient User, stamp creator admin's email, and link to the registration
+    @user = User.new(
+      email: "#{@regi.last_name}#{@regi.first_name}#{@regi.dob.strftime('%m')}".downcase.gsub(/\s+/, ""),
+      password: "temp123",
+      password_confirmation: "temp123",
+      role: "patient",
+      created_by: creator_email, # Automatically logs the active administrator's email safely
+      regi_id: @regi.id # Essential: Links the new User record back to this registration
+    )
+
+    if @user.save
+      # Glue: Associate the registration with the user, and change status to :issued
+      @regi.update(user_id: @user.id, status: :issued)
+      redirect_to regis_path, notice: "Access issued! Login ID: #{@regi.id}"
+    else
+      redirect_to regis_path, alert: "User creation failed: #{@user.errors.full_messages.to_sentence}"
+    end
+  end
+  
+  # DELETE /regis/:id/destroy_patient_user
+  def destroy_patient_user
+    @regi = Regi.find(params[:id])
+  
+    # 1. Generate the expected email to find potential orphans
+    prefix = "#{@regi.last_name}#{@regi.first_name}#{@regi.dob.strftime('%m')}".downcase.gsub(/\s+/, "")
+    email_to_clean = "#{prefix}"
+  
+    # 2. Find the user via the association OR the email
+    user = @regi.user || User.find_by(email: email_to_clean)
+  
+    if user
+      user.destroy
+      # Reset both user association and status back to signup
+      @regi.update(user_id: nil, status: :signup)
+      redirect_to regis_path, notice: "Login ID #{email_to_clean} deleted. You can now recycle this ID."
+    else
+      redirect_to regis_path, alert: "No login found for #{email_to_clean}."
+    end
+  end
+
   def create
     @regi = Regi.new(regi_params)
     if @regi.save
-      redirect_to regis_path, notice: "Registration successfully created."
+      redirect_to regis_path, notice: "New Patient Registered..."
     else
       render :new, status: :unprocessable_entity
     end
   end
 
-  # GET /regis/1/edit
-  def edit
-  end
-
-  # PATCH/PUT /regis/1
   def update
     if @regi.update(regi_params)
-      redirect_to regis_path, notice: "Registration successfully updated."
+      redirect_to regis_path, notice: "Patient Registration updated..."
     else
       render :edit, status: :unprocessable_entity
     end
   end
 
-  # DELETE /regis/1
   def destroy
+    @regi = Regi.find(params[:id])
     @regi.destroy
-    redirect_to regis_path, notice: "Registration successfully deleted.", status: :see_other
+    redirect_to regis_path, status: :see_other, notice: "Patient record and access removed."
   end
 
-  # POST /regis/1/signup_patient
-  def signup_patient
+  # POST /regis/:id/issue_access
+  def issue_access
+    @regi = Regi.find(params[:id])
+    
     dob_m = @regi.dob&.strftime('%m') || "00"
     login_handle = "#{@regi.last_name}#{@regi.first_name}#{dob_m}".downcase.gsub(/\s+/, "")
     login_email = "#{login_handle}"
@@ -106,7 +145,8 @@ class RegisController < ApplicationController
       email: login_email,
       password: "temp123",
       password_confirmation: "temp123",
-      role: "patient" # Use the lowercase string to match the Enum key
+      role: "patient",
+      created_by: active_manager_email # Track the exact manager who issued this access safely
     )
   
     if user.save && @regi.update(status: :issued)
@@ -116,7 +156,7 @@ class RegisController < ApplicationController
     end
   end
   
-  # POST /regis/1/revoke_access
+  # POST /regis/:id/revoke_access
   def revoke_access
     @regi = Regi.find(params[:id])
     user = User.find_by(regi_id: @regi.id)
@@ -130,18 +170,39 @@ class RegisController < ApplicationController
 
   private
 
+  # Failsafe helper to resolve the active administrator's email across Rails 8 environments
+  def active_manager_email
+    # 1. Try Current.user (Cookie-based session attributes delegation)
+    if defined?(Current) && Current.user.present?
+      return Current.user.email if Current.user.respond_to?(:email) && Current.user.email.present?
+    end
+
+    # 2. Try the classic controller current_user helper method
+    if respond_to?(:current_user) && current_user.present?
+      return current_user.email if current_user.respond_to?(:email) && current_user.email.present?
+    end
+
+    # 3. Direct session lookup as a failsafe backstop
+    if session[:user_id].present?
+      u = User.find_by(id: session[:user_id])
+      return u.email if u&.respond_to?(:email) && u.email.present?
+    end
+
+    # 4. Global fallback
+    "jz2043@yahoo.com"
+  end
+
+  def require_management_access
+    unless Current.user&.admin? || Current.user&.manager?
+      redirect_to root_path, alert: "Access Denied."
+    end
+  end
+
   def set_regi
     @regi = Regi.find(params[:id])
   end
 
-  def require_management_access
-    # Prevent patients (role "patient") from accessing management views
-    if Current.user&.role.to_s == "patient"
-      redirect_to root_path, alert: "Unauthorized access."
-    end
-  end
-
   def regi_params
-    params.require(:regi).permit(:first_name, :last_name, :mi, :dob, :gender, :p_phone)
+    params.require(:regi).permit(:last_name, :first_name, :init, :gender, :dob, :p_name)
   end
 end
