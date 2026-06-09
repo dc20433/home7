@@ -73,7 +73,7 @@ gem "ransack"
 gem "bootstrap", "~> 5.3.3"
 gem "dartsass-rails"
 gem "sassc-rails"
-gem "pagy", '~> 9.0'
+gem "pagy", '~> 43.5'
 gem "activerecord-session_store"
 gem "prawn"
 gem "prawn-table"
