@@ -1,23 +1,12 @@
 class AddCompatibilityColumnsToPatients < ActiveRecord::Migration[8.1]
   def change
-    add_column :patients, :alcohol, :string
-    add_column :patients, :aq_where, :string
-    add_column :patients, :aqrist, :string
-    add_column :patients, :better, :string
-    add_column :patients, :c_onset, :string
-    add_column :patients, :d_lost, :string
-    add_column :patients, :d_restd, :string
-    add_column :patients, :diag_where, :string
-    add_column :patients, :h_when, :string
-    add_column :patients, :hosp, :string
-    add_column :patients, :inj_surg, :string
-    add_column :patients, :med_taken, :string
-    add_column :patients, :name, :string
-    add_column :patients, :o_drs, :string
-    add_column :patients, :o_drs_when, :string
-    add_column :patients, :pcp_name, :string
-    add_column :patients, :string, :string
-    add_column :patients, :tobacco, :string
-    add_column :patients, :worse, :string
+    # Define columns only if they do not exist
+    [:alcohol, :aq_where, :aqrist, :better, :c_onset, :d_lost, :d_restd, 
+     :diag_where, :h_when, :hosp, :inj_surg, :med_taken, :name, :o_drs, 
+     :o_drs_when, :pcp_name, :string, :tobacco, :worse].each do |col|
+      unless column_exists?(:patients, col)
+        add_column :patients, col, :string
+      end
+    end
   end
 end

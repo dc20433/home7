@@ -1,14 +1,16 @@
 class CreateRegis < ActiveRecord::Migration[8.1]
   def change
-    create_table :regis do |t|
-      t.string :last_name
-      t.string :first_name
-      t.string :init
-      t.string :gender
-      t.date :dob
-      t.string :p_name
+    unless table_exists?(:regis)
+      create_table :regis do |t|
+        t.string :last_name
+        t.string :first_name
+        t.string :init
+        t.string :gender
+        t.date :dob
+        t.string :p_name
 
-      t.timestamps
+        t.timestamps
+      end
     end
   end
 end

@@ -1,5 +1,7 @@
 class AddFDateToFilings < ActiveRecord::Migration[8.1]
   def change
-    add_column :filings, :f_date, :date
+    unless column_exists?(:filings, :f_date)
+      add_column :filings, :f_date, :date
+    end
   end
 end
