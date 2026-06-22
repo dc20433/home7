@@ -62,10 +62,11 @@ module Authentication
   end
 
   def resume_session
+
     session = find_session_by_cookie
     return nil unless session
 
-    if session.updated_at < 20.minutes.ago
+    if session.updated_at < 60.minutes.ago
       terminate_session
       return nil
     end

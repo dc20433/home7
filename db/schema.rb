@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_21_031024) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_20_021507) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -54,6 +54,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_21_031024) do
     t.date "t_date"
     t.datetime "updated_at", precision: 0, null: false
     t.index ["regi_id"], name: "index_charts_on_regi_id"
+    t.index ["t_date"], name: "index_charts_on_t_date"
   end
 
   create_table "filings", force: :cascade do |t|
@@ -88,7 +89,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_21_031024) do
     t.string "exercise_old", default: [], array: true
     t.json "f_list"
     t.date "h_when"
-    t.decimal "height", precision: 2, scale: 1
+    t.decimal "height", precision: 4, scale: 1
     t.string "home"
     t.string "hosp"
     t.string "inj_surg"
@@ -137,18 +138,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_21_031024) do
     t.string "status"
     t.datetime "updated_at", precision: 0, null: false
     t.bigint "user_id"
+    t.index ["last_name"], name: "index_regis_on_last_name"
+    t.index ["p_name"], name: "index_regis_on_p_name"
     t.index ["user_id"], name: "index_regis_on_user_id"
   end
 
   create_table "sessions", force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.text "data"
     t.string "ip_address"
-    t.string "session_id"
     t.datetime "updated_at", null: false
     t.string "user_agent"
     t.bigint "user_id", null: false
-    t.index ["session_id"], name: "index_sessions_on_session_id", unique: true
     t.index ["updated_at"], name: "index_sessions_on_updated_at"
     t.index ["user_id"], name: "index_sessions_on_user_id"
   end
@@ -168,6 +168,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_21_031024) do
     t.datetime "last_sign_out_at"
     t.boolean "needs_password_change"
     t.string "password_digest", default: "", null: false
+    t.integer "patient_id"
     t.integer "regi_id"
     t.datetime "remember_created_at", precision: 0
     t.datetime "reset_password_sent_at", precision: 0
