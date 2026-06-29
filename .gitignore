@@ -36,3 +36,8 @@
 
 /app/assets/builds/*
 !/app/assets/builds/.keep
+
+# SSL Certificates
+server.key
+server.crt
+*.pem

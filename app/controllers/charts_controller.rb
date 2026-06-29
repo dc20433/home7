@@ -29,31 +29,29 @@ class ChartsController < ApplicationController
   # POST regis/1/charts
   def create
     @chart = @regi.charts.build(chart_params)
-
-    if @chart.save
-      redirect_to regi_charts_path(@regi, @chart), notice: "Patient Chart created..."
+    
+    if @regi.charts.exists?(t_date: chart_params[:t_date])
+      flash.now[:alert] = "A chart already exists for this date. Please choose a different date, or cancel the Save."
+      render :new, status: :unprocessable_entity
+    elsif @chart.save
+      redirect_to regi_charts_path(@regi), notice: "Chart created successfully."
     else
-      render action: "new"
+      render :new, status: :unprocessable_entity
     end
   end
 
   # PUT regis/1/charts/1
   def update
-    # 1. Look for ANY record (including this one) with the same date
-    collision = @regi.charts.find_by(t_date: chart_params[:t_date])
-
-    # 2. TRIGGER: If a collision exists and 'overwrite' hasn't been confirmed
-    if collision && params[:overwrite] != "true"
-      @show_overwrite_warning = true
-      @chart.assign_attributes(chart_params)
-
-      # Exit here so the "Final Save" logic below is not reached
-      render :edit, status: :unprocessable_entity and return
-    end
-
-    # 3. Final Save: Only reached if no collision OR overwrite == "true"
-    if @chart.update(chart_params)
-      redirect_to regi_charts_path(@regi), status: :see_other, notice: "Patient Chart updated..."
+    # Check if another record (not this one) has the new date
+    collision = @regi.charts.where(t_date: chart_params[:t_date])
+                            .where.not(id: @chart.id)
+                            .exists?
+  
+    if collision
+      flash.now[:alert] = "A chart already exists for this date. Please save it under a different date, or cancel the Save."
+      render :edit, status: :unprocessable_entity
+    elsif @chart.update(chart_params)
+      redirect_to regi_charts_path(@regi), notice: "Chart updated successfully."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -74,6 +72,13 @@ class ChartsController < ApplicationController
     def set_chart
       @chart = @regi.charts.find(params[:id])
     end
+
+    def check_for_collision
+      # Find if ANY OTHER record has this date for this patient
+      @collision = @regi.charts.where(t_date: chart_params[:t_date])
+                               .where.not(id: @chart.id)
+                               .first
+    end   
 
     # Only allow a trusted parameter "white list" through.
     def chart_params

@@ -13,7 +13,8 @@ class SessionsController < ApplicationController
 
     if user = User.authenticate_by(email: login_id, password: params[:password])
       if user.respond_to?(:is_active) && !user.is_active
-        redirect_to new_session_path, alert: "This account has been deactivated." and return
+        # redirect_to new_session_path, alert: "This account has been deactivated." and return
+        redirect_to home_path, alert: "This account has been deactivated." and return
       end
 
       start_new_session_for user
@@ -43,6 +44,7 @@ class SessionsController < ApplicationController
     # any code after it will cause the DoubleRenderError unless we stop.
     return if performed?
 
-    redirect_to new_session_path, status: :see_other
+    # redirect_to new_session_path, status: :see_other
+    redirect_to home_path, status: :see_other
   end
 end
