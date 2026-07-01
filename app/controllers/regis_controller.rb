@@ -1,6 +1,8 @@
 require_relative '../pdfs/patient_directory_pdf'
 
 class RegisController < ApplicationController
+  allow_unauthenticated_access only: %i[ index ]
+  
   before_action :resume_session
   before_action :require_management_access, only: %i[ show edit update destroy signup_patient ]
   before_action :set_regi, only: %i[ show edit update destroy signup_patient ]

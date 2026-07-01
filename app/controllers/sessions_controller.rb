@@ -1,9 +1,5 @@
 class SessionsController < ApplicationController
-  skip_before_action :resume_session, only: :destroy
-  skip_before_action :check_patient_activation, only: :destroy
-  skip_before_action :set_session_timestamp, only: :destroy
-
-  allow_unauthenticated_access only: %i[ new create ]
+  allow_unauthenticated_access only: %i[ new create destroy ]
 
   def new
   end
@@ -43,6 +39,6 @@ class SessionsController < ApplicationController
     # any code after it will cause the DoubleRenderError unless we stop.
     return if performed?
 
-    redirect_to new_session_path, status: :see_other
+    redirect_to root_path, status: :see_other, notice: "Signed out successfully!"
   end
 end

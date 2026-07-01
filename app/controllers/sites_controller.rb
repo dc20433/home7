@@ -1,17 +1,19 @@
 class SitesController < ApplicationController
-   skip_before_action :ensure_staff_only, only: [ :home ]
+  allow_unauthenticated_access only: :home
+  skip_before_action :ensure_staff_only, only: [ :home ]
 
-   def home
-    # If they are logged in, we can gently nudge them to their dashboard
-    if authenticated?
+  def home
+    # Only run the redirect logic if the user is truly authenticated 
+    # AND the session is not currently being destroyed.
+    if authenticated? && !request.fullpath.include?('session')
       if Current.user.patient?
         @regi = Regi.find_by(user_id: Current.user.id)
-        # Only redirect if they aren't already on their way out
-        redirect_to new_regi_patient_path(@regi) if @regi && action_name != "destroy"
+        redirect_to new_regi_patient_path(@regi) if @regi
       elsif Current.user.manager? || Current.user.admin?
         redirect_to regis_path
       end
     end
+    # If not authenticated, the page simply renders the home view normally.
   end
 
   def no_consent

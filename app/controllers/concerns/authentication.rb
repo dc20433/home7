@@ -4,6 +4,11 @@ module Authentication
   included do
     before_action :require_authentication
     helper_method :authenticated?
+    before_action :resume_session
+    before_action :check_patient_activation
+    before_action :set_session_timestamp
+    before_action :ensure_staff_only
+    before_action :redirect_patients_from_manager_zone
   end
 
   class_methods do
@@ -58,7 +63,14 @@ module Authentication
   end
 
   def require_authentication
-    resume_session || (request_authentication unless performed?)
+    # Allow the login process (new, create) and the logout process (destroy)
+    if (controller_name == 'sessions' && ['new', 'create', 'destroy'].include?(action_name))
+      return
+    end
+  
+    unless authenticated?
+      redirect_to new_session_path, alert: "Please log in."
+    end
   end
 
   def resume_session

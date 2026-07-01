@@ -1,13 +1,7 @@
-require 'pagy'
-
 class ApplicationController < ActionController::Base
+  
   include Authentication
   include Pagy::Backend
-  before_action :resume_session
-  before_action :check_patient_activation
-  before_action :set_session_timestamp
-  before_action :ensure_staff_only
-  before_action :redirect_patients_from_manager_zone
 
   def current_user
     return @current_user if defined?(@current_user)
