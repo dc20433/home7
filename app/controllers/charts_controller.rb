@@ -1,5 +1,4 @@
 class ChartsController < ApplicationController
-  # before_action :authenticate_user!
   before_action :set_regi
   before_action :set_chart, only: [ :show, :edit, :update, :destroy ]
   before_action :ensure_staff_only

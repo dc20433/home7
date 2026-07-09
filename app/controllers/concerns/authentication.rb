@@ -2,13 +2,13 @@ module Authentication
   extend ActiveSupport::Concern
 
   included do
-    before_action :require_authentication
-    helper_method :authenticated?
     before_action :resume_session
+    before_action :require_authentication
     before_action :check_patient_activation
     before_action :set_session_timestamp
     before_action :ensure_staff_only
     before_action :redirect_patients_from_manager_zone
+    helper_method :authenticated?
   end
 
   class_methods do

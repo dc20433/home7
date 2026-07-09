@@ -3,17 +3,13 @@ require_relative '../pdfs/patient_directory_pdf'
 class RegisController < ApplicationController
   allow_unauthenticated_access only: %i[ index ]
   
-  before_action :resume_session
-  before_action :require_management_access, only: %i[ show edit update destroy signup_patient ]
   before_action :set_regi, only: %i[ show edit update destroy signup_patient ]
+  before_action :require_management_access, only: %i[ show edit update destroy signup_patient ]
   skip_before_action :ensure_staff_only, only: [ :index ]
 
-  # GET /regis
-  # GET /regis.pdf
   def index
     # DEBUG: This will show in your terminal exactly what the app sees
     if Current.user
-      Rails.logger.info "LOGGING IN AS: #{Current.user.id} | ROLE: #{Current.user.role.inspect}"
     end
   
     # 1. Patient Redirect Loop Protection
@@ -67,11 +63,7 @@ class RegisController < ApplicationController
 
     # Resolve the email of the active logging administrator
     creator_email = active_manager_email
-    
-    # Trace log to print exactly who Rails sees as logged in during creation
-    Rails.logger.info "SIGNUP CREATOR AUDIT - Captured active administrator: #{creator_email}"
 
-    # Instantiate the new patient User, stamp creator admin's email, and link to the registration
     @user = User.new(
       email: "#{@regi.last_name}#{@regi.first_name}#{@regi.dob.strftime('%m')}".downcase.gsub(/\s+/, ""),
       password: "temp123",
@@ -192,12 +184,6 @@ class RegisController < ApplicationController
 
     # 4. Global fallback
     "jz2043@yahoo.com"
-  end
-
-  def require_management_access
-    unless Current.user&.admin? || Current.user&.manager?
-      redirect_to root_path, alert: "Access Denied."
-    end
   end
 
   def set_regi
